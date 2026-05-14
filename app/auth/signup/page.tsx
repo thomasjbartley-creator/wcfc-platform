@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
@@ -25,7 +25,7 @@ const COUNTRIES = [
   { code: 'DZ', name: 'Algeria' },
   { code: 'CV', name: 'Cabo Verde' },
   { code: 'CD', name: 'Congo DR' },
-  { code: 'CI', name: 'Côte d\'Ivoire' },
+  { code: 'CI', name: 'CÃ´te d\'Ivoire' },
   { code: 'EG', name: 'Egypt' },
   { code: 'GH', name: 'Ghana' },
   { code: 'MA', name: 'Morocco' },
@@ -34,7 +34,7 @@ const COUNTRIES = [
   { code: 'TN', name: 'Tunisia' },
   // CONCACAF (6 inc. hosts)
   { code: 'CA', name: 'Canada' },
-  { code: 'CW', name: 'Curaçao' },
+  { code: 'CW', name: 'CuraÃ§ao' },
   { code: 'HT', name: 'Haiti' },
   { code: 'MX', name: 'Mexico' },
   { code: 'PA', name: 'Panama' },
@@ -67,7 +67,7 @@ const COUNTRIES = [
   { code: 'TR', name: 'Turkiye' },
   { code: 'OTHER', name: 'Other Country' },
 ]
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
@@ -205,7 +205,7 @@ export default function SignupPage() {
             Create Your Account
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '28px', letterSpacing: '0.5px' }}>
-            Join the global fan challenge — free to play, win cash & prizes
+            Join the global fan challenge â free to play, win cash & prizes
           </div>
           {referredBy && (
             <div style={{
@@ -218,7 +218,7 @@ export default function SignupPage() {
               fontSize: '0.9rem',
               color: '#00C853',
             }}>
-              🎉 You were invited by a friend! Sign up to join the challenge together.
+              ð You were invited by a friend! Sign up to join the challenge together.
             </div>
           )}
           {error && (
@@ -232,7 +232,7 @@ export default function SignupPage() {
               fontSize: '0.9rem',
               color: '#ff6b6b',
             }}>
-              ⚠ {error}
+              â  {error}
             </div>
           )}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -259,7 +259,7 @@ export default function SignupPage() {
                 style={inputStyle}
               />
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', marginTop: '4px' }}>
-                3–25 characters · Letters, numbers, underscores only · Usernames are reviewed — violations may result in suspension
+                3â25 characters Â· Letters, numbers, underscores only Â· Usernames are reviewed â violations may result in suspension
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -287,7 +287,7 @@ export default function SignupPage() {
               </div>
             </div>
             <div>
-              <label style={labelStyle}>Country You're Supporting 🌍</label>
+              <label style={labelStyle}>Country You're Supporting ð</label>
               <select
                 required
                 value={form.country}
@@ -311,7 +311,7 @@ export default function SignupPage() {
               />
               {form.dateOfBirth && isUnder18(form.dateOfBirth) && (
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600', marginTop: '4px', padding: '8px', background: 'rgba(255,214,0,0.06)', borderRadius: '6px', border: '1px solid rgba(255,214,0,0.2)' }}>
-                  👦 Junior Fan Account — Under 18. Cash prizes not available. Merch, trophies & activity books only. Parent/guardian will need to verify this account.
+                  ð¦ Junior Fan Account â Under 18. Cash prizes not available. Merch, trophies & activity books only. Parent/guardian will need to verify this account.
                 </div>
               )}
             </div>
@@ -336,16 +336,16 @@ export default function SignupPage() {
                 marginTop: '4px',
               }}
             >
-              {loading ? 'CREATING ACCOUNT...' : 'CREATE MY ACCOUNT →'}
+              {loading ? 'CREATING ACCOUNT...' : 'CREATE MY ACCOUNT â'}
             </button>
           </form>
           <div style={{ textAlign: 'center', marginTop: '20px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68' }}>
             Already have an account?{' '}
-            <Link href="/auth/login" style={{ color: '#00C853', textDecoration: 'none' }}>Sign in →</Link>
+            <Link href="/auth/login" style={{ color: '#00C853', textDecoration: 'none' }}>Sign in â</Link>
           </div>
         </div>
         <div style={{ textAlign: 'center', marginTop: '16px', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px' }}>
-          ✓ No purchase necessary to win &nbsp;·&nbsp; ✓ Skill-based competition &nbsp;·&nbsp; ✓ Secure & private
+          â No purchase necessary to win &nbsp;Â·&nbsp; â Skill-based competition &nbsp;Â·&nbsp; â Secure & private
         </div>
       </div>
     </div>
@@ -371,4 +371,12 @@ const inputStyle: React.CSSProperties = {
   fontSize: '0.95rem',
   color: 'white',
   outline: 'none',
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
+  )
 }
