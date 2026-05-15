@@ -333,7 +333,7 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              <div style={{ display: 'flex', gap: '16px' }}>
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '14px' }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#4FC3F7', lineHeight: 1 }}>{referralCount}</div>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>FRIENDS JOINED</div>
@@ -343,6 +343,9 @@ export default function DashboardPage() {
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>BONUS POINTS</div>
                 </div>
               </div>
+              <Link href="/share" style={{ display: 'block', padding: '11px', background: 'linear-gradient(135deg, rgba(105,201,208,0.12), rgba(225,48,108,0.12))', border: '1px solid rgba(105,201,208,0.3)', borderRadius: '8px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center', color: '#69C9D0' }}>
+                🎬 CREATE TIKTOK CARD
+              </Link>
             </div>
 
             <div style={{ background: 'rgba(0,200,83,0.04)', border: '1px solid rgba(0,200,83,0.12)', borderRadius: '12px', padding: '20px' }}>
