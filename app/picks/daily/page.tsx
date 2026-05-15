@@ -17,7 +17,7 @@ const FLAGS: Record<string, string> = {
   ES:'1f1ea-1f1f8', CV:'1f1e8-1f1fb', SA:'1f1f8-1f1e6', UY:'1f1fa-1f1fe',
   FR:'1f1eb-1f1f7', SN:'1f1f8-1f1f3', IQ:'1f1ee-1f1f6', NO:'1f1f3-1f1f4',
   AR:'1f1e6-1f1f7', DZ:'1f1e9-1f1ff', AT:'1f1e6-1f1f9', JO:'1f1ef-1f1f4',
-  PT:'1f1f5-1f1f9', CD:'1f1e8-1f1e9', UZ:'1f1fa-1f1ff', CO:'1f1e8-1f1f4',
+  PT:'1f1f5-1f1f9', CD:'1f1e8-1f1e9', UZ:'1f1fa-1f1ff', CN:'1f1e8-1f1f4',
   HR:'1f1ed-1f1f7', GH:'1f1ec-1f1ed', PA:'1f1f5-1f1e6',
 }
 
@@ -287,7 +287,7 @@ export default function DailyPicksPage() {
 
                     {isLocked && pick.saved && (
                       <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.05)', fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#00C853' }}>
-                        ✓ Pick locked in: {match.home_team} {pick.home} – {pick.away} {match.away_team}
+                        {✓ Pick locked in: {match.home_team} {pick.home} – {pick.away} {match.away_team}
                       </div>
                     )}
                   </div>
