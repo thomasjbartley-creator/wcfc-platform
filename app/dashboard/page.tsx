@@ -227,7 +227,7 @@ export default function DashboardPage() {
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '16px', lineHeight: '1.5' }}>
                 {isPaid
                   ? 'Predict every match. Submit your bracket before June 11.'
-                  : 'Upgrade to Plus or Premium to submit picks and win cash prizes.'}
+                  : 'Become a Champion Founder for $10 — lock in your picks and compete for $500 in cash prizes.'}
               </div>
               {isPaid ? (
                 <Link href="/picks" style={{ display: 'block', padding: '12px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
