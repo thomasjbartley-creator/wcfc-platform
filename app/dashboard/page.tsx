@@ -344,7 +344,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <Link href="/share" style={{ display: 'block', padding: '11px', background: 'linear-gradient(135deg, rgba(105,201,208,0.12), rgba(225,48,108,0.12))', border: '1px solid rgba(105,201,208,0.3)', borderRadius: '8px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center', color: '#69C9D0' }}>
-                🎬 CREATE TIKTOK CARD
+                🎬 CREATE SHARE CARD
               </Link>
             </div>
 
@@ -353,61 +353,4 @@ export default function DashboardPage() {
               <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
                 Every fan who joins helps fund youth futbol programs around the world. Your participation matters beyond the leaderboard.
               </div>
-              <a href="https://buy.stripe.com/3cI7sDfO8dH9fIlgd3dfG0c" style={{ display: 'block', padding: '11px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                🌱 DONATE TO YOUTH FUTBOL →
-              </a>
-            </div>
-
-          </div>
-        </div>
-
-        <div style={{ marginTop: '24px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>📅 COMING UP — GROUP STAGE</div>
-          <UpcomingMatchesStrip supabase={supabase} />
-        </div>
-
-        <div style={{ marginTop: '32px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
-          <a href="/" style={{ color: '#3a5a42', textDecoration: 'none' }}>worldcupfanchallenge.com</a>
-          {' · '}
-          <span>No purchase necessary to win</span>
-          {' · '}
-          <span>Skill-based competition</span>
-        </div>
-
-      </div>
-    </div>
-  )
-}
-
-function UpcomingMatchesStrip({ supabase }: { supabase: ReturnType<typeof createClient> }) {
-  const [matches, setMatches] = useState<Match[]>([])
-
-  useEffect(() => {
-    supabase
-      .from('matches')
-      .select('*')
-      .eq('stage', 'group')
-      .gte('kickoff_time', new Date().toISOString())
-      .order('kickoff_time', { ascending: true })
-      .limit(6)
-      .then(({ data }) => { if (data) setMatches(data) })
-  }, [])
-
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>
-      {matches.map(m => (
-        <div key={m.match_number} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '12px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#00C853', letterSpacing: '2px', marginBottom: '4px' }}>
-            GROUP {m.group_name} · {m.city}
-          </div>
-          <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1rem', color: 'white', letterSpacing: '1px' }}>
-            {m.home_flag ?? ''} {m.home_team} <span style={{ color: '#5a8a68' }}>vs</span> {m.away_team} {m.away_flag ?? ''}
-          </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', marginTop: '3px' }}>
-            {new Date(m.kickoff_time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
+              <a href="https://buy.stripe.com/3cI7sDfO8dH9fIlgd3dfG0c" style={{ display: 'block', padding: '11px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpa
