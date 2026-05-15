@@ -23,7 +23,7 @@ const FLAGS: Record<string, string> = {
 
 function FlagImg({ code, size = 44 }: { code: string, size?: number }) {
   const cp = FLAGS[code]
-  if (!cp) return <div style={{ width: size, height: size, borderRadius: 8, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.5 }}>🌍</div>
+  if (!cp) return <div style={{ width: size, height: size, borderRadius: 8, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.5 }}>ð</div>
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 8, objectFit: 'cover', display: 'block' }} alt={code} />
 }
 
@@ -160,8 +160,8 @@ export default function DailyPicksPage() {
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(5,12,10,0.95)', position: 'sticky', top: 0, zIndex: 50 }}>
         <a href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.5rem', color: 'white', letterSpacing: '3px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></a>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <Link href="/picks" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', textDecoration: 'none' }}>← Picks</Link>
-          <Link href="/picks/bracket" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#FFD600', textDecoration: 'none' }}>🏆 Bracket</Link>
+          <Link href="/picks" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', textDecoration: 'none' }}>â Picks</Link>
+          <Link href="/picks/bracket" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#FFD600', textDecoration: 'none' }}>ð Bracket</Link>
         </div>
       </nav>
 
@@ -169,10 +169,10 @@ export default function DailyPicksPage() {
 
         {/* HEADER */}
         <div style={{ marginBottom: '24px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>⚽ SCORE PREDICTIONS</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>â½ SCORE PREDICTIONS</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem, 6vw, 3rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>DAILY PICKS</div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginTop: '6px' }}>
-            Predict exact scores · Lock at kickoff · Exact score = 8pts
+            Predict exact scores Â· Lock at kickoff Â· Exact score = 8pts
           </div>
         </div>
 
@@ -200,7 +200,7 @@ export default function DailyPicksPage() {
         {/* MATCH CARDS */}
         {displayMatches.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', fontFamily: "'Barlow Condensed'", fontSize: '1rem', color: '#5a8a68', letterSpacing: '1px' }}>
-            {activeTab === 'today' ? 'No matches today — check the upcoming tab.' : 'No upcoming matches loaded yet.'}
+            {activeTab === 'today' ? 'No matches today â check the upcoming tab.' : 'No upcoming matches loaded yet.'}
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -220,10 +220,10 @@ export default function DailyPicksPage() {
                   {/* Card header */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '2px', fontWeight: 700 }}>
-                      {match.group_name ? `GROUP ${match.group_name}` : match.stage.toUpperCase()} · {match.city.toUpperCase()}
+                      {match.group_name ? `GROUP ${match.group_name}` : match.stage.toUpperCase()} Â· {match.city.toUpperCase()}
                     </div>
                     <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: isLocked ? '#E53935' : '#5a8a68', letterSpacing: '1px' }}>
-                      {isLocked ? '🔒 LOCKED' : kickoff.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
+                      {isLocked ? 'ð LOCKED' : kickoff.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
                     </div>
                   </div>
 
@@ -236,7 +236,7 @@ export default function DailyPicksPage() {
                         <FlagImg code={match.home_flag} size={44} />
                         <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: 'white', letterSpacing: '1px', textAlign: 'center' }}>{match.home_team}</div>
                         <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: `1px solid ${isLocked ? 'rgba(255,255,255,0.08)' : 'rgba(0,200,83,0.3)'}`, borderRadius: '8px', overflow: 'hidden' }}>
-                          <button onClick={() => updateScore(match.id, 'home', -1)} disabled={isLocked} style={{ width: 36, height: 44, background: 'none', border: 'none', color: isLocked ? '#3a5a42' : '#5a8a68', fontSize: '1.2rem', cursor: isLocked ? 'default' : 'pointer', fontWeight: 700 }}>−</button>
+                          <button onClick={() => updateScore(match.id, 'home', -1)} disabled={isLocked} style={{ width: 36, height: 44, background: 'none', border: 'none', color: isLocked ? '#3a5a42' : '#5a8a68', fontSize: '1.2rem', cursor: isLocked ? 'default' : 'pointer', fontWeight: 700 }}>â</button>
                           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: isLocked ? '#5a8a68' : 'white', width: 40, textAlign: 'center', lineHeight: '44px' }}>{pick.home}</div>
                           <button onClick={() => updateScore(match.id, 'home', 1)} disabled={isLocked} style={{ width: 36, height: 44, background: 'none', border: 'none', color: isLocked ? '#3a5a42' : '#5a8a68', fontSize: '1.2rem', cursor: isLocked ? 'default' : 'pointer', fontWeight: 700 }}>+</button>
                         </div>
@@ -252,7 +252,7 @@ export default function DailyPicksPage() {
                         <FlagImg code={match.away_flag} size={44} />
                         <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: 'white', letterSpacing: '1px', textAlign: 'center' }}>{match.away_team}</div>
                         <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: `1px solid ${isLocked ? 'rgba(255,255,255,0.08)' : 'rgba(229,57,53,0.3)'}`, borderRadius: '8px', overflow: 'hidden' }}>
-                          <button onClick={() => updateScore(match.id, 'away', -1)} disabled={isLocked} style={{ width: 36, height: 44, background: 'none', border: 'none', color: isLocked ? '#3a5a42' : '#5a8a68', fontSize: '1.2rem', cursor: isLocked ? 'default' : 'pointer', fontWeight: 700 }}>−</button>
+                          <button onClick={() => updateScore(match.id, 'away', -1)} disabled={isLocked} style={{ width: 36, height: 44, background: 'none', border: 'none', color: isLocked ? '#3a5a42' : '#5a8a68', fontSize: '1.2rem', cursor: isLocked ? 'default' : 'pointer', fontWeight: 700 }}>â</button>
                           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: isLocked ? '#5a8a68' : 'white', width: 40, textAlign: 'center', lineHeight: '44px' }}>{pick.away}</div>
                           <button onClick={() => updateScore(match.id, 'away', 1)} disabled={isLocked} style={{ width: 36, height: 44, background: 'none', border: 'none', color: isLocked ? '#3a5a42' : '#5a8a68', fontSize: '1.2rem', cursor: isLocked ? 'default' : 'pointer', fontWeight: 700 }}>+</button>
                         </div>
@@ -265,7 +265,7 @@ export default function DailyPicksPage() {
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                         <div style={{ background: `${pts.color}18`, border: `1px solid ${pts.color}35`, borderRadius: '8px', padding: '6px 12px' }}>
                           <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: pts.color, fontWeight: 700 }}>
-                            {pts.label} · up to {pts.pts}pts if correct
+                            {pts.label} Â· up to {pts.pts}pts if correct
                           </span>
                         </div>
                         <button onClick={() => savePick(match.id)} disabled={pick.saving} style={{
@@ -280,14 +280,14 @@ export default function DailyPicksPage() {
                           cursor: pick.saving ? 'wait' : 'pointer',
                           transition: 'all 0.2s',
                         }}>
-                          {pick.saving ? 'SAVING...' : pick.saved ? '✓ SAVED' : 'SUBMIT PICK'}
+                          {pick.saving ? 'SAVING...' : pick.saved ? 'â SAVED' : 'SUBMIT PICK'}
                         </button>
                       </div>
                     )}
 
                     {isLocked && pick.saved && (
                       <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.05)', fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#00C853' }}>
-                        {✓ Pick locked in: {match.home_team} {pick.home} – {pick.away} {match.away_team}
+                        {`✓ Pick locked in: ${match.home_team} ${pick.home}–${pick.away} ${match.away_team}`}
                       </div>
                     )}
                   </div>
