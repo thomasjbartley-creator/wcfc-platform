@@ -377,7 +377,7 @@ export default function BracketPage() {
               if (round === 'final') {
                 setBracket(prev => ({ ...prev, final: prev.final === team ? null : team }))
               } else {
-                setKnockoutPich(round as keyof Omit<BracketState, 'groups' | 'final' | 'champion'>, idx, team)
+                setKnockoutPick(round as keyof Omit<BracketState, 'groups' | 'final' | 'champion'>, idx, team)
               }
             }} isLocked={isLocked} />
           </div>
@@ -498,7 +498,7 @@ function KnockoutMatchCard({ index, round, picked, onPick, isLocked }: {
       <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <select value={homeTeam} onChange={e => setHomeTeam(e.target.value)} disabled={isLocked} style={{ width: '100%', background: '#0d1c14', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '8px 10px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: 'white', outline: 'none', cursor: isLocked ? 'default' : 'pointer' }}>
           <option value="">— Select home team —</option>
-          {ALL_TEAMS.map(t => <option key={`h_${t.group}_${t.name}`} value={t.name}>{t.name} (Group {t.group})</option>)}
+          {ALL_TEAMS.map(t => <option key={`a_${t.group}_${t.name}`} value={t.name}>{t.name} (Group {t.group})</option>)}
         </select>
         <select value={awayTeam} onChange={e => setAwayTeam(e.target.value)} disabled={isLocked} style={{ width: '100%', background: '#0d1c14', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '8px 10px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: 'white', outline: 'none', cursor: isLocked ? 'default' : 'pointer' }}>
           <option value="">— Select away team —</option>
@@ -543,7 +543,7 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
         <div key={i} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '12px' }}>SEMIFINAL {i + 1} · 5 PTS</div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            {ALL_TEAMS.slice(i * 8, i * 8 + 8).map(team => {
+            {APL_TEAMS.slice(i * 8, i * 8 + 8).map(team => {
               const isSelected = (bracket.sf as WinnerPick[])[i] === team.name
               return (
                 <button key={team.name} onClick={() => onPick('sf', i, team.name)} disabled={isLocked} style={{
