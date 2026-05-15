@@ -72,6 +72,7 @@ export default function DashboardPage() {
   const [countdown, setCountdown] = useState('')
   const [loading, setLoading] = useState(true)
   const [copyDone, setCopyDone] = useState(false)
+  const [shareCopied, setShareCopied] = useState('')
 
   const referralLink = profile?.referral_code
     ? `${typeof window !== 'undefined' ? window.location.origin : 'https://worldcupfanchallenge.com'}/auth/signup?ref=${profile.referral_code}`
@@ -137,6 +138,18 @@ export default function DashboardPage() {
     const msg = `I just joined the World Cup Fan Challenge representing ${country}! Predict scores, win cash prizes, and help fund youth futbol. Join me\n${referralLink}`
     if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`, '_blank')
     if (platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank')
+    if (platform === 'instagram') {
+      navigator.clipboard.writeText(referralLink)
+      setShareCopied('instagram')
+      setTimeout(() => setShareCopied(''), 3500)
+      window.open('https://www.instagram.com/', '_blank')
+    }
+    if (platform === 'tiktok') {
+      navigator.clipboard.writeText(referralLink)
+      setShareCopied('tiktok')
+      setTimeout(() => setShareCopied(''), 3500)
+      window.open('https://www.tiktok.com/', '_blank')
+    }
     if (platform === 'native' && navigator.share) navigator.share({ title: 'World Cup Fan Challenge', text: msg, url: referralLink })
   }
 
@@ -305,11 +318,20 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              <div style={{ display: 'flex', gap: '6px', marginBottom: '14px' }}>
-                <button onClick={() => shareReferral('twitter')} style={shareBtn('#1da1f2')}>X</button>
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
+                <button onClick={() => shareReferral('instagram')} style={shareBtn('#E1306C')}>Instagram</button>
+                <button onClick={() => shareReferral('tiktok')} style={shareBtn('#69C9D0')}>TikTok</button>
                 <button onClick={() => shareReferral('whatsapp')} style={shareBtn('#25d366')}>WhatsApp</button>
-                <button onClick={() => shareReferral('native')} style={shareBtn('#FFD600')}>Share</button>
               </div>
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
+                <button onClick={() => shareReferral('twitter')} style={shareBtn('#1da1f2')}>X</button>
+                <button onClick={() => shareReferral('native')} style={{ ...shareBtn('#FFD600'), flex: 2 }}>Share</button>
+              </div>
+              {shareCopied && (
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: shareCopied === 'instagram' ? '#E1306C' : '#69C9D0', letterSpacing: '0.5px', padding: '6px 8px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px', marginBottom: '6px' }}>
+                  Link copied! Open {shareCopied === 'instagram' ? 'Instagram' : 'TikTok'} and paste it in your story or bio.
+                </div>
+              )}
 
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div style={{ textAlign: 'center' }}>
