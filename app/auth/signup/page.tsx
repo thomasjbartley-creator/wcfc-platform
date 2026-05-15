@@ -336,12 +336,12 @@ function SignupForm() {
                 marginTop: '4px',
               }}
             >
-              {loading ? 'CREATING ACCOUNT...' : 'CREATE MY ACCOUNT â'}
+              {loading ? 'CREATING ACCOUNT...' : 'CREATE MY ACCOUNT'}
             </button>
           </form>
           <div style={{ textAlign: 'center', marginTop: '20px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68' }}>
             Already have an account?{' '}
-            <Link href="/auth/login" style={{ color: '#00C853', textDecoration: 'none' }}>Sign in â</Link>
+            <Link href="/auth/login" style={{ color: '#00C853', textDecoration: 'none' }}>Sign in</Link>
           </div>
         </div>
         <div style={{ textAlign: 'center', marginTop: '16px', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px' }}>
