@@ -44,7 +44,7 @@ const FLAGS: Record<string, string> = {
 
 function FlagImg({ code, size = 24 }: { code: string, size?: number }) {
   const cp = FLAGS[code]
-  if (!cp) return <span style={{ fontSize: size * 0.7 }}>🌍</span>
+  if (!cp) return <span style={{ fontSize: size * 0.7, color: '#5a8a68' }}>—</span>
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 4, objectFit: 'cover', display: 'block' }} alt={code} />
 }
 
@@ -126,7 +126,7 @@ export default function PicksPage() {
 
         {/* HEADER */}
         <div style={{ marginBottom: '32px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>⚽ WORLD CUP 2026</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>WORLD CUP 2026</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem, 6vw, 3.5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>YOUR PICKS</div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginTop: '8px' }}>
             Submit your bracket before June 11. Make daily score picks before each match.
@@ -141,7 +141,7 @@ export default function PicksPage() {
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68' }}>Upgrade before June 11 to compete for $500 grand prize and weekly cash.</div>
             </div>
             <a href="https://www.paypal.com/ncp/payment/2CXE6HV7Y3DVG" style={{ padding: '12px 24px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              👑 Champion Founder — $10
+              Champion Founder — $10
             </a>
           </div>
         )}
@@ -154,7 +154,7 @@ export default function PicksPage() {
             <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '28px', cursor: 'pointer', transition: 'border-color 0.2s', height: '100%' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,214,0,0.5)')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,214,0,0.2)')}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🏆</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#FFD600', marginBottom: '12px', letterSpacing: '2px' }}>BRACKET</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>BRACKET PICKS</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
                 Predict winners for all 72 group matches + full knockout bracket. Lock in before June 11 kickoff.
@@ -180,7 +180,7 @@ export default function PicksPage() {
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '28px', cursor: 'pointer', transition: 'border-color 0.2s', height: '100%' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(0,200,83,0.5)')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(0,200,83,0.2)')}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>⚽</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', marginBottom: '12px', letterSpacing: '2px' }}>DAILY</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', letterSpacing: '2px', marginBottom: '8px' }}>DAILY PICKS</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
                 Predict exact scores for today's matches. Lock in before kickoff. Up to 8 pts per exact score.
@@ -220,7 +220,7 @@ export default function PicksPage() {
 
         {/* POINTS LEGEND */}
         <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px 24px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>📊 HOW POINTS WORK</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>HOW POINTS WORK</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px' }}>
             {[
               { pts: '8', label: 'Exact Score', color: '#FFD600' },
@@ -234,13 +234,4 @@ export default function PicksPage() {
             ].map(p => (
               <div key={p.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                 <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.3rem', color: p.color, minWidth: '36px', textAlign: 'center' }}>{p.pts}</div>
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', letterSpacing: '0.5px' }}>{p.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-    </div>
-  )
-}
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68'

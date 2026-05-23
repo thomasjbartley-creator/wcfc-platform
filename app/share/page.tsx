@@ -9,14 +9,14 @@ const H = 800
 const DURATION = 5.5
 
 const FLAGS: Record<string, string> = {
-  AU: '🇦🇺', IR: '🇮🇷', IQ: '🇮🇶', JP: '🇯🇵', JO: '🇯🇴', KR: '🇰🇷',
-  QA: '🇶🇦', SA: '🇸🇦', UZ: '🇺🇿', DZ: '🇩🇿', CV: '🇨🇻', CD: '🇨🇩',
-  CI: '🇨🇮', EG: '🇪🇬', GH: '🇬🇭', MA: '🇲🇦', SN: '🇸🇳', ZA: '🇿🇦',
-  TN: '🇹🇳', CA: '🇨🇦', CW: '🇨🇼', HT: '🇭🇹', MX: '🇲🇽', PA: '🇵🇦',
-  US: '🇺🇸', AR: '🇦🇷', BR: '🇧🇷', CO: '🇨🇴', EC: '🇪🇨', PY: '🇵🇾',
-  UY: '🇺🇾', NZ: '🇳🇿', AT: '🇦🇹', BE: '🇧🇪', BA: '🇧🇦', HR: '🇭🇷',
-  CZ: '🇨🇿', GB: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', FR: '🇫🇷', DE: '🇩🇪', NL: '🇳🇱', NO: '🇳🇴',
-  PT: '🇵🇹', SCO: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', ES: '🇪🇸', SE: '🇸🇪', CH: '🇨🇭', TR: '🇹🇷',
+  AU: 'AU', IR: 'IR', IQ: 'IQ', JP: 'JP', JO: 'JO', KR: 'KR',
+  QA: 'QA', SA: 'SA', UZ: 'UZ', DZ: 'DZ', CV: 'CV', CD: 'CD',
+  CI: 'CI', EG: 'EG', GH: 'GH', MA: 'MA', SN: 'SN', ZA: 'ZA',
+  TN: 'TN', CA: 'CA', CW: 'CW', HT: 'HT', MX: 'MX', PA: 'PA',
+  US: 'US', AR: 'AR', BR: 'BR', CO: 'CO', EC: 'EC', PY: 'PY',
+  UY: 'UY', NZ: 'NZ', AT: 'AT', BE: 'BE', BA: 'BA', HR: 'HR',
+  CZ: 'CZ', GB: 'ENG', FR: 'FR', DE: 'DE', NL: 'NL', NO: 'NO',
+  PT: 'PT', SCO: 'SCO', ES: 'ES', SE: 'SE', CH: 'CH', TR: 'TR',
 }
 
 const NAMES: Record<string, string> = {
@@ -55,7 +55,7 @@ function drawFrame(
   refCode: string,
   scoreline: string,
 ) {
-  const flag = FLAGS[country] || '🌍'
+  const flag = FLAGS[country] || country
   const name = (NAMES[country] || country).toUpperCase()
   const tc = TIER_COLORS[tier] || '#5a8a68'
   const tl = TIER_LABELS[tier] || 'FAN'
@@ -278,11 +278,11 @@ interface Profile {
 type Platform = 'tiktok' | 'instagram' | 'facebook' | 'twitter' | 'snapchat'
 
 const PLATFORMS: { id: Platform; label: string; color: string; icon: string }[] = [
-  { id: 'tiktok', label: 'TikTok', color: '#69C9D0', icon: '🎵' },
-  { id: 'instagram', label: 'Instagram', color: '#E1306C', icon: '📸' },
-  { id: 'facebook', label: 'Facebook', color: '#1877F2', icon: '👍' },
-  { id: 'twitter', label: 'X / Twitter', color: '#1DA1F2', icon: '🐦' },
-  { id: 'snapchat', label: 'Snapchat', color: '#FFFC00', icon: '👻' },
+  { id: 'tiktok', label: 'TikTok', color: '#69C9D0', icon: 'TT' },
+  { id: 'instagram', label: 'Instagram', color: '#E1306C', icon: 'IG' },
+  { id: 'facebook', label: 'Facebook', color: '#1877F2', icon: 'FB' },
+  { id: 'twitter', label: 'X / Twitter', color: '#1DA1F2', icon: 'X' },
+  { id: 'snapchat', label: 'Snapchat', color: '#FFFC00', icon: 'SC' },
 ]
 
 const PLATFORM_INSTRUCTIONS: Record<Platform, { title: string; steps: string[]; note: string }> = {
@@ -293,7 +293,7 @@ const PLATFORM_INSTRUCTIONS: Record<Platform, { title: string; steps: string[]; 
       'Open TikTok and tap the + button',
       'Upload the video from your camera roll',
       'Tap Sounds → search "World Cup" and add the official song',
-      'Caption: "I\'m calling it 🏆 Can you beat my pick? Link in bio" + #WorldCup2026',
+      'Caption: "I\'m calling it —Can you beat my pick? Link in bio" + #WorldCup2026',
       'Post and tag us @wcfc',
     ],
     note: 'TikTok\'s official music library has the World Cup song fully licensed — adding it inside TikTok is always legal.',
@@ -305,7 +305,7 @@ const PLATFORM_INSTRUCTIONS: Record<Platform, { title: string; steps: string[]; 
       'Open Instagram → tap + → select Reel',
       'Upload the video from your camera roll',
       'Tap Add Audio → search "World Cup" and add the official song',
-      'Caption: "I\'m calling it 🏆 Can you beat my pick? Link in bio" + #WorldCup2026',
+      'Caption: "I\'m calling it —Can you beat my pick? Link in bio" + #WorldCup2026',
       'Share to your Feed & Story for maximum reach',
     ],
     note: 'Instagram Reels has the World Cup song fully licensed — adding it natively inside Instagram is always legal.',
@@ -316,7 +316,7 @@ const PLATFORM_INSTRUCTIONS: Record<Platform, { title: string; steps: string[]; 
       'Download your video above',
       'Open Facebook and tap Photo/Video in the post box',
       'Select the video from your camera roll',
-      'Caption: "I\'m calling it 🏆 Who do YOU think wins? #WorldCup2026"',
+      'Caption: "I\'m calling it —Who do YOU think wins? #WorldCup2026"',
       'Tag your friends and challenge them to make their own pick',
       'Post publicly so your friends can share it further',
     ],
@@ -328,7 +328,7 @@ const PLATFORM_INSTRUCTIONS: Record<Platform, { title: string; steps: string[]; 
       'Download your video above',
       'Open X (Twitter) and tap the compose button',
       'Attach the video from your camera roll',
-      'Tweet: "I\'m calling it 🏆 [Country] wins the World Cup. Fight me. #WorldCup2026 worldcupfanchallenge.com"',
+      'Tweet: "I\'m calling it —[Country] wins the World Cup. Fight me. #WorldCup2026 worldcupfanchallenge.com"',
       'Tag @wcfc and your friends to challenge them',
       'Quote-tweet your rivals\' picks for extra engagement',
     ],
@@ -340,7 +340,7 @@ const PLATFORM_INSTRUCTIONS: Record<Platform, { title: string; steps: string[]; 
       'Download your video above to your camera roll',
       'Open Snapchat and tap the camera roll icon (bottom left)',
       'Select the video → tap Send → My Story',
-      'Add a sticker or text: "I\'m calling it! 🏆 #WorldCup2026"',
+      'Add a sticker or text: "I\'m calling it! —#WorldCup2026"',
       'Share to your Story so all your friends can see',
       'Challenge your friends to post their own picks',
     ],
@@ -651,3 +651,4 @@ export default function SharePage() {
     </div>
   )
 }
+                                                                                                                                                                                                                                                                                                                                                          

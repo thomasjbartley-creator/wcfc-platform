@@ -18,12 +18,12 @@ export default function ClubsPage() {
   }
 
   const kitItems = [
-    { icon: '🔗', title: 'Custom Club Link', desc: 'Your own signup URL — worldcupfanchallenge.com/join/YOURCLUB — tracks every member who joins through your club.' },
-    { icon: '📊', title: 'Club Leaderboard', desc: 'Your members compete against each other on a private leaderboard. Best club fans rise to the top.' },
-    { icon: '📢', title: 'Promo Materials', desc: 'Ready-to-send email, WhatsApp message, and social post templates. Copy, paste, send. Done.' },
-    { icon: '💰', title: '30% Revenue Share', desc: 'Every paid entry through your club link puts 30% directly into your club treasury. No minimums.' },
-    { icon: '📱', title: 'QR Code', desc: 'Print it, put it on your phone, tape it to the wall at practice. Every scan is a potential signup.' },
-    { icon: '🏆', title: 'Club Champion Badge', desc: 'The club with the highest average score wins the Club Champion title and a limited edition banner.' },
+    { title: 'Custom Club Link', desc: 'Your own signup URL — worldcupfanchallenge.com/join/YOURCLUB — tracks every member who joins through your club.' },
+    { title: 'Club Leaderboard', desc: 'Your members compete against each other on a private leaderboard. Best club fans rise to the top.' },
+    { title: 'Promo Materials', desc: 'Ready-to-send email, WhatsApp message, and social post templates. Copy, paste, send. Done.' },
+    { title: '30% Revenue Share', desc: 'Every paid entry through your club link puts 30% directly into your club treasury. No minimums.' },
+    { title: 'QR Code', desc: 'Print it, put it on your phone, tape it to the wall at practice. Every scan is a potential signup.' },
+    { title: 'Club Champion Badge', desc: 'The club with the highest average score wins the Club Champion title and a limited edition banner.' },
   ]
 
   const tiers = [
@@ -45,7 +45,7 @@ export default function ClubsPage() {
           <Link href="/about" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>OUR STORY</Link>
           <Link href="/affiliate" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#FFD600', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>EARN $$$</Link>
           <Link href="/auth/login" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 14px' }}>SIGN IN</Link>
-          <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>👑 JOIN — $10</Link>
+          <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>JOIN — $10</Link>
         </div>
       </nav>
 
@@ -53,7 +53,7 @@ export default function ClubsPage() {
 
         {/* HERO */}
         <div style={{ marginBottom: '60px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>🏟️ FOR CLUBS & COACHES</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>FOR CLUBS & COACHES</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2.4rem,6vw,4.5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>
             Turn the World Cup Into<br /><span style={{ color: '#FFD600' }}>a Club Fundraiser</span>
           </div>
@@ -62,7 +62,7 @@ export default function ClubsPage() {
           </p>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '32px' }}>
             <a href="#request-kit" style={{ padding: '14px 32px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-              🏟️ GET YOUR FREE KIT →
+              GET YOUR FREE KIT →
             </a>
             <a href="#how-it-works" style={{ padding: '14px 24px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#d0ead8', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
               HOW IT WORKS
@@ -81,12 +81,11 @@ export default function ClubsPage() {
 
         {/* THE KIT */}
         <div style={{ marginBottom: '60px' }} id="how-it-works">
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>📦 WHAT YOU GET</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>WHAT YOU GET</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '24px' }}>Your Free Club Kit</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px' }}>
             {kitItems.map(k => (
               <div key={k.title} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-                <div style={{ fontSize: '1.6rem', marginBottom: '8px' }}>{k.icon}</div>
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: '6px' }}>{k.title}</div>
                 <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: 1.5 }}>{k.desc}</div>
               </div>
@@ -96,7 +95,7 @@ export default function ClubsPage() {
 
         {/* REVENUE MATH */}
         <div style={{ background: 'linear-gradient(135deg,rgba(0,200,83,0.08),rgba(255,214,0,0.04))', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '32px', marginBottom: '60px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>💰 THE MATH</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>THE MATH</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '16px' }}>How Much Can Your Club Raise?</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px', marginBottom: '16px' }}>
             {[
@@ -167,7 +166,7 @@ export default function ClubsPage() {
 
         {/* CUSTOM PROGRAM */}
         <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '32px', marginBottom: '60px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>🏗️ ENTERPRISE & CUSTOM</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>ENTERPRISE & CUSTOM</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Need Something Bigger?</div>
           <p style={{ fontFamily: "'Barlow'", fontSize: '0.9rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '16px' }}>
             Running a league with 20+ clubs? A school district? A national youth federation? A corporate tournament? We build fully custom programs — your brand, your revenue structure, your scale.
@@ -179,7 +178,7 @@ export default function ClubsPage() {
           </div>
           <a href="mailto:thomasjbartley@worldcupfanchallenge.com?subject=Custom%20Club%20Program%20Inquiry&body=Hi%20Thomas%2C%0A%0AI%27m%20interested%20in%20a%20custom%20program%20for%20my%20organization.%0A%0AOrganization%3A%0ASize%2FScope%3A%0AWhat%20I%27m%20looking%20for%3A"
             style={{ display: 'inline-block', padding: '12px 24px', background: 'rgba(255,214,0,0.12)', border: '1px solid rgba(255,214,0,0.3)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-            📬 CONTACT US FOR DETAILS →
+            CONTACT US FOR DETAILS →
           </a>
         </div>
 
@@ -190,7 +189,7 @@ export default function ClubsPage() {
 
           {submitted ? (
             <div style={{ textAlign: 'center', padding: '40px' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>✅</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', marginBottom: '12px', letterSpacing: '2px' }}>DONE</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', letterSpacing: '2px' }}>Request Sent!</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginTop: '8px' }}>We&apos;ll have your club kit ready within 24 hours.</div>
             </div>
@@ -256,3 +255,4 @@ export default function ClubsPage() {
     </div>
   )
 }
+                                                                                                                                                   

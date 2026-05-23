@@ -23,7 +23,7 @@ const FLAGS: Record<string, string> = {
 
 function FlagImg({ code, size = 44 }: { code: string, size?: number }) {
   const cp = FLAGS[code]
-  if (!cp) return <div style={{ width: size, height: size, borderRadius: 8, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.5 }}>🌍</div>
+  if (!cp) return <div style={{ width: size, height: size, borderRadius: 8, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Barlow Condensed'", fontSize: size * 0.35, color: '#5a8a68' }}>—</div>
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 8, objectFit: 'cover', display: 'block' }} alt={code} />
 }
 
@@ -161,7 +161,7 @@ export default function DailyPicksPage() {
         <a href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.5rem', color: 'white', letterSpacing: '3px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></a>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <Link href="/picks" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', textDecoration: 'none' }}>← Picks</Link>
-          <Link href="/picks/bracket" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#FFD600', textDecoration: 'none' }}>🏆 Bracket</Link>
+          <Link href="/picks/bracket" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#FFD600', textDecoration: 'none' }}>Bracket</Link>
         </div>
       </nav>
 
@@ -169,7 +169,7 @@ export default function DailyPicksPage() {
 
         {/* HEADER */}
         <div style={{ marginBottom: '24px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>⚽ SCORE PREDICTIONS</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>SCORE PREDICTIONS</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem, 6vw, 3rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>DAILY PICKS</div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginTop: '6px' }}>
             Predict exact scores · Lock at kickoff · Exact score = 8pts
@@ -223,7 +223,7 @@ export default function DailyPicksPage() {
                       {match.group_name ? `GROUP ${match.group_name}` : match.stage.toUpperCase()} · {match.city.toUpperCase()}
                     </div>
                     <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: isLocked ? '#E53935' : '#5a8a68', letterSpacing: '1px' }}>
-                      {isLocked ? '🔒 LOCKED' : kickoff.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
+                      {isLocked ? 'LOCKED' : kickoff.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
                     </div>
                   </div>
 
@@ -295,8 +295,4 @@ export default function DailyPicksPage() {
               )
             })}
           </div>
-        )}
-      </div>
-    </div>
-  )
-}
+   

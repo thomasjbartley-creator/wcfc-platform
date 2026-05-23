@@ -97,7 +97,7 @@ const TABS = ['groups', 'r32', 'r16', 'qf', 'sf', 'champion'] as const
 type Tab = typeof TABS[number]
 
 const TAB_LABELS: Record<Tab, string> = {
-  groups: 'Groups', r32: 'R32', r16: 'R16', qf: 'QF', sf: 'SF / Final', champion: '🏆 Champ'
+  groups: 'Groups', r32: 'R32', r16: 'R16', qf: 'QF', sf: 'SF / Final', champion: 'Champ'
 }
 
 const AUTO_SUBMIT_DATE = 'June 11 at 12:00 PM CT'
@@ -245,7 +245,7 @@ export default function BracketPage() {
             <div style={{ height: '100%', width: `${pct}%`, background: pct === 100 ? '#00C853' : '#FFD600', borderRadius: '2px', transition: 'width 0.3s' }} />
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '4px' }}>
-            💾 Auto-saves as you pick · Auto-submits {AUTO_SUBMIT_DATE} (1 hour before kickoff)
+            Auto-saves as you pick · Auto-submits {AUTO_SUBMIT_DATE} (1 hour before kickoff)
           </div>
         </div>
 
@@ -423,8 +423,8 @@ export default function BracketPage() {
         <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '1px', marginBottom: '6px' }}>
             {isLocked
-              ? '🔒 BRACKET LOCKED — Picks submitted'
-              : `💾 Auto-saves every change · Auto-submits ${AUTO_SUBMIT_DATE}`}
+              ? 'BRACKET LOCKED — Picks submitted'
+              : `Auto-saves every change · Auto-submits ${AUTO_SUBMIT_DATE}`}
           </div>
           <div style={{ height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', marginBottom: '8px' }}>
             <div style={{ height: '100%', width: `${pct}%`, background: pct === 100 ? '#00C853' : '#FFD600', borderRadius: '2px', transition: 'width 0.3s' }} />
@@ -577,3 +577,4 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
     </div>
   )
 }
+                    
