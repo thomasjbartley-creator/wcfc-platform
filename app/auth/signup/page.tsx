@@ -224,7 +224,7 @@ function SignupPageContent() {
               fontSize: '0.9rem',
               color: '#00C853',
             }}>
-              🎉 You were invited by a friend! Sign up to join the challenge together.
+              You were invited by a friend! Sign up to join the challenge together.
             </div>
           )}
           {error && (
@@ -238,7 +238,7 @@ function SignupPageContent() {
               fontSize: '0.9rem',
               color: '#ff6b6b',
             }}>
-              ⚠ {error}
+              {error}
             </div>
           )}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -293,7 +293,7 @@ function SignupPageContent() {
               </div>
             </div>
             <div>
-              <label style={labelStyle}>Country You're Supporting 🌍</label>
+              <label style={labelStyle}>Country You're Supporting</label>
               <select
                 required
                 value={form.country}
@@ -317,7 +317,7 @@ function SignupPageContent() {
               />
               {form.dateOfBirth && isUnder18(form.dateOfBirth) && (
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600', marginTop: '4px', padding: '8px', background: 'rgba(255,214,0,0.06)', borderRadius: '6px', border: '1px solid rgba(255,214,0,0.2)' }}>
-                  👦 Junior Fan Account — Under 18. Cash prizes not available. Merch, trophies & activity books only. Parent/guardian will need to verify this account.
+                  Junior Fan Account — Under 18. Cash prizes not available. Merch, trophies & activity books only. Parent/guardian will need to verify this account.
                 </div>
               )}
             </div>
@@ -378,3 +378,4 @@ const inputStyle: React.CSSProperties = {
   color: 'white',
   outline: 'none',
 }
+                   

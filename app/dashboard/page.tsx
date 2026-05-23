@@ -14,11 +14,11 @@ const TIER_COLORS: Record<string, string> = {
   free:     '#5a8a68',
 }
 const TIER_LABELS: Record<string, string> = {
-  champion: '👑 Champion Founder',
-  founder:  '🏅 Founder Fan',
-  premium:  '💎 Premium',
-  plus:     '⚡ Plus',
-  free:     '🆓 Free Fan',
+  champion: 'Champion Founder',
+  founder:  'Founder Fan',
+  premium:  'Premium',
+  plus:     'Plus',
+  free:     'Free Fan',
 }
 
 interface Profile {
@@ -222,7 +222,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             <div style={{ background: '#0a1410', border: `1px solid ${isPaid ? 'rgba(0,200,83,0.3)' : 'rgba(255,255,255,0.07)'}`, borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '10px' }}>⚽</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', marginBottom: '10px', letterSpacing: '2px' }}>PICKS</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '6px' }}>
                 {isPaid ? 'Make Your Picks' : 'Enter the Challenge'}
               </div>
@@ -238,17 +238,17 @@ export default function DashboardPage() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <a href="https://buy.stripe.com/5kQdR1bxS7iL0Nr1i9dfG03" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                    👑 CHAMPION FOUNDER — $10
+                    CHAMPION FOUNDER — $10
                   </a>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', textAlign: 'center', padding: '2px 0' }}>
                     or choose a smaller entry:
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <a href="https://buy.stripe.com/eVq3cnfO8cD5fIl2mddfG01" style={{ flex: 1, display: 'block', padding: '9px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.3)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                      💎 PREMIUM — $5
+                      PREMIUM — $5
                     </a>
                     <a href="https://buy.stripe.com/bJe3cndG01Yr0NraSJdfG0b" style={{ flex: 1, display: 'block', padding: '9px', background: 'rgba(79,195,247,0.08)', border: '1px solid rgba(79,195,247,0.25)', color: '#4FC3F7', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                      ⚡ PLUS — $3
+                      PLUS — $3
                     </a>
                   </div>
                 </div>
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                     You're in — but free fans aren't eligible for cash prizes. Upgrade before June 11 to compete for $500.
                   </div>
                   <a href="https://buy.stripe.com/5kQdR1bxS7iL0Nr1i9dfG03" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                    👑 CHAMPION FOUNDER — $10
+                    CHAMPION FOUNDER — $10
                   </a>
                 </div>
               )}
@@ -291,7 +291,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '12px', padding: '20px' }}>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>🎯 REFER FRIENDS — EARN POINTS</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>REFER FRIENDS — EARN POINTS</div>
               <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '14px', lineHeight: '1.5' }}>
                 Share your link. When a friend joins the paid challenge you earn <strong style={{ color: '#00C853' }}>+5 bonus points</strong>.
               </div>
@@ -326,12 +326,12 @@ export default function DashboardPage() {
             </div>
 
             <div style={{ background: 'rgba(0,200,83,0.04)', border: '1px solid rgba(0,200,83,0.12)', borderRadius: '12px', padding: '20px' }}>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>🌱 GRASSROOTS FUTBOL FUND</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>GRASSROOTS FUTBOL FUND</div>
               <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
                 Every fan who joins helps fund youth futbol programs around the world. Your participation matters beyond the leaderboard.
               </div>
               <a href="https://buy.stripe.com/3cI7sDfO8dH9fIlgd3dfG0c" style={{ display: 'block', padding: '11px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                🌱 DONATE TO YOUTH FUTBOL →
+                DONATE TO YOUTH FUTBOL →
               </a>
             </div>
 
@@ -339,7 +339,7 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ marginTop: '24px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>📅 COMING UP — GROUP STAGE</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>COMING UP — GROUP STAGE</div>
           <UpcomingMatchesStrip supabase={supabase} />
         </div>
 
@@ -385,6 +385,4 @@ function UpcomingMatchesStrip({ supabase }: { supabase: ReturnType<typeof create
           </div>
         </div>
       ))}
-    </div>
-  )
-}
+    </div>
