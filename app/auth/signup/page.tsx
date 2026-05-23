@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
@@ -67,7 +67,9 @@ const COUNTRIES = [
   { code: 'TR', name: 'Turkiye' },
   { code: 'OTHER', name: 'Other Country' },
 ]
-export default function SignupPage() {
+export default function SignupPage() { return <Suspense fallback={null}><SignupPageContent /></Suspense> }
+
+function SignupPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
