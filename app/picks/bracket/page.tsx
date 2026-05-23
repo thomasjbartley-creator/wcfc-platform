@@ -577,4 +577,3 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
     </div>
   )
 }
-                    

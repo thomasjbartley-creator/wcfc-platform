@@ -378,4 +378,3 @@ const inputStyle: React.CSSProperties = {
   color: 'white',
   outline: 'none',
 }
-                   
