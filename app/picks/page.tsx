@@ -44,7 +44,7 @@ const FLAGS: Record<string, string> = {
 
 function FlagImg({ code, size = 24 }: { code: string, size?: number }) {
   const cp = FLAGS[code]
-  if (!cp) return <span style={{ fontSize: size * 0.7, color: '#5a8a68' }}>—</span>
+  if (!cp) return <span style={{ fontSize: size * 0.7, fontFamily: "'Barlow Condensed'", color: '#5a8a68' }}>—</span>
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 4, objectFit: 'cover', display: 'block' }} alt={code} />
 }
 
@@ -154,7 +154,7 @@ export default function PicksPage() {
             <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '28px', cursor: 'pointer', transition: 'border-color 0.2s', height: '100%' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,214,0,0.5)')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,214,0,0.2)')}>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#FFD600', marginBottom: '12px', letterSpacing: '2px' }}>BRACKET</div>
+              <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#FFD600', marginBottom: '12px' }}>BRACKET</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>BRACKET PICKS</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
                 Predict winners for all 72 group matches + full knockout bracket. Lock in before June 11 kickoff.
@@ -180,7 +180,7 @@ export default function PicksPage() {
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '28px', cursor: 'pointer', transition: 'border-color 0.2s', height: '100%' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(0,200,83,0.5)')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(0,200,83,0.2)')}>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', marginBottom: '12px', letterSpacing: '2px' }}>DAILY</div>
+              <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#00C853', marginBottom: '12px' }}>DAILY</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', letterSpacing: '2px', marginBottom: '8px' }}>DAILY PICKS</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
                 Predict exact scores for today's matches. Lock in before kickoff. Up to 8 pts per exact score.
@@ -234,4 +234,13 @@ export default function PicksPage() {
             ].map(p => (
               <div key={p.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                 <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.3rem', color: p.color, minWidth: '36px', textAlign: 'center' }}>{p.pts}</div>
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68'
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', letterSpacing: '0.5px' }}>{p.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}

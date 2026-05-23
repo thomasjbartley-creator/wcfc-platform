@@ -23,7 +23,7 @@ const FLAGS: Record<string, string> = {
 
 function FlagImg({ code, size = 44 }: { code: string, size?: number }) {
   const cp = FLAGS[code]
-  if (!cp) return <div style={{ width: size, height: size, borderRadius: 8, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Barlow Condensed'", fontSize: size * 0.35, color: '#5a8a68' }}>—</div>
+  if (!cp) return <div style={{ width: size, height: size, borderRadius: 8, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.5, fontFamily: "'Barlow Condensed'", color: '#5a8a68' }}>—</div>
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 8, objectFit: 'cover', display: 'block' }} alt={code} />
 }
 
@@ -295,4 +295,8 @@ export default function DailyPicksPage() {
               )
             })}
           </div>
-   
+        )}
+      </div>
+    </div>
+  )
+}

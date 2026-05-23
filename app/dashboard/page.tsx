@@ -222,7 +222,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             <div style={{ background: '#0a1410', border: `1px solid ${isPaid ? 'rgba(0,200,83,0.3)' : 'rgba(255,255,255,0.07)'}`, borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', marginBottom: '10px', letterSpacing: '2px' }}>PICKS</div>
+              <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#00C853', marginBottom: '10px' }}>PICKS</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '6px' }}>
                 {isPaid ? 'Make Your Picks' : 'Enter the Challenge'}
               </div>
@@ -385,4 +385,6 @@ function UpcomingMatchesStrip({ supabase }: { supabase: ReturnType<typeof create
           </div>
         </div>
       ))}
-    </div>
+    </div>
+  )
+}
