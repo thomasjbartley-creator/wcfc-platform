@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import GoogleTranslate from '@/components/GoogleTranslate'
 
 function generateReferralCode(username: string): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -188,14 +189,17 @@ function SignupPageContent() {
       <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
       <div style={{ width: '100%', maxWidth: '460px' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <a href="/" style={{ textDecoration: 'none' }}>
-            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '4px' }}>
-              WCFC<span style={{ color: '#00C853' }}>.</span>
-            </div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#5a8a68', letterSpacing: '3px', textTransform: 'uppercase' }}>
-              World Cup Fan Challenge
-            </div>
-          </a>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginBottom: '4px' }}>
+            <a href="/" style={{ textDecoration: 'none' }}>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '4px' }}>
+                WCFC<span style={{ color: '#00C853' }}>.</span>
+              </div>
+            </a>
+            <GoogleTranslate />
+          </div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#5a8a68', letterSpacing: '3px', textTransform: 'uppercase' }}>
+            World Cup Fan Challenge
+          </div>
         </div>
         <div style={{
           background: '#0a1410',

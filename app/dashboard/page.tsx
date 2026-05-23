@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import GoogleTranslate from '@/components/GoogleTranslate'
 
 const TIER_COLORS: Record<string, string> = {
   champion: '#FFD600',
@@ -162,6 +163,7 @@ export default function DashboardPage() {
           WCFC<span style={{ color: '#00C853' }}>.</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <GoogleTranslate />
           <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: tierColor, fontWeight: 700, letterSpacing: '1px' }}>{tierLabel}</span>
           <button onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', padding: '7px 14px', fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', cursor: 'pointer', letterSpacing: '1px' }}>
             SIGN OUT

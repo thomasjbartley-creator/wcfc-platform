@@ -1,4 +1,18 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+import GoogleTranslate from '@/components/GoogleTranslate'
+
+export const metadata: Metadata = {
+  title: 'WCFC — World Cup Fan Challenge 2026',
+  description: 'Pick every match. Win real prizes. The global fan challenge for the 2026 FIFA World Cup.',
+  alternates: {
+    languages: {
+      'pt-BR': 'https://worldcupfanchallenge.com/?lang=pt',
+      'es-MX': 'https://worldcupfanchallenge.com/?lang=es',
+      'x-default': 'https://worldcupfanchallenge.com',
+    },
+  },
+}
 
 export default function Home() {
   return (
@@ -16,6 +30,7 @@ export default function Home() {
           <Link href="/sponsors" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 10px' }}>SPONSORS</Link>
           <Link href="/about" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 10px' }}>OUR STORY</Link>
           <Link href="/affiliate" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#FFD600', letterSpacing: '1px', textDecoration: 'none', padding: '7px 10px' }}>EARN $$$</Link>
+          <GoogleTranslate />
           <Link href="/auth/login" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>SIGN IN</Link>
           <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
             👑 JOIN — $10
