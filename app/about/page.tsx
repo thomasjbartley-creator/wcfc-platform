@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'About \u2014 WCFC',
+  description: 'Meet the team behind the World Cup Fan Challenge. Built by fans, for fans \u2014 a global prediction game for the 2026 FIFA World Cup.',
+}
 
 export default function AboutPage() {
  return (

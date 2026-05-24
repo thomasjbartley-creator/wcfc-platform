@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Official Rules \u2014 WCFC',
+  description: 'Official rules for the World Cup Fan Challenge 2026. No purchase necessary. Open to fans worldwide. Skill-based competition with real prizes.',
+}
 
 export default function RulesPage() {
  return (
