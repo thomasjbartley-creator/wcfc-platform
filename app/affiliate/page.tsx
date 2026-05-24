@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import QRCode from 'qrcode.react'
+import { QRCodeSVG } from 'qrcode.react'
 
 export default function AffiliatePage() {
  const [form, setForm] = useState({ name: '', email: '', platform: '', audience: '', paypal: '' })
@@ -93,7 +93,7 @@ export default function AffiliatePage() {
  {previewLink && (
  <div style={{ display: 'flex', gap: '32px', alignItems: 'center', flexWrap: 'wrap' }}>
  <div style={{ background: 'white', padding: '12px', borderRadius: '8px', display: 'inline-block' }}>
- <QRCode value={previewLink} size={140} />
+ <QRCodeSVG value={previewLink} size={140} />
  </div>
  <div>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '6px' }}>YOUR AFFILIATE LINK</div>
