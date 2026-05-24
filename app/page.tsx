@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import GoogleTranslate from '@/components/GoogleTranslate'
 
 export const metadata: Metadata = {
-  title: 'WCFC â World Cup Fan Challenge 2026',
+  title: 'WCFC Ã¢ÂÂ World Cup Fan Challenge 2026',
   description: 'Pick every match. Win real prizes. The global fan challenge for the 2026 FIFA World Cup.',
   alternates: {
     languages: {
@@ -33,7 +33,7 @@ export default function Home() {
           <GoogleTranslate />
           <Link href="/auth/login" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>SIGN IN</Link>
           <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
-            JOIN â $10
+            JOIN Ã¢ÂÂ $10
           </Link>
         </div>
       </nav>
@@ -41,7 +41,7 @@ export default function Home() {
       {/* HERO */}
       <section style={{ textAlign: 'center', padding: 'clamp(60px,10vw,120px) 24px 60px', background: 'radial-gradient(ellipse at top, rgba(0,200,83,0.08) 0%, transparent 70%)' }}>
         <div style={{ display: 'inline-block', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', borderRadius: '20px', padding: '6px 16px', fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', fontWeight: 700, color: '#00C853', letterSpacing: '2px', marginBottom: '24px' }}>
-          2026 FIFA WORLD CUP â JUNE 11 KICKOFF
+          2026 FIFA WORLD CUP Ã¢ÂÂ JUNE 11 KICKOFF
         </div>
         <h1 style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(3rem,10vw,7rem)', color: 'white', letterSpacing: '3px', lineHeight: 1, marginBottom: '8px' }}>
           PICK EVERY MATCH.
@@ -56,16 +56,13 @@ export default function Home() {
         {/* CTAs */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
           <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '18px 48px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.3rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', boxShadow: '0 0 32px rgba(255,214,0,0.25)' }}>
-            JOIN AS CHAMPION FOUNDER â $10
-          </Link>
-          <Link href="/auth/signup?plan=premium" style={{ display: 'inline-block', padding: '13px 36px', background: 'rgba(0,200,83,0.12)', color: '#00C853', border: '1.5px solid rgba(0,200,83,0.35)', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-            PREMIUM ENTRY â $5
+            JOIN AS CHAMPION FOUNDER Ã¢ÂÂ $10
           </Link>
           <Link href="/shop" style={{ display: 'inline-block', padding: '10px 28px', background: 'transparent', color: '#5a8a68', border: '1px solid rgba(255,255,255,0.1)', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none', textTransform: 'uppercase' }}>
-            Books &amp; Donations â
+            Books &amp; Donations Ã¢ÂÂ
           </Link>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '4px' }}>
-            â No purchase necessary to enter or win &nbsp;Â·&nbsp; â 18+ for cash prizes &nbsp;Â·&nbsp;
+            Ã¢ÂÂ No purchase necessary to enter or win &nbsp;ÃÂ·&nbsp; Ã¢ÂÂ 18+ for cash prizes &nbsp;ÃÂ·&nbsp;
             <Link href="/auth/signup" style={{ color: '#3a5a42', textDecoration: 'underline' }}>Free entry available</Link>
           </div>
         </div>
@@ -95,16 +92,16 @@ export default function Home() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
               {[['Exact score prediction', '8 pts'], ['Correct winner', '3 pts'], ['Pick the champion', '15 pts'], ['Daily picks cap', '25 pts/day']].map(([label, pts]) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#d0ead8' }}>
-                  <span style={{ color: '#00C853' }}>â</span><span style={{ flex: 1 }}>{label}</span><span style={{ color: '#FFD600', fontWeight: 700 }}>{pts}</span>
+                  <span style={{ color: '#00C853' }}>Ã¢ÂÂ</span><span style={{ flex: 1 }}>{label}</span><span style={{ color: '#FFD600', fontWeight: 700 }}>{pts}</span>
                 </div>
               ))}
             </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <Link href="/auth/signup?plan=champion" style={{ padding: '13px 24px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-                Join &amp; Fill Bracket â $10
+                Join &amp; Fill Bracket Ã¢ÂÂ $10
               </Link>
               <Link href="/picks/bracket" style={{ padding: '13px 20px', background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-                Preview Bracket â
+                Preview Bracket Ã¢ÂÂ
               </Link>
             </div>
           </div>
@@ -150,7 +147,7 @@ export default function Home() {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: '28px' }}>
-          <Link href="/how-it-works" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#00C853', letterSpacing: '1px' }}>Read the full guide â</Link>
+          <Link href="/how-it-works" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#00C853', letterSpacing: '1px' }}>Read the full guide Ã¢ÂÂ</Link>
         </div>
       </section>
 
@@ -174,16 +171,16 @@ export default function Home() {
             ))}
           </div>
           <div style={{ background: 'rgba(255,214,0,0.06)', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '12px', padding: '28px 32px', marginBottom: '32px' }}>
-            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Champion Founder â $10</div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Champion Founder Ã¢ÂÂ $10</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '16px' }}>
-              One-time founding membership. Locks in $3/entry forever. +25 bonus points. Both activity books free (digital). Name on the Founding Wall. Includes $2 donation to youth fÃºtbol. Price increases at June 11 kickoff.
+              One-time founding membership. Locks in $3/entry forever. +25 bonus points. Both activity books free (digital). Name on the Founding Wall. Includes $2 donation to youth fÃÂºtbol. Price increases at June 11 kickoff.
             </div>
             <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
-              JOIN AS CHAMPION FOUNDER â
+              JOIN AS CHAMPION FOUNDER Ã¢ÂÂ
             </Link>
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
-            All cash prizes are fixed amounts funded by the platform operator â not pooled from entry fees. No purchase necessary to enter or win non-cash prizes.
+            All cash prizes are fixed amounts funded by the platform operator Ã¢ÂÂ not pooled from entry fees. No purchase necessary to enter or win non-cash prizes.
           </div>
         </div>
       </section>
@@ -193,14 +190,14 @@ export default function Home() {
         <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>THE MISSION</div>
         <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3rem)', color: 'white', letterSpacing: '2px', marginBottom: '16px' }}>Built by a Coach. Powered by Fans.</div>
         <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.8, marginBottom: '28px' }}>
-          Founded by a Houston Navy veteran and youth soccer coach who spent 20+ years coaching YMCA kids for free. The Grassroots FÃºtbol Fund channels fan donations directly to youth soccer programs worldwide. This is the Thunder FC mission going global.
+          Founded by a Houston Navy veteran and youth soccer coach who spent 20+ years coaching YMCA kids for free. The Grassroots FÃÂºtbol Fund channels fan donations directly to youth soccer programs worldwide. This is the Thunder FC mission going global.
         </p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/about" style={{ padding: '12px 24px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-            OUR STORY â
+            OUR STORY Ã¢ÂÂ
           </Link>
           <Link href="/shop" style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#5a8a68', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-            DONATE TO YOUTH FÃTBOL
+            DONATE TO YOUTH FÃÂTBOL
           </Link>
         </div>
       </section>
@@ -216,8 +213,8 @@ export default function Home() {
           ))}
         </div>
         <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', lineHeight: 1.8 }}>
-          worldcupfanchallenge.com Â· No purchase necessary to enter or win non-cash prizes Â· Skill-based competition Â· 18+ for cash prizes<br />
-          Â© 2026 Bartex Enterprise Holdings LLC Â· Houston, TX
+          worldcupfanchallenge.com ÃÂ· No purchase necessary to enter or win non-cash prizes ÃÂ· Skill-based competition ÃÂ· 18+ for cash prizes<br />
+          ÃÂ© 2026 Bartex Enterprise Holdings LLC ÃÂ· Houston, TX
         </div>
       </footer>
 
