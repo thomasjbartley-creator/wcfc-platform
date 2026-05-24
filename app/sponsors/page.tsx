@@ -1,0 +1,193 @@
+import Link from 'next/link'
+
+export default function SponsorsPage() {
+ const tiers = [
+ {
+ name: 'Founding Sponsor',
+ price: '$5,000+',
+ color: '#FFD600',
+ limit: 'Founding privileges by commit date',
+ perks: [
+ '"Presented by" on the Grassroots Fútbol Fund',
+ 'Logo in hero position on all pages',
+ 'Included in every fan email',
+ 'Donation match opportunity — become the hero',
+ 'Affiliate links placed prominently on site',
+ 'Social media features throughout tournament',
+ 'Included in press releases when issued',
+ 'Champion Founder memberships for your team (10)',
+ 'Seat on the Selection Board choosing donation recipients',
+ 'Top placement on the public Sponsor Leaderboard',
+ 'Check presentation attendance — higher amount and earlier commit = higher-level presentation',
+ 'Award credit at Youth Project awards ceremony',
+ ],
+ },
+ {
+ name: 'Tournament Partner',
+ price: '$1,000–$4,999',
+ color: '#4FC3F7',
+ limit: 'Match spotlight slots by commit date',
+ perks: [
+ 'Logo in sponsors section on site',
+ 'Donation match opportunity',
+ 'Affiliate links placed on site',
+ 'Public Sponsor Leaderboard placement',
+ '2 dedicated social media features',
+ 'Spotlight post during a marquee match',
+ 'Check presentation attendance at regional level',
+ 'Named in tournament communications',
+ 'Champion Founder memberships (5)',
+ 'Award mention at Youth Project ceremony',
+ ],
+ },
+ {
+ name: 'Community Supporter',
+ price: '$250–$999',
+ color: '#00C853',
+ limit: 'Sponsors wall placement by commit date',
+ perks: [
+ 'Logo on sponsors wall',
+ 'Affiliate link placement',
+ 'Public Sponsor Leaderboard placement',
+ 'Thank you post on social media',
+ 'Named in award announcement',
+ 'Champion Founder memberships (2)',
+ ],
+ },
+ ]
+
+ const targets = [
+ { cat: ' Soccer', names: ['Adidas', 'Nike Football', 'Puma', 'EA Sports FC', 'MLS Teams'] },
+ { cat: ' Apps', names: ['Sofascore', 'OneFootball', 'FotMob', 'Sorare'] },
+ { cat: ' Food & Drink', names: ['Budweiser', 'Gatorade', 'Red Bull', 'Chipotle'] },
+ { cat: ' Media', names: ['Apple TV+', 'Paramount+', 'Telemundo', 'Univision'] },
+ { cat: ' Travel', names: ['Marriott', 'Booking.com', 'American Airlines', 'Airbnb'] },
+ { cat: ' Mission', names: ['Common Goal', 'streetfootballworld', 'US Youth Soccer', 'UNICEF Sport'] },
+ ]
+
+ return (
+ <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>
+ <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
+ <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 28px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(5,12,10,0.97)', position: 'sticky', top: 0, zIndex: 50 }}>
+ <Link href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '4px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></Link>
+ <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+ <Link href="/" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', textDecoration: 'none' }}>← Back</Link>
+ <a href="mailto:thomasjbartley@worldcupfanchallenge.com?subject=Sponsorship%20Inquiry" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>BECOME A SPONSOR</a>
+ </div>
+ </nav>
+
+ <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '60px 24px 80px' }}>
+
+ {/* HERO */}
+ <div style={{ marginBottom: '60px' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>PARTNER WITH WCFC</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2.4rem,6vw,4rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>Sponsor the World Cup&apos;s<br /><span style={{ color: '#FFD600' }}>Most Passionate Fans</span>
+ </div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '640px', marginBottom: '24px' }}>The 2026 FIFA World Cup is the biggest sporting event in history — 48 teams, 104 matches, 5 billion global fans. The World Cup Fan Challenge puts your brand in front of the most engaged fans during the tournament&apos;s most exciting moments, while funding youth soccer programs worldwide.
+ </p>
+ <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+ {[['', '48', 'Nations Competing'], ['', '104', 'Matches'], ['', 'June 11', '2026 Kickoff'], ['', '$500', 'Grand Prize']].map(([i, n, l]) => (
+ <div key={l} style={{ textAlign: 'center' }}>
+ <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>{i}</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: '#FFD600', lineHeight: 1 }}>{n}</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#5a8a68', letterSpacing: '1px' }}>{l}</div>
+ </div>
+ ))}
+ </div>
+ </div>
+
+ {/* DONATION MATCH CALLOUT */}
+ <div style={{ background: 'linear-gradient(135deg,rgba(0,200,83,0.08),rgba(255,214,0,0.04))', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '28px 32px', marginBottom: '20px' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>MOST POPULAR FEATURE</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>The Donation Match</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '0' }}>Commit a match amount (e.g. $2,500). We announce it to all fans with a live progress bar on the site. When the match hits, you&apos;re the hero. You get a dedicated announcement post, award credit, and a story every fan remembers. This is the highest-visibility sponsorship we offer.
+ </p>
+ </div>
+
+ {/* AFFILIATE PARTNERSHIP CALLOUT */}
+ <div style={{ background: 'linear-gradient(135deg,rgba(255,214,0,0.08),rgba(79,195,247,0.04))', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '28px 32px', marginBottom: '20px' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>BUILT-IN BONUS FOR EVERY SPONSOR</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>The Affiliate Loop</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '0' }}>We place your affiliate purchase links throughout the site — product mentions, fan emails, relevant content. When fans buy through your link, you make sales beyond your sponsorship. A portion of every affiliate commission we earn is donated directly to the Grassroots Fútbol Fund. You get traffic. You get sales. You fuel the mission. Everyone wins.
+ </p>
+ </div>
+
+ {/* SPONSOR LEADERBOARD CALLOUT */}
+ <div style={{ background: 'linear-gradient(135deg,rgba(229,57,53,0.06),rgba(255,214,0,0.04))', border: '1px solid rgba(229,57,53,0.2)', borderRadius: '14px', padding: '28px 32px', marginBottom: '48px' }}>
+ <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+ <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#E53935', boxShadow: '0 0 8px #E53935' }} />
+ <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#E53935', letterSpacing: '3px', fontWeight: 700 }}>LIVE PUBLIC RANKING</span>
+ </div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>The Sponsor Leaderboard</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '20px' }}>Every sponsor commitment appears on a live public leaderboard ranked by total contribution. Visible to all fans, all press, every other brand watching the space. Your position climbs as your commitment grows. The top of the board is reserved for the brands who showed up first and biggest — and there&apos;s only one #1 spot.
+ </p>
+ <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '16px' }}>
+ {[1, 2, 3].map(n => (
+ <div key={n} style={{ background: 'rgba(5,12,10,0.6)', border: '1px dashed rgba(229,57,53,0.3)', borderRadius: '8px', padding: '14px 12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#FFD600', lineHeight: 1 }}>#{n}</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', fontStyle: 'italic', letterSpacing: '0.5px' }}>Open — be first</div>
+ </div>
+ ))}
+ </div>
+ <Link href="/leaderboard" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#E53935', textDecoration: 'none', letterSpacing: '1.5px', fontWeight: 700 }}>SEE LIVE LEADERBOARD →</Link>
+ </div>
+
+ {/* TIER CARDS */}
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Sponsorship Tiers</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.9rem', color: '#8ab898', marginBottom: '20px', maxWidth: '720px' }}>Open at every tier — what&apos;s scarce is the moments and the ranking. The higher your commitment amount and the earlier you commit, the more you&apos;re in: a seat on the Selection Board choosing donation recipients, top spots on the public Sponsor Leaderboard, attendance at the highest-level check presentations, marquee match spotlights, press release order, and front-of-the-line placement.</p>
+ <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '48px' }}>
+ {tiers.map(t => (
+ <div key={t.name} style={{ background: '#0a1410', border: `1.5px solid ${t.color}40`, borderRadius: '14px', padding: '28px', display: 'flex', flexDirection: 'column' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: t.color, letterSpacing: '2px', marginBottom: '8px' }}>{t.limit}</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '4px' }}>{t.name}</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: t.color, marginBottom: '16px' }}>{t.price}</div>
+ <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+ {t.perks.map(p => (
+ <li key={p} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+ <span style={{ color: t.color, flexShrink: 0, marginTop: '2px' }}>✓</span>
+ <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', lineHeight: 1.4 }}>{p}</span>
+ </li>
+ ))}
+ </ul>
+ <a href={`mailto:thomasjbartley@worldcupfanchallenge.com?subject=${encodeURIComponent(t.name + ' Sponsorship Inquiry')}&body=${encodeURIComponent('Hi Thomas,\n\nI am interested in the ' + t.name + ' sponsorship opportunity for the World Cup Fan Challenge.\n\nOrganization:\nContact name:\nBest number to reach you:\n\nLooking forward to connecting.')}`}
+ style={{ display: 'block', padding: '12px', background: `${t.color}18`, border: `1px solid ${t.color}40`, color: t.color, fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none', textAlign: 'center' }}>GET IN TOUCH →
+ </a>
+ </div>
+ ))}
+ </div>
+
+ {/* TARGET CATEGORIES */}
+ <div style={{ marginBottom: '48px' }}>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Categories We&apos;re Targeting</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '16px', maxWidth: '640px' }}>Examples of brands that fit each category. These are aspirational targets, not current partners — your brand could be the first.</p>
+ <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
+ {targets.map(t => (
+ <div key={t.cat} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', padding: '16px' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', fontWeight: 700, color: 'white', marginBottom: '8px' }}>{t.cat}</div>
+ <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+ {t.names.map(n => (
+ <span key={n} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', background: 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: '4px' }}>{n}</span>
+ ))}
+ </div>
+ </div>
+ ))}
+ </div>
+ </div>
+
+ {/* CONTACT CTA */}
+ <div style={{ background: 'rgba(255,214,0,0.05)', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '32px', textAlign: 'center' }}>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Ready to Talk?</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', marginBottom: '24px', maxWidth: '480px', margin: '0 auto 24px' }}>Response within 24 hours. Custom packages available for organizations that don&apos;t fit a standard tier.
+ </p>
+ <a href="mailto:thomasjbartley@worldcupfanchallenge.com?subject=Sponsorship%20Inquiry&body=Hi%20Thomas%2C%0A%0AI%27m%20interested%20in%20sponsoring%20the%20World%20Cup%20Fan%20Challenge.%0A%0AOrganization%3A%0ABudget%20range%3A%0AWhat%20we%27re%20looking%20for%3A%0A%0ALooking%20forward%20to%20connecting."
+ style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>EMAIL US TO DISCUSS
+ </a>
+ <div style={{ marginTop: '12px', fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
+ thomasjbartley@worldcupfanchallenge.com
+ </div>
+ </div>
+
+ </div>
+ </div>
+ )
+}
