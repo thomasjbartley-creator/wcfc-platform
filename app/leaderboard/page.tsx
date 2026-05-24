@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Leaderboard \u2014 WCFC',
+  description: 'See who leads the World Cup Fan Challenge. Global individual and country leaderboards updated after every match.',
+}
 export default function LeaderboardPage() {
  return (
  <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>

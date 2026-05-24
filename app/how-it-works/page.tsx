@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'How It Works \u2014 WCFC',
+  description: 'Learn how to play the World Cup Fan Challenge. Submit your bracket, make daily score picks, climb the leaderboard, and win real prizes.',
+}
 
 export default function HowItWorksPage() {
  return (

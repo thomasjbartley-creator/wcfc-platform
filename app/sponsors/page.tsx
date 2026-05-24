@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Become a Sponsor \u2014 WCFC',
+  description: 'Partner with the World Cup Fan Challenge 2026. Reach passionate football fans worldwide through premium sponsorship opportunities.',
+}
 
 export default function SponsorsPage() {
  const tiers = [
