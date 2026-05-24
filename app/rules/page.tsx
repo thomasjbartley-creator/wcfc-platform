@@ -8,7 +8,7 @@ export default function RulesPage() {
  <Link href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '4px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></Link>
  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
  <Link href="/how-it-works" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', textDecoration: 'none' }}>← How It Works</Link>
- <Link href="/auth/signup" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#00C853', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>JOIN FREE</Link>
+ <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>JOIN — $10</Link>
  </div>
  </nav>
 
@@ -117,8 +117,8 @@ The Sponsor Operator reserves the right to disqualify any participant at its sol
 For participants under 13, we collect only the minimum necessary information with verifiable parental consent. Parents may request deletion of their child's data at any time by contacting thomasjbartley@worldcupfanchallenge.com.`,
  },
  {
- title: '10. Grassroots Fútbol Fund Donations',
- body: `Donations to the Grassroots Fútbol Fund are voluntary and separate from competition entry. Donations are not required to enter or win.
+ title: '10. Grassroots Futbol Fund Donations',
+ body: `Donations to the Grassroots Futbol Fund are voluntary and separate from competition entry. Donations are not required to enter or win.
 
 Donors may designate which country's youth programs receive their contribution. If no qualifying project exists for the designated country, funds are directed to partner organizations (streetfootballworld, Common Goal) earmarked for that region.
 
@@ -158,7 +158,7 @@ For questions about these rules, prize claims, or eligibility, contact us at the
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#3a5a42', letterSpacing: '1px', lineHeight: 1.8 }}>Questions? Contact thomasjbartley@worldcupfanchallenge.com<br />
  <Link href="/how-it-works" style={{ color: '#5a8a68' }}>How It Works →</Link>
  &nbsp;·&nbsp;
- <Link href="/auth/signup" style={{ color: '#5a8a68' }}>Join Free →</Link>
+ <span style={{ color: '#5a8a68' }}>Free entry available →</span>
  </div>
  </div>
  </div>
