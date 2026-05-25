@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import CopyEmail from './CopyEmail'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -79,6 +80,7 @@ export default function SponsorsPage() {
  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
  <Link href="/" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', textDecoration: 'none' }}>← Back</Link>
  <a href="mailto:thomasjbartley@worldcupfanchallenge.com?subject=Sponsorship%20Inquiry" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>BECOME A SPONSOR</a>
+          <CopyEmail />
  </div>
  </nav>
 
@@ -158,6 +160,7 @@ export default function SponsorsPage() {
  <a href={`mailto:thomasjbartley@worldcupfanchallenge.com?subject=${encodeURIComponent(t.name + ' Sponsorship Inquiry')}&body=${encodeURIComponent('Hi Thomas,\n\nI am interested in the ' + t.name + ' sponsorship opportunity for the World Cup Fan Challenge.\n\nOrganization:\nContact name:\nBest number to reach you:\n\nLooking forward to connecting.')}`}
  style={{ display: 'block', padding: '12px', background: `${t.color}18`, border: `1px solid ${t.color}40`, color: t.color, fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none', textAlign: 'center' }}>GET IN TOUCH →
  </a>
+            <div style={{ marginTop: '6px', textAlign: 'center' }}><CopyEmail /></div>
  </div>
  ))}
  </div>
@@ -188,6 +191,7 @@ export default function SponsorsPage() {
  <a href="mailto:thomasjbartley@worldcupfanchallenge.com?subject=Sponsorship%20Inquiry&body=Hi%20Thomas%2C%0A%0AI%27m%20interested%20in%20sponsoring%20the%20World%20Cup%20Fan%20Challenge.%0A%0AOrganization%3A%0ABudget%20range%3A%0AWhat%20we%27re%20looking%20for%3A%0A%0ALooking%20forward%20to%20connecting."
  style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>EMAIL US TO DISCUSS
  </a>
+            <div style={{ textAlign: 'center', marginTop: '8px' }}><CopyEmail /></div>
  <div style={{ marginTop: '12px', fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
  thomasjbartley@worldcupfanchallenge.com
  </div>
