@@ -178,14 +178,14 @@ export default function DashboardPage() {
             HEY, {(profile?.username || 'FAN').toUpperCase()}!
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginTop: '4px' }}>
-            {userEmail}{profile?.country_supported ? ` ÃÂ· Supporting ${profile.country_supported}` : ''}
+            {userEmail}{profile?.country_supported ? ` · Supporting ${profile.country_supported}` : ''}
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '28px' }}>
           {[
             { label: 'Points', value: profile?.points_total?.toLocaleString() || '0', color: '#FFD600' },
-            { label: 'Global Rank', value: 'Ã¢ÂÂ', color: '#00C853', note: 'Opens June 11' },
+            { label: 'Global Rank', value: '—', color: '#00C853', note: 'Opens June 11' },
             { label: 'Day Streak', value: String(profile?.streak_current || 0), color: '#FF9800' },
             { label: 'Referrals', value: String(referralCount), color: '#4FC3F7' },
           ].map(s => (
@@ -201,13 +201,13 @@ export default function DashboardPage() {
           <div style={{ background: 'linear-gradient(135deg, rgba(0,200,83,0.08), rgba(255,214,0,0.04))', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '12px', padding: '20px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
             <div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                Next Match Ã¢ÂÂ {nextMatch.group_name ? `Group ${nextMatch.group_name}` : nextMatch.stage.toUpperCase()}
+                Next Match — {nextMatch.group_name ? `Group ${nextMatch.group_name}` : nextMatch.stage.toUpperCase()}
               </div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px' }}>
                 {nextMatch.home_flag ?? ''} {nextMatch.home_team} <span style={{ color: '#5a8a68' }}>vs</span> {nextMatch.away_team} {nextMatch.away_flag ?? ''}
               </div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', marginTop: '2px' }}>
-                {nextMatch.stadium} ÃÂ· {nextMatch.city} ÃÂ· {new Date(nextMatch.kickoff_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
+                {nextMatch.stadium} · {nextMatch.city} · {new Date(nextMatch.kickoff_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -233,22 +233,22 @@ export default function DashboardPage() {
               </div>
               {isPaid ? (
                 <Link href="/picks" style={{ display: 'block', padding: '12px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                  GO TO PICKS Ã¢ÂÂ
+                  GO TO PICKS →
                 </Link>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <a href="https://www.paypal.com/ncp/payment/2CXE6HV7Y3DVG" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                    CHAMPION FOUNDER Ã¢ÂÂ $10
+                    CHAMPION FOUNDER — $10
                   </a>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', textAlign: 'center', padding: '2px 0' }}>
                     or choose a smaller entry:
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <a href="https://www.paypal.com/ncp/payment/JAJYWPYW4UTWJ" style={{ flex: 1, display: 'block', padding: '9px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.3)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                      PREMIUM Ã¢ÂÂ $5
+                      PREMIUM — $5
                     </a>
                     <a href="https://www.paypal.com/ncp/payment/WG2JPTXWRRUF4" style={{ flex: 1, display: 'block', padding: '9px', background: 'rgba(79,195,247,0.08)', border: '1px solid rgba(79,195,247,0.25)', color: '#4FC3F7', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                      PLUS Ã¢ÂÂ $3
+                      PLUS — $3
                     </a>
                   </div>
                 </div>
@@ -261,10 +261,10 @@ export default function DashboardPage() {
               {tier === 'free' && (
                 <div>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
-                    You're in Ã¢ÂÂ but free fans aren't eligible for cash prizes. Upgrade before June 11 to compete for $500.
+                    You're in — but free fans aren't eligible for cash prizes. Upgrade before June 11 to compete for $500.
                   </div>
                   <a href="https://www.paypal.com/ncp/payment/2CXE6HV7Y3DVG" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                    CHAMPION FOUNDER Ã¢ÂÂ $10
+                    CHAMPION FOUNDER — $10
                   </a>
                 </div>
               )}
@@ -272,16 +272,16 @@ export default function DashboardPage() {
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: '1.6' }}>
                   You're competing for weekly prizes. Upgrade to Premium for the $500 grand prize.
                   <a href="https://www.paypal.com/ncp/payment/JAJYWPYW4UTWJ" style={{ display: 'block', marginTop: '10px', padding: '10px', background: 'rgba(0,200,83,0.12)', border: '1px solid rgba(0,200,83,0.3)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                    UPGRADE TO PREMIUM Ã¢ÂÂ
+                    UPGRADE TO PREMIUM →
                   </a>
                 </div>
               )}
               {['premium', 'founder', 'champion'].includes(tier) && (
                 <ul style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.8', paddingLeft: '0', listStyle: 'none', margin: 0 }}>
-                  <li><span style={{ color: '#00C853' }}>Ã¢ÂÂ</span> $500 Grand Prize eligible</li>
-                  <li><span style={{ color: '#00C853' }}>Ã¢ÂÂ</span> Weekly cash prizes</li>
-                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>Ã¢ÂÂ</span> Founding Wall Ã¢ÂÂ permanent</li>}
-                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>Ã¢ÂÂ</span> $3/entry forever locked</li>}
+                  <li><span style={{ color: '#00C853' }}>✓</span> $500 Grand Prize eligible</li>
+                  <li><span style={{ color: '#00C853' }}>✓</span> Weekly cash prizes</li>
+                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> Founding Wall — permanent</li>}
+                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> $3/entry forever locked</li>}
                 </ul>
               )}
             </div>
@@ -291,7 +291,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '12px', padding: '20px' }}>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>REFER FRIENDS Ã¢ÂÂ EARN POINTS</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>REFER FRIENDS — EARN POINTS</div>
               <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '14px', lineHeight: '1.5' }}>
                 Share your link. When a friend joins the paid challenge you earn <strong style={{ color: '#00C853' }}>+5 bonus points</strong>.
               </div>
@@ -303,7 +303,7 @@ export default function DashboardPage() {
                   style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '9px 12px', fontFamily: "'Barlow'", fontSize: '0.75rem', color: '#5a8a68', outline: 'none' }}
                 />
                 <button onClick={copyReferral} style={{ padding: '9px 16px', background: copyDone ? '#00C853' : 'rgba(0,200,83,0.15)', border: '1px solid rgba(0,200,83,0.3)', borderRadius: '6px', color: copyDone ? '#050C0A' : '#00C853', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap' }}>
-                  {copyDone ? 'Ã¢ÂÂ COPIED' : 'COPY'}
+                  {copyDone ? '✓ COPIED' : 'COPY'}
                 </button>
               </div>
 
@@ -331,7 +331,7 @@ export default function DashboardPage() {
                 Every fan who joins helps fund youth futbol programs around the world. Your participation matters beyond the leaderboard.
               </div>
               <a href="https://www.paypal.com/ncp/payment/BTKA5UPNZ64FQ" style={{ display: 'block', padding: '11px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                DONATE TO YOUTH FUTBOL Ã¢ÂÂ
+                DONATE TO YOUTH FUTBOL →
               </a>
             </div>
 
@@ -339,15 +339,15 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ marginTop: '24px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>COMING UP Ã¢ÂÂ GROUP STAGE</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>COMING UP — GROUP STAGE</div>
           <UpcomingMatchesStrip supabase={supabase} />
         </div>
 
         <div style={{ marginTop: '32px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
           <a href="/" style={{ color: '#3a5a42', textDecoration: 'none' }}>worldcupfanchallenge.com</a>
-          {' ÃÂ· '}
+          {' · '}
           <span>No purchase necessary to win</span>
-          {' ÃÂ· '}
+          {' · '}
           <span>Skill-based competition</span>
         </div>
 
@@ -375,7 +375,7 @@ function UpcomingMatchesStrip({ supabase }: { supabase: ReturnType<typeof create
       {matches.map(m => (
         <div key={m.match_number} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '12px' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#00C853', letterSpacing: '2px', marginBottom: '4px' }}>
-            GROUP {m.group_name} ÃÂ· {m.city}
+            GROUP {m.group_name} · {m.city}
           </div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1rem', color: 'white', letterSpacing: '1px' }}>
             {m.home_flag ?? ''} {m.home_team} <span style={{ color: '#5a8a68' }}>vs</span> {m.away_team} {m.away_flag ?? ''}
