@@ -173,7 +173,7 @@ export default function Home() {
           <div style={{ background: 'rgba(255,214,0,0.06)', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '12px', padding: '28px 32px', marginBottom: '32px' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Champion Founder — $10</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '16px' }}>
-              One-time founding membership. Locks in $3/entry forever. +25 bonus points. Both activity books free (digital). Name on the Founding Wall. Includes $2 donation to youth fútbol. Price increases at June 11 kickoff.
+              One-time founding membership. Locks in $3/entry forever. +25 bonus points. Name on the Founding Wall. Includes $2 donation to youth fútbol. Price increases at June 11 kickoff.
             </div>
             <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
               JOIN AS CHAMPION FOUNDER →
