@@ -33,7 +33,7 @@ export default function Home() {
           WIN REAL PRIZES.
         </h1>
         <p style={{ fontFamily: "'Barlow'", fontSize: 'clamp(1rem,2vw,1.2rem)', color: '#8ab898', maxWidth: '600px', margin: '0 auto 40px', lineHeight: 1.7 }}>
-          The global fan challenge for the 2026 World Cup. Submit your full bracket, make daily score picks, climb the leaderboard, and compete for $500 cash.
+          The global fan challenge for the 2026 World Cup. Pick the result and score of every match. Climb the leaderboard. Compete for $500 cash.
         </p>
 
         {/* CTAs */}
@@ -61,13 +61,24 @@ export default function Home() {
         ))}
       </div>
 
-      {/* BRACKET CHALLENGE */}
+      {/* NEW TO PICK'EM? */}
+      <section style={{ padding: '48px 24px 0' }}>
+        <div style={{ maxWidth: '640px', margin: '0 auto', background: 'rgba(0,200,83,0.05)', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '28px 32px' }}>
+          <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '12px' }}>New to Pick&apos;em?</div>
+          <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '16px' }}>
+            Before June 11 kickoff, you pick your tournament bracket and predict the result and score of every match. The closer your guesses, the more points you earn. Most points wins.
+          </p>
+          <Link href="/how-it-works" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#00C853', letterSpacing: '1px', textDecoration: 'none' }}>Full How It Works →</Link>
+        </div>
+      </section>
+
+      {/* PREDICT EVERY MATCH */}
       <section style={{ padding: '80px 24px', background: 'linear-gradient(135deg,rgba(255,214,0,0.05),rgba(0,200,83,0.02))' }}>
         <div style={{ maxWidth: '960px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'center' }}>
           <div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>FILL YOUR BRACKET NOW</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>PREDICT EVERY MATCH</div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3.2rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>
-              Predict Every Match.<br /><span style={{ color: '#FFD600' }}>Lock In Before June 11.</span>
+              Pick the result and score of every match.<br /><span style={{ color: '#FFD600' }}>Lock in your full tournament before June 11.</span>
             </div>
             <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '20px' }}>
               Predict scores for all 72 group matches. Pick winners through every knockout round to the final. Auto-saves as you go and locks in 1 hour before kickoff.
@@ -90,7 +101,7 @@ export default function Home() {
           </div>
           {/* Bracket preview */}
           <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.15)', borderRadius: '14px', padding: '20px' }}>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '12px' }}>BRACKET PREVIEW</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '12px' }}>TOURNAMENT PICK-EM BRACKET PREVIEW</div>
             {[['A','Mexico','S. Africa'],['B','Canada','Switzerland'],['C','Brazil','Morocco'],['D','USA','Paraguay'],['I','France','Senegal'],['J','Argentina','Algeria']].map(([g,h,a]) => (
               <div key={g} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', marginBottom: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '7px' }}>
                 <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', minWidth: '44px' }}>GRP {g}</span>
@@ -116,8 +127,8 @@ export default function Home() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
           {[
-            { n: '01', title: 'Submit Your Bracket', desc: 'Predict scores for all 72 group matches and pick winners through the knockout rounds. Lock in before June 11.' },
-            { n: '02', title: 'Daily Score Picks', desc: 'Predict exact scores for every match before kickoff. Up to 8 points for an exact score. Streak bonuses for consecutive days.' },
+            { n: '01', title: 'Predict Every Score', desc: 'Pick the result and score of every match. Closer guess = more points.' },
+            { n: '02', title: 'Fill Your Tournament Bracket', desc: 'Bonus picks: pick winners through the knockout rounds. Lock in before June 11.' },
             { n: '03', title: 'Climb the Leaderboard', desc: 'Compete on the global individual leaderboard and the country leaderboard. Premium fans compete for $500 grand prize.' },
           ].map(s => (
             <div key={s.n} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '28px' }}>
@@ -143,7 +154,6 @@ export default function Home() {
             {[
               { label: 'Grand Prize', amt: '$500', tier: 'Premium', color: '#FFD600' },
               { label: 'Weekly Prize', amt: '$100', tier: 'Premium', color: '#00C853' },
-              { label: 'Weekly Prize', amt: '$50', tier: 'Plus', color: '#4FC3F7' },
               { label: 'Country Prize', amt: 'Trophy', tier: 'All tiers', color: '#FF9800' },
             ].map(p => (
               <div key={p.label} style={{ background: '#0a1410', border: `1px solid ${p.color}30`, borderRadius: '12px', padding: '24px' }}>
@@ -156,7 +166,7 @@ export default function Home() {
           <div style={{ background: 'rgba(255,214,0,0.06)', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '12px', padding: '28px 32px', marginBottom: '32px' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Champion Founder — $10</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '16px' }}>
-              One-time founding membership. Locks in $3/entry forever. +25 bonus points. Name on the Founding Wall. Includes $2 donation to youth fútbol. Price increases at June 11 kickoff.
+              One-time founding membership. Includes all future tournament entries — no fees ever. +25 bonus points. Name on the Founding Wall. Includes $2 donation to youth fútbol. Price increases at June 11 kickoff.
             </div>
             <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
               JOIN AS CHAMPION FOUNDER →
