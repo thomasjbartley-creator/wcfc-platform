@@ -22,7 +22,7 @@ export default function LeaderboardPage() {
  {[
  { icon: '', title: 'Individual Leaderboard', desc: 'Every fan ranked globally by total points. Updated after each match.' },
  { icon: '', title: 'Country Leaderboard', desc: 'Average score per fan by country. Levels the playing field for smaller nations.' },
- { icon: '', title: 'Weekly Prize Tracker', desc: 'Top Plus and Premium fans each week. Cash prizes paid within 48 hours of week end.' },
+ { icon: '', title: 'Weekly Prize Tracker', desc: 'Top Premium fans each week. Cash prizes paid within 48 hours of week end.' },
  { icon: '', title: 'Champion Founders Wall', desc: 'Every founding member listed permanently. Your name in the history of this platform.' },
  { icon: '', title: 'Sponsor Leaderboard', desc: 'Live now. Brands ranked by total commitment, refreshed as new sponsors join.' },
  ].map(c => (

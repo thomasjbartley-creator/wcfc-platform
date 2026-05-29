@@ -35,11 +35,11 @@ const NAMES: Record<string, string> = {
 
 const TIER_COLORS: Record<string, string> = {
   champion: '#FFD600', founder: '#FF9800', premium: '#00C853',
-  plus: '#4FC3F7', free: '#5a8a68',
+  free: '#5a8a68',
 }
 const TIER_LABELS: Record<string, string> = {
   champion: 'CHAMPION FOUNDER', founder: 'FOUNDER FAN', premium: 'PREMIUM',
-  plus: 'PLUS FAN', free: 'FREE FAN',
+  free: 'FREE FAN',
 }
 
 function eo(t: number) { return 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3) }

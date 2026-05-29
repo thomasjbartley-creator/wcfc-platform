@@ -48,7 +48,7 @@ Daily match picks must be submitted before the official kickoff time of each ind
 3. Submit daily score predictions before each match kickoff.
 4. Points are earned based on prediction accuracy as described in Section 5.
 
-Paid entry tiers ($3 Plus, $5 Premium, $10 Champion Founder) unlock eligibility for cash prizes. Payment is processed through PayPal. Entry fees are non-refundable.`,
+Paid entry tiers ($5 Premium, $10 Champion Founder) unlock eligibility for cash prizes. Payment is processed through PayPal. Entry fees are non-refundable.`,
  },
  {
  title: '5. Scoring System',
@@ -81,9 +81,6 @@ The Sponsor Operator reserves the right to correct scoring errors. Decisions of 
 Premium Entry cash prizes:
 Grand Prize: $500 USD (highest total points at tournament end)
 Weekly Prize: $100 USD per week (highest points in each tournament week)
-
-Plus Entry cash prizes:
-Weekly Prize: $50 USD per week (highest Plus-tier points each tournament week)
 
 Free Entry prizes:
 Merchandise prizes, activity books (no cash prizes)

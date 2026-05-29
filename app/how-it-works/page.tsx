@@ -24,7 +24,6 @@ export default function HowItWorksPage() {
  {[
  { tier: ' Champion Founder', price: '$10', color: '#FFD600', perks: '$3/entry forever, +25 pts, Founding Wall, both books' },
  { tier: ' Premium', price: '$5', color: '#00C853', perks: '$500 grand prize, $100 weekly, full leaderboard' },
- { tier: ' Plus', price: '$3', color: '#4FC3F7', perks: 'Weekly prize eligible, full leaderboard' },
  { tier: 'Free', price: '$0', color: '#5a8a68', perks: 'Merch prizes only, no cash prizes' },
  ].map(t => (
  <div key={t.tier} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${t.color}30`, borderRadius: '10px', padding: '14px' }}>
@@ -72,7 +71,7 @@ export default function HowItWorksPage() {
  <p>After every match, scores update and rankings shift. Two leaderboards run simultaneously:</p>
  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', margin: '16px 0' }}>
  {[
- { title: ' Individual', desc: 'Every fan ranked globally. Premium fans compete for $500 grand prize. Plus fans compete for weekly prizes.' },
+ { title: ' Individual', desc: 'Every fan ranked globally. Premium fans compete for $500 grand prize. Premium fans compete for weekly prizes.' },
  { title: ' Country', desc: 'Average score per fan by country. Levels the playing field — a country with 10 fans can beat a country with 10,000.' },
  ].map(l => (
  <div key={l.title} style={{ background: 'rgba(79,195,247,0.05)', border: '1px solid rgba(79,195,247,0.15)', borderRadius: '10px', padding: '16px' }}>
