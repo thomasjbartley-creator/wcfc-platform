@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import Nav from '@/app/components/Nav'
 
 export const metadata: Metadata = {
   title: 'How It Works \u2014 WCFC',
@@ -10,14 +11,7 @@ export default function HowItWorksPage() {
  return (
  <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>
  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
- <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 28px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(5,12,10,0.97)', position: 'sticky', top: 0, zIndex: 50 }}>
- <Link href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '4px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></Link>
- <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
- <Link href="/" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', textDecoration: 'none' }}>← Back</Link>
- <Link href="/rules" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', textDecoration: 'none' }}>Official Rules →</Link>
- <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>JOIN — $10</Link>
- </div>
- </nav>
+ <Nav />
 
  <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 24px 80px' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>COMPLETE GUIDE</div>

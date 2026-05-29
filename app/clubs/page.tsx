@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import Nav from '@/app/components/Nav'
 
 export default function ClubsPage() {
   const [form, setForm] = useState({ name: '', email: '', club: '', city: '', size: '', type: '', source: '' })
@@ -35,19 +36,7 @@ export default function ClubsPage() {
     <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>
       <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
 
-      {/* NAV */}
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 28px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(5,12,10,0.97)', position: 'sticky', top: 0, zIndex: 50 }}>
-        <Link href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '4px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></Link>
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Link href="/leaderboard" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>LEADERBOARD</Link>
-          <Link href="/clubs" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>FOR CLUBS</Link>
-          <Link href="/sponsors" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>SPONSORS</Link>
-          <Link href="/about" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>OUR STORY</Link>
-          <Link href="/affiliate" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#FFD600', letterSpacing: '1px', textDecoration: 'none', padding: '7px 12px' }}>EARN $$$</Link>
-          <Link href="/auth/login" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textDecoration: 'none', padding: '7px 14px' }}>SIGN IN</Link>
-          <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>JOIN — $10</Link>
-        </div>
-      </nav>
+      <Nav />
 
       <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '60px 24px 80px' }}>
 
