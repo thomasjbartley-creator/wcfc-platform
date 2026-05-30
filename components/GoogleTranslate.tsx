@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import Script from 'next/script'
+import { usePathname } from 'next/navigation'
 
 declare global {
   interface Window {
@@ -23,8 +23,10 @@ declare global {
 }
 
 export default function GoogleTranslate() {
+  const pathname = usePathname()
+
   useEffect(() => {
-    // Define the callback that Google Translate calls after loading
+    // 1. Define the init callback (used by the script on first load AND by our rebuild)
     window.googleTranslateElementInit = () => {
       if (
         typeof window.google !== 'undefined' &&
@@ -34,9 +36,8 @@ export default function GoogleTranslate() {
         new window.google.translate.TranslateElement(
           {
             pageLanguage: 'en',
-            // Priority order: pt first, es second, then the rest
             includedLanguages: 'pt,es,en,fr,de,ar,ja,ko,nl,it,zh-CN,tr,ru',
-            layout: 0, // SIMPLE layout (dropdown only, no banner)
+            layout: 0,
             autoDisplay: false,
           },
           'google_translate_element'
@@ -44,19 +45,35 @@ export default function GoogleTranslate() {
       }
     }
 
-    // If the script already loaded (e.g. navigating between pages),
-    // re-init the widget
-    if (
-      typeof window.google !== 'undefined' &&
-      window.google.translate &&
-      window.google.translate.TranslateElement
-    ) {
-      // Clear previous widget instance if any
-      const el = document.getElementById('google_translate_element')
-      if (el) el.innerHTML = ''
-      window.googleTranslateElementInit()
+    // 2. Empty the container
+    const el = document.getElementById('google_translate_element')
+    if (el) el.innerHTML = ''
+
+    // 3. Clear googtrans cookie on both root and domain paths
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.worldcupfanchallenge.com;'
+
+    // 4. Reset Google Translate internal state
+    if ((window as any).google && (window as any).google.translate) {
+      delete (window as any).google.translate
     }
-  }, [])
+
+    // 5. Wait one tick, then rebuild in try/catch
+    setTimeout(() => {
+      try {
+        // Re-fetch the TranslateElement constructor from the already-loaded script
+        if (
+          typeof (window as any).google !== 'undefined' &&
+          (window as any).google.translate &&
+          (window as any).google.translate.TranslateElement
+        ) {
+          window.googleTranslateElementInit()
+        }
+      } catch (err) {
+        console.warn('GoogleTranslate re-init failed:', err)
+      }
+    }, 0)
+  }, [pathname])
 
   return (
     <>
@@ -64,11 +81,6 @@ export default function GoogleTranslate() {
         id="google_translate_element"
         suppressHydrationWarning
         style={{ display: 'inline-block' }}
-      />
-
-      <Script
-        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-        strategy="afterInteractive"
       />
 
       {/* Style overrides to match the WCFC dark nav with green/gold accents */}

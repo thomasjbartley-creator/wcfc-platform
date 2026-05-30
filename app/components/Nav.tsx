@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import GoogleTranslate from '@/components/GoogleTranslate'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const navLinks = [
   { label: 'HOME', href: '/' },
@@ -18,15 +18,6 @@ const navLinks = [
 export default function Nav() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-
-  // Re-initialize Google Translate on route change
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.googleTranslateElementInit) {
-      const el = document.getElementById('google_translate_element')
-      if (el) el.innerHTML = ''
-      window.googleTranslateElementInit()
-    }
-  }, [pathname])
 
   // Close mobile menu on route change
   useEffect(() => {
