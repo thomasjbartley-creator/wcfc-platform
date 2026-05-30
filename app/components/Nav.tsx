@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import GoogleTranslate from '@/components/GoogleTranslate'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
@@ -58,7 +57,7 @@ export default function Nav() {
           {navLinks.map(l => (
             <Link key={l.href} href={l.href} style={linkStyle(l.gold)}>{l.label}</Link>
           ))}
-          <GoogleTranslate />
+          <div id="translate-widget-slot" style={{ display: 'inline-block' }} />
           <Link href="/auth/login" style={{ ...linkStyle(), padding: '7px 12px' }}>SIGN IN</Link>
           <Link href="/auth/signup?plan=champion" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
             JOIN — $10
@@ -109,7 +108,7 @@ export default function Nav() {
             <Link key={l.href} href={l.href} style={{ ...linkStyle(l.gold), padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{l.label}</Link>
           ))}
           <div style={{ paddingTop: '10px' }}>
-            <GoogleTranslate />
+            <div id="translate-widget-slot-mobile" style={{ display: 'inline-block' }} />
           </div>
         </div>
       )}

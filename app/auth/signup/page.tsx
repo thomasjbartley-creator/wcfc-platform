@@ -3,7 +3,6 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
-import GoogleTranslate from '@/components/GoogleTranslate'
 
 function generateReferralCode(username: string): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -195,7 +194,7 @@ function SignupPageContent() {
                 WCFC<span style={{ color: '#00C853' }}>.</span>
               </div>
             </a>
-            <GoogleTranslate />
+            <div id="translate-widget-slot" style={{ display: 'inline-block' }} />
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#5a8a68', letterSpacing: '3px', textTransform: 'uppercase' }}>
             World Cup Fan Challenge

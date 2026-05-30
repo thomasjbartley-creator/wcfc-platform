@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { createPortal } from 'react-dom'
+import { useEffect, useState, useCallback } from 'react'
 
 declare global {
   interface Window {
@@ -23,82 +23,78 @@ declare global {
 }
 
 export default function GoogleTranslate() {
-  const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
+  const [target, setTarget] = useState<HTMLElement | null>(null)
+  const [initialized, setInitialized] = useState(false)
+
+  const initWidget = useCallback(() => {
+    if (window.google?.translate?.TranslateElement) {
+      const el = document.getElementById('google_translate_element')
+      if (el && !el.hasChildNodes()) {
+        try {
+          new window.google.translate.TranslateElement(
+            {
+              pageLanguage: 'en',
+              includedLanguages: 'pt,es,en,fr,de,ar,ja,ko,nl,it,zh-CN,tr,ru',
+              layout: 0,
+              autoDisplay: false,
+            },
+            'google_translate_element'
+          )
+          setInitialized(true)
+        } catch (err) {
+          console.warn('GoogleTranslate init failed:', err)
+        }
+      }
+    }
+  }, [])
 
   useEffect(() => {
-    // 1. Define the init callback (used by the script on first load AND by our rebuild)
+    setMounted(true)
+
+    // Define the global callback for the GT script's initial load
     window.googleTranslateElementInit = () => {
-      if (
-        typeof window.google !== 'undefined' &&
-        window.google.translate &&
-        window.google.translate.TranslateElement
-      ) {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: 'en',
-            includedLanguages: 'pt,es,en,fr,de,ar,ja,ko,nl,it,zh-CN,tr,ru',
-            layout: 0,
-            autoDisplay: false,
-          },
-          'google_translate_element'
-        )
-      }
+      initWidget()
     }
 
-    // 2. Empty the container
-    const el = document.getElementById('google_translate_element')
-    if (el) el.innerHTML = ''
-
-    // 3. Clear googtrans cookie on both root and domain paths
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.worldcupfanchallenge.com;'
-
-    // 4. Reset Google Translate internal state
-    if ((window as any).google && (window as any).google.translate) {
-      delete (window as any).google.translate
-    }
-
-    // 5. Wait one tick, then rebuild in try/catch
-    setTimeout(() => {
-      try {
-        // Re-fetch the TranslateElement constructor from the already-loaded script
-        if (
-          typeof (window as any).google !== 'undefined' &&
-          (window as any).google.translate &&
-          (window as any).google.translate.TranslateElement
-        ) {
-          window.googleTranslateElementInit()
-        }
-      } catch (err) {
-        console.warn('GoogleTranslate re-init failed:', err)
+    // Watch for the translate-widget-slot appearing/reappearing in the DOM
+    // (Nav remounts on each page navigation, creating a new slot div)
+    const observer = new MutationObserver(() => {
+      const slot = document.getElementById('translate-widget-slot')
+      if (slot && slot !== target) {
+        setTarget(slot)
       }
-    }, 0)
-  }, [pathname])
+    })
 
-  return (
+    observer.observe(document.body, { childList: true, subtree: true })
+
+    // Initial find
+    const slot = document.getElementById('translate-widget-slot')
+    if (slot) setTarget(slot)
+
+    return () => observer.disconnect()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // When target changes (new Nav mounted), re-init widget after portal renders
+  useEffect(() => {
+    if (target && mounted) {
+      // Wait a tick for the portal to render the container div into the new slot
+      requestAnimationFrame(() => {
+        initWidget()
+      })
+    }
+  }, [target, mounted, initWidget])
+
+  if (!mounted || !target) return null
+
+  return createPortal(
     <>
-      <div
-        id="google_translate_element"
-        suppressHydrationWarning
-        style={{ display: 'inline-block' }}
-      />
+      <div id="google_translate_element" suppressHydrationWarning style={{ display: 'inline-block' }} />
 
-      {/* Style overrides to match the WCFC dark nav with green/gold accents */}
-      <style jsx global>{`
-        /* Hide the Google Translate top-bar iframe that shifts the page */
-        .skiptranslate {
-          display: none !important;
-        }
-        body {
-          top: 0px !important;
-        }
-
-        /* But show our widget container */
-        #google_translate_element .skiptranslate {
-          display: inline-block !important;
-        }
-
-        /* Style the dropdown select */
+      <style>{`
+        .skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        #google_translate_element .skiptranslate { display: inline-block !important; }
         #google_translate_element select,
         .goog-te-combo {
           font-family: 'Barlow Condensed', sans-serif;
@@ -121,39 +117,14 @@ export default function GoogleTranslate() {
           background-position: right 8px center;
           padding-right: 24px;
         }
-
-        .goog-te-combo:hover {
-          border-color: rgba(0, 200, 83, 0.5);
-          color: #00C853;
-        }
-
-        .goog-te-combo option {
-          background: #0a1410;
-          color: #d0ead8;
-          font-family: 'Barlow Condensed', sans-serif;
-          padding: 6px;
-        }
-
-        /* Hide the "Powered by" Google Translate branding */
-        .goog-te-gadget > span {
-          display: none !important;
-        }
-        .goog-te-gadget {
-          font-size: 0 !important;
-          color: transparent !important;
-        }
-
-        /* Hide the Google Translate attribution link */
-        #google_translate_element a {
-          display: none !important;
-        }
-
-        /* Fix Google's injected banner iframe from pushing down content */
-        iframe.skiptranslate {
-          display: none !important;
-          visibility: hidden !important;
-        }
+        .goog-te-combo:hover { border-color: rgba(0, 200, 83, 0.5); color: #00C853; }
+        .goog-te-combo option { background: #0a1410; color: #d0ead8; font-family: 'Barlow Condensed', sans-serif; padding: 6px; }
+        .goog-te-gadget > span { display: none !important; }
+        .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
+        #google_translate_element a { display: none !important; }
+        iframe.skiptranslate { display: none !important; visibility: hidden !important; }
       `}</style>
-    </>
+    </>,
+    target
   )
 }
