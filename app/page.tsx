@@ -38,9 +38,9 @@ export default function Home() {
 
         {/* CTAs */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-          <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '18px 48px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.3rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', boxShadow: '0 0 32px rgba(255,214,0,0.25)' }}>
+          <a href="https://paypal.com/ncp/payment/2CXE6HV7Y3DVG" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', padding: '18px 48px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.3rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', boxShadow: '0 0 32px rgba(255,214,0,0.25)' }}>
             JOIN AS CHAMPION FOUNDER — $10
-          </Link>
+          </a>
           <Link href="/shop" style={{ display: 'inline-block', padding: '10px 28px', background: 'transparent', color: '#5a8a68', border: '1px solid rgba(255,255,255,0.1)', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none', textTransform: 'uppercase' }}>
             Books &amp; Donations →
           </Link>
@@ -91,9 +91,9 @@ export default function Home() {
               ))}
             </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <Link href="/auth/signup?plan=champion" style={{ padding: '13px 24px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
+              <a href="https://paypal.com/ncp/payment/2CXE6HV7Y3DVG" target="_blank" rel="noopener noreferrer" style={{ padding: '13px 24px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
                 Join &amp; Fill Bracket — $10
-              </Link>
+              </a>
               <Link href="/picks/bracket" style={{ padding: '13px 20px', background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
                 Preview Bracket →
               </Link>
@@ -168,9 +168,9 @@ export default function Home() {
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '16px' }}>
               One-time founding membership. Includes all future tournament entries — no fees ever. +25 bonus points. Name on the Founding Wall. Includes $2 donation to youth fútbol. Price increases at June 11 kickoff.
             </div>
-            <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
+            <a href="https://paypal.com/ncp/payment/2CXE6HV7Y3DVG" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
               JOIN AS CHAMPION FOUNDER →
-            </Link>
+            </a>
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
             All cash prizes are fixed amounts funded by the platform operator — not pooled from entry fees. No purchase necessary to enter or win non-cash prizes.
