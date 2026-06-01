@@ -178,13 +178,13 @@ export default function CheckoutPage() {
           </div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2.5rem', color: '#FFD600', marginBottom: '16px' }}>$10</div>
           <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '420px', margin: '0 auto' }}>
-            One-time founding membership. Includes all future tournament entries — no fees ever. +25 bonus points. Name on the Founding Wall. Includes $2 donation to youth fútbol.
+            One-time founding membership. +25 bonus points at signup. Name on the Founding Wall. Champion tier on the leaderboard. Includes $2 donation to the Grassroots Fútbol Fund.
           </p>
         </div>
 
         {/* BENEFITS */}
         <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.15)', borderRadius: '12px', padding: '20px', marginBottom: '32px' }}>
-          {['All future tournament entries included', '+25 bonus points at signup', 'Name on the Founding Wall', '$2 donation to Grassroots Fútbol Fund', 'Champion tier on leaderboard'].map(b => (
+          {['+25 bonus points at signup', 'Name on the Founding Wall', 'Champion tier on the leaderboard', '$2 donation to the Grassroots Fútbol Fund'].map(b => (
             <div key={b} style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '6px 0' }}>
               <span style={{ color: '#FFD600', flexShrink: 0 }}>✓</span>
               <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898' }}>{b}</span>
