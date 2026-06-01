@@ -59,7 +59,7 @@ export default function Nav() {
           ))}
           <div id="translate-widget-slot" style={{ display: 'inline-block' }} />
           <Link href="/auth/login" style={{ ...linkStyle(), padding: '7px 12px' }}>SIGN IN</Link>
-          <a href="https://paypal.com/ncp/payment/2CXE6HV7Y3DVG" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
+          <a href="/checkout" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
             JOIN — $10
           </a>
         </div>
@@ -67,7 +67,7 @@ export default function Nav() {
         {/* Mobile: SIGN IN + JOIN + hamburger — shown at ≤768px */}
         <div className="wcfc-nav-mobile-ctas" style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
           <Link href="/auth/login" style={{ ...linkStyle(), padding: '7px 12px' }}>SIGN IN</Link>
-          <a href="https://paypal.com/ncp/payment/2CXE6HV7Y3DVG" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
+          <a href="/checkout" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
             JOIN — $10
           </a>
           <button

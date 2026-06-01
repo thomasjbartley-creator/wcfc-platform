@@ -140,7 +140,7 @@ export default function PicksPage() {
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#ff6b6b', letterSpacing: '1px', marginBottom: '4px' }}>Free Fans Can't Win Cash Prizes</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68' }}>Upgrade before June 11 to compete for $500 grand prize and weekly cash.</div>
             </div>
-            <a href="https://www.paypal.com/ncp/payment/2CXE6HV7Y3DVG" style={{ padding: '12px 24px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            <a href="/checkout" style={{ padding: '12px 24px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               Champion Founder — $10
             </a>
           </div>
