@@ -165,22 +165,24 @@ export async function POST(req: NextRequest) {
 
       userId = authData.user.id
 
-      const { error: profileError } = await adminClient.from('profiles').insert({
-        id: userId,
-        email: normalizedEmail,
-        tier: 'champion',
-        paypal_transaction_id: transactionId,
-        paid_at: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-      })
+      // The DB trigger on_auth_user_created auto-creates a profile at tier='free'.
+      // UPDATE that row to champion instead of inserting a duplicate.
+      const { error: profileError } = await adminClient
+        .from('profiles')
+        .update({
+          tier: 'champion',
+          paypal_transaction_id: transactionId,
+          paid_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
 
       if (profileError) {
-        console.error('Profile insert failed after auth user created:', profileError)
-        await logPaymentWithoutAccount(adminClient, transactionId, normalizedEmail, 'profile_insert_failed', profileError.message)
+        console.error('Profile upgrade failed after auth user created:', profileError)
+        await logPaymentWithoutAccount(adminClient, transactionId, normalizedEmail, 'profile_upgrade_failed', profileError.message)
         return NextResponse.json({
           success: false,
           paymentReceived: true,
-          error: 'Payment received but profile creation failed. We will set you up — contact thomasjbartley@worldcupfanchallenge.com if needed.',
+          error: 'Payment received but profile upgrade failed. We will set you up — contact thomasjbartley@worldcupfanchallenge.com if needed.',
         }, { status: 500 })
       }
 
