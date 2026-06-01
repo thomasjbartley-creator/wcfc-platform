@@ -34,7 +34,13 @@ export async function POST(req: NextRequest) {
       .maybeSingle()
 
     if (existing) {
-      return NextResponse.json({ success: true, note: 'Application already on file' })
+      // Return the existing code so they can still see their link
+      const { data: existingFull } = await supabase
+        .from('affiliates')
+        .select('code')
+        .eq('email', normalizedEmail)
+        .single()
+      return NextResponse.json({ success: true, code: existingFull?.code || '', note: 'Application already on file' })
     }
 
     const { error } = await supabase.from('affiliates').insert({
@@ -44,8 +50,8 @@ export async function POST(req: NextRequest) {
       platform: platform?.trim() || null,
       audience_size: audience?.trim() || null,
       paypal_email: paypal?.trim() || null,
-      approved: false,
-      is_active: false,
+      approved: true,
+      is_active: true,
     })
 
     if (error) {
@@ -54,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(`Affiliate application saved: ${normalizedEmail} code=${code}`)
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, code })
 
   } catch (err) {
     console.error('Affiliate apply error:', err)

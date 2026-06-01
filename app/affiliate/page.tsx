@@ -8,6 +8,7 @@ import Nav from '@/app/components/Nav'
 export default function AffiliatePage() {
  const [form, setForm] = useState({ name: '', email: '', platform: '', audience: '', paypal: '' })
  const [submitted, setSubmitted] = useState(false)
+ const [affiliateCode, setAffiliateCode] = useState('')
  const [previewCode, setPreviewCode] = useState('')
 
  const previewLink = previewCode
@@ -39,6 +40,7 @@ export default function AffiliatePage() {
  setSubmitting(false)
  return
  }
+ if (data.code) setAffiliateCode(data.code)
  setSubmitted(true)
  } catch {
  setError('Network error. Please try again.')
@@ -137,13 +139,36 @@ export default function AffiliatePage() {
  {/* APPLICATION FORM */}
  <div style={{ background: 'linear-gradient(135deg,rgba(255,214,0,0.06),rgba(0,200,83,0.03))', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '32px' }}>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '6px' }}>Apply Now</div>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>We approve within 24 hours. You&apos;ll get your unique link and QR code via email.</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>Your affiliate link and QR code are generated instantly.</div>
 
  {submitted ? (
- <div style={{ textAlign: 'center', padding: '32px' }}>
- <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
- <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', letterSpacing: '2px' }}>Application Sent!</div>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginTop: '8px' }}>We&apos;ll review and get back to you within 24 hours.</div>
+ <div style={{ padding: '24px' }}>
+ <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+ <div style={{ fontSize: '2rem', marginBottom: '8px' }}></div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', letterSpacing: '2px' }}>You&apos;re In!</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginTop: '4px' }}>Your affiliate link is live. Start sharing now.</div>
+ </div>
+ {affiliateCode && (
+ <div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>YOUR AFFILIATE LINK</div>
+ <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '12px 14px', fontFamily: "'Barlow Condensed'", fontSize: '0.95rem', color: '#00C853', wordBreak: 'break-all', marginBottom: '16px' }}>
+ https://worldcupfanchallenge.com/ref/{affiliateCode}
+ </div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '8px' }}>YOUR CODE</div>
+ <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '12px 14px', fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '20px' }}>
+ {affiliateCode}
+ </div>
+ <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
+ <div style={{ background: 'white', padding: '12px', borderRadius: '8px', display: 'inline-block' }}>
+ <QRCodeSVG value={`https://worldcupfanchallenge.com/ref/${affiliateCode}`} size={140} />
+ </div>
+ <div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', marginBottom: '4px' }}>Every visit tracked · Cookie lasts 30 days</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>Pays on Champion Founder signup</div>
+ </div>
+ </div>
+ </div>
+ )}
  </div>
  ) : (
  <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
