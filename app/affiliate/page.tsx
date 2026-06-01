@@ -14,14 +14,36 @@ export default function AffiliatePage() {
  ? `https://worldcupfanchallenge.com/ref/${previewCode.toUpperCase().replace(/\s/g, '')}`
  : ''
 
+ const [submitting, setSubmitting] = useState(false)
+ const [error, setError] = useState('')
+
  const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault()
- const subject = encodeURIComponent('WCFC Affiliate Application')
- const body = encodeURIComponent(
- `Name: ${form.name}\nEmail: ${form.email}\nPlatform/Channel: ${form.platform}\nAudience Size: ${form.audience}\nPayPal Email: ${form.paypal}`
- )
- window.location.href = `mailto:thomasjbartley@worldcupfanchallenge.com?subject=${subject}&body=${body}`
+ setSubmitting(true)
+ setError('')
+ try {
+ const res = await fetch('/api/affiliate-apply', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ name: form.name,
+ email: form.email,
+ platform: form.platform,
+ audience: form.audience,
+ paypal: form.paypal,
+ }),
+ })
+ const data = await res.json()
+ if (!res.ok) {
+ setError(data.error || 'Something went wrong. Please try again.')
+ setSubmitting(false)
+ return
+ }
  setSubmitted(true)
+ } catch {
+ setError('Network error. Please try again.')
+ setSubmitting(false)
+ }
  }
 
  return (
@@ -144,7 +166,10 @@ export default function AffiliatePage() {
  />
  </div>
  ))}
- <button type="submit" style={{ padding: '14px', background: '#FFD600', color: '#050C0A', border: 'none', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', cursor: 'pointer', marginTop: '6px' }}>SUBMIT APPLICATION →
+ {error && (
+ <div style={{ background: 'rgba(229,57,53,0.1)', border: '1px solid rgba(229,57,53,0.3)', borderRadius: '6px', padding: '10px', fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#E53935', textAlign: 'center' }}>{error}</div>
+ )}
+ <button type="submit" disabled={submitting} style={{ padding: '14px', background: submitting ? '#8a7a30' : '#FFD600', color: '#050C0A', border: 'none', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', cursor: submitting ? 'default' : 'pointer', marginTop: '6px' }}>{submitting ? 'SUBMITTING...' : 'SUBMIT APPLICATION →'}
  </button>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', textAlign: 'center', letterSpacing: '1px' }}>Paid monthly via PayPal · $10 minimum payout · Champion Founder signups only
  </div>
