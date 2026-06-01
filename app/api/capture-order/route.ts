@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
  * Captures a PayPal Orders v2 payment and creates/upgrades a Supabase user to Champion.
  * No prior login required — email + password are submitted with the order.
  *
- * Expects JSON body: { orderID: string, email: string, password: string }
+ * Expects JSON body: { orderID: string, email: string, password: string, refCode?: string }
  *
  * Flow:
  *   1. Capture the PayPal order (server-side, validates $10)
@@ -18,13 +18,14 @@ import { createAdminClient } from '@/lib/supabase-admin'
  */
 export async function POST(req: NextRequest) {
   try {
-    const { orderID, email, password } = await req.json()
+    const { orderID, email, password, refCode } = await req.json()
 
     if (!orderID || !email || !password) {
       return NextResponse.json({ error: 'Missing orderID, email, or password' }, { status: 400 })
     }
 
     const normalizedEmail = email.trim().toLowerCase()
+    const referralCode = refCode ? String(refCode).trim().toUpperCase() : null
 
     console.log(`Capture-order: email=${normalizedEmail} orderID=${orderID}`)
 
@@ -110,9 +111,28 @@ export async function POST(req: NextRequest) {
     // listUsers doesn't filter by email — use a profile lookup instead
     const { data: existingProfile } = await adminClient
       .from('profiles')
-      .select('id, tier, email')
+      .select('id, tier, email, referred_by')
       .eq('email', normalizedEmail)
       .maybeSingle()
+
+    // Validate referral code: must exist and must not be self-referral
+    let validatedRefCode: string | null = null
+    if (referralCode) {
+      const { data: referrer } = await adminClient
+        .from('profiles')
+        .select('id, email, referral_code')
+        .eq('referral_code', referralCode)
+        .maybeSingle()
+
+      if (referrer && referrer.email !== normalizedEmail) {
+        validatedRefCode = referralCode
+        console.log(`Referral validated: ${referralCode} -> referrer ${referrer.email}`)
+      } else if (referrer && referrer.email === normalizedEmail) {
+        console.log(`Self-referral blocked: ${normalizedEmail} tried code ${referralCode}`)
+      } else {
+        console.log(`Referral code ${referralCode} not found — ignoring`)
+      }
+    }
 
     let userId: string
 
@@ -120,13 +140,19 @@ export async function POST(req: NextRequest) {
       // --- Existing user: upgrade tier (do NOT touch their password) ---
       userId = existingProfile.id
 
-      const { error: updateError } = await adminClient
-        .from('profiles')
-        .update({
+      const updateFields: Record<string, any> = {
           tier: 'champion',
           paid_at: new Date().toISOString(),
           paypal_transaction_id: transactionId,
-        })
+      }
+      // Only set referred_by if not already set (don't overwrite an earlier referral)
+      if (validatedRefCode && !existingProfile.referred_by) {
+        updateFields.referred_by = validatedRefCode
+      }
+
+      const { error: updateError } = await adminClient
+        .from('profiles')
+        .update(updateFields)
         .eq('id', userId)
 
       if (updateError) {
@@ -167,13 +193,18 @@ export async function POST(req: NextRequest) {
 
       // The DB trigger on_auth_user_created auto-creates a profile at tier='free'.
       // UPDATE that row to champion instead of inserting a duplicate.
-      const { error: profileError } = await adminClient
-        .from('profiles')
-        .update({
+      const newProfileFields: Record<string, any> = {
           tier: 'champion',
           paypal_transaction_id: transactionId,
           paid_at: new Date().toISOString(),
-        })
+      }
+      if (validatedRefCode) {
+        newProfileFields.referred_by = validatedRefCode
+      }
+
+      const { error: profileError } = await adminClient
+        .from('profiles')
+        .update(newProfileFields)
         .eq('id', userId)
 
       if (profileError) {

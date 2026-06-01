@@ -1,13 +1,15 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Nav from '@/app/components/Nav'
 import { createClient } from '@/lib/supabase'
+import { Suspense } from 'react'
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [paypalReady, setPaypalReady] = useState(false)
@@ -17,6 +19,21 @@ export default function CheckoutPage() {
   const buttonsRendered = useRef(false)
   const emailRef = useRef('')
   const passwordRef = useRef('')
+  const refCodeRef = useRef('')
+
+  // Read referral code: ?ref= param first, then wcfc_ref cookie
+  useEffect(() => {
+    const refParam = searchParams.get('ref')
+    if (refParam) {
+      refCodeRef.current = refParam.toUpperCase()
+      return
+    }
+    // Fall back to cookie
+    const match = document.cookie.match(/(?:^|;\s*)wcfc_ref=([^;]+)/)
+    if (match) {
+      refCodeRef.current = decodeURIComponent(match[1]).toUpperCase()
+    }
+  }, [searchParams])
 
   // Keep refs in sync so PayPal callbacks see current values
   useEffect(() => { emailRef.current = email }, [email])
@@ -103,6 +120,7 @@ export default function CheckoutPage() {
               orderID: data.orderID,
               email: currentEmail,
               password: currentPassword,
+              refCode: refCodeRef.current || undefined,
             }),
           })
 
@@ -276,5 +294,17 @@ export default function CheckoutPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: '#050C0A', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8ab898', fontFamily: "'Barlow', sans-serif" }}>
+        Loading...
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }
