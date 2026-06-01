@@ -117,11 +117,8 @@ export async function POST(req: NextRequest) {
     let userId: string
 
     if (existingProfile) {
-      // --- Existing user: upgrade tier ---
+      // --- Existing user: upgrade tier (do NOT touch their password) ---
       userId = existingProfile.id
-
-      // Update their password (they may be re-setting it via this flow)
-      await adminClient.auth.admin.updateUser(userId, { password })
 
       const { error: updateError } = await adminClient
         .from('profiles')
