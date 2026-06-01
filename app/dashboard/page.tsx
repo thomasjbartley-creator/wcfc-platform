@@ -280,7 +280,7 @@ export default function DashboardPage() {
                   <li><span style={{ color: '#00C853' }}>✓</span> $500 Grand Prize eligible</li>
                   <li><span style={{ color: '#00C853' }}>✓</span> Weekly cash prizes</li>
                   {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> Founding Wall — permanent</li>}
-                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> $3/entry forever locked</li>}
+                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> +25 bonus points · $2 donated to youth fútbol</li>}
                 </ul>
               )}
             </div>

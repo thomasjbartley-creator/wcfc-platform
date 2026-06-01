@@ -22,7 +22,7 @@ export default function HowItWorksPage() {
  <p>Create a free account at worldcupfanchallenge.com. Choose the tier that works for you:</p>
  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', margin: '16px 0' }}>
  {[
- { tier: ' Champion Founder', price: '$10', color: '#FFD600', perks: '$3/entry forever, +25 pts, Founding Wall, both books' },
+ { tier: ' Champion Founder', price: '$10', color: '#FFD600', perks: '+25 pts, Founding Wall, Champion leaderboard tier, $2 to youth fútbol' },
  { tier: ' Premium', price: '$5', color: '#00C853', perks: '$500 grand prize, $100 weekly, full leaderboard' },
  { tier: 'Free', price: '$0', color: '#5a8a68', perks: 'Merch prizes only, no cash prizes' },
  ].map(t => (
