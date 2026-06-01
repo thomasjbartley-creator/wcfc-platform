@@ -53,7 +53,7 @@ export default function Home() {
 
       {/* STATS STRIP */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '20px 24px', display: 'flex', justifyContent: 'center', gap: 'clamp(24px,6vw,80px)', flexWrap: 'wrap' }}>
-        {[['104', 'Total Matches'], ['$500', 'Grand Prize'], ['8 Pts', 'Per Exact Score'], ['Jun 11', 'Bracket Deadline']].map(([n, l]) => (
+        {[['104', 'Total Matches'], ['$500', 'Grand Prize'], ['25 Pts', 'Per Exact Score'], ['Jun 11', 'Bracket Deadline']].map(([n, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(1.6rem,4vw,2.4rem)', color: '#FFD600', letterSpacing: '2px' }}>{n}</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68', letterSpacing: '2px', textTransform: 'uppercase' }}>{l}</div>
@@ -84,7 +84,7 @@ export default function Home() {
               Predict scores for all 72 group matches. Pick winners through every knockout round to the final. Auto-saves as you go and locks in 1 hour before kickoff.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
-              {[['Exact score prediction', '8 pts'], ['Correct winner', '3 pts'], ['Pick the champion', '15 pts'], ['Daily picks cap', '25 pts/day']].map(([label, pts]) => (
+              {[['Exact score prediction', '25 pts'], ['Correct winner', '10 pts'], ['Pick the champion', '50 pts'], ['Perfect matchday bonus', '+20 pts']].map(([label, pts]) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#d0ead8' }}>
                   <span style={{ color: '#00C853' }}>—</span><span style={{ flex: 1 }}>{label}</span><span style={{ color: '#FFD600', fontWeight: 700 }}>{pts}</span>
                 </div>

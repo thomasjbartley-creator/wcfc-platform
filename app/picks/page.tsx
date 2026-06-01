@@ -183,7 +183,7 @@ export default function PicksPage() {
               <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#00C853', marginBottom: '12px' }}>DAILY</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', letterSpacing: '2px', marginBottom: '8px' }}>DAILY PICKS</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
-                Predict exact scores for today's matches. Lock in before kickoff. Up to 8 pts per exact score.
+                Predict exact scores for today's matches. Lock in before kickoff. Up to 25 pts per exact score.
               </div>
               {/* Today's matches */}
               {todayMatches.length > 0 ? (
@@ -223,14 +223,14 @@ export default function PicksPage() {
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>HOW POINTS WORK</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px' }}>
             {[
-              { pts: '8', label: 'Exact Score', color: '#FFD600' },
-              { pts: '5', label: 'Correct Draw', color: '#FF9800' },
-              { pts: '3', label: 'Correct Winner', color: '#00C853' },
-              { pts: '2', label: 'Goal Difference', color: '#4FC3F7' },
-              { pts: '+3', label: 'Underdog Pick', color: '#CE93D8' },
-              { pts: '+2', label: 'Daily Streak', color: '#00C853' },
-              { pts: '15', label: 'Champion Pick', color: '#FFD600' },
-              { pts: '+5', label: 'Referral Bonus', color: '#FF9800' },
+              { pts: '25', label: 'Exact Score', color: '#FFD600' },
+              { pts: '12', label: 'Correct Draw', color: '#FF9800' },
+              { pts: '10', label: 'Correct Winner', color: '#00C853' },
+              { pts: '+5', label: 'Goal Margin', color: '#4FC3F7' },
+              { pts: '+5', label: 'Underdog Pick', color: '#CE93D8' },
+              { pts: '+20', label: 'Perfect Matchday', color: '#E53935' },
+              { pts: '+3/+2', label: 'Group W/RU', color: '#FF9800' },
+              { pts: '50', label: 'Champion Pick', color: '#FFD600' },
             ].map(p => (
               <div key={p.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                 <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.3rem', color: p.color, minWidth: '36px', textAlign: 'center' }}>{p.pts}</div>

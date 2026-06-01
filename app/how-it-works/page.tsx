@@ -41,7 +41,7 @@ export default function HowItWorksPage() {
  <div style={{ background: 'rgba(255,214,0,0.06)', border: '1px solid rgba(255,214,0,0.15)', borderRadius: '10px', padding: '16px', margin: '16px 0' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '10px' }}>BRACKET POINTS</div>
  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
- {[['Exact score', '8 pts'], ['Correct draw', '5 pts'], ['Correct winner', '3 pts'], ['Goal difference', '2 pts'], ['Tournament champion', '15 pts'], ['Runner-up', '10 pts'], ['Semifinalists', '5 pts each']].map(([l, p]) => (
+ {[['Exact final score', '25 pts'], ['Correct draw', '12 pts'], ['Correct winner', '10 pts'], ['Goal margin bonus', '+5 pts'], ['Group winner bonus', '+3 pts'], ['Group runner-up bonus', '+2 pts'], ['Correct champion', '50 pts'], ['Runner-up (Final)', '25 pts'], ['Each semifinalist', '12 pts'], ['Each quarterfinalist', '8 pts'], ['Each R16 pick', '5 pts'], ['Each R32 pick', '3 pts']].map(([l, p]) => (
  <div key={l} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem' }}>
  <span style={{ color: '#8ab898' }}>{l}</span>
  <span style={{ color: '#FFD600', fontWeight: 700 }}>{p}</span>
@@ -57,7 +57,7 @@ export default function HowItWorksPage() {
  <p>Every matchday, predict the exact score for each game. Picks lock at kickoff for each individual match — so you can submit picks right up until the whistle blows.</p>
  <div style={{ background: 'rgba(0,200,83,0.06)', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '10px', padding: '16px', margin: '16px 0' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '2px', marginBottom: '10px' }}>DAILY BONUSES</div>
- {[['Daily streak (consecutive matchdays)', '+2 pts'], ['Underdog pick correct', '+3 pts'], ['Perfect matchday (all matches)', '+10 pts'], ['Daily point cap', '25 pts max'], ['Referral bonus', '+5 pts per signup']].map(([l, p]) => (
+ {[['Daily login streak', '+2 pts/day'], ['Correct upset/underdog pick', '+5 pts'], ['Perfect matchday (all matches)', '+20 pts'], ['Referral bonus (paid signup)', '+2 pts each (10/day cap)']].map(([l, p]) => (
  <div key={l} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', marginBottom: '6px' }}>
  <span style={{ color: '#8ab898' }}>{l}</span>
  <span style={{ color: '#00C853', fontWeight: 700 }}>{p}</span>
@@ -84,9 +84,9 @@ export default function HowItWorksPage() {
 
  {/* STEP 5 — REFERRALS */}
  <Section color="#FF9800" icon="5" title="Refer Friends — Earn Points">
- <p>Share your unique referral link. When a friend creates a paid account through your link, you earn +5 bonus points immediately. No limit on referrals.</p>
+ <p>Share your unique referral link. When a friend creates a paid account through your link, you earn +2 bonus points. Capped at 10 referral points per day.</p>
  <div style={{ background: 'rgba(255,152,0,0.06)', border: '1px solid rgba(255,152,0,0.15)', borderRadius: '10px', padding: '16px', margin: '16px 0', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#FF9800' }}>
- 1 referral = +5 pts &nbsp;·&nbsp; 10 referrals = +50 pts &nbsp;·&nbsp; 20 referrals = +100 pts
+ 1 paid referral = +2 pts &nbsp;·&nbsp; 5 paid referrals/day = +10 pts &nbsp;·&nbsp; Max 10 referral pts/day
  </div>
  <p>Find your referral link on your dashboard after signing up.</p>
  </Section>

@@ -276,7 +276,7 @@ export default function BracketPage() {
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '6px' }}>GROUP STAGE</div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Predict Every Score</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>
-              Scores determine group standings — the winner/runner-up auto-fill your R32 bracket. Exact score = 8pts.
+              Scores determine group standings — the winner/runner-up auto-fill your R32 bracket. Exact score = 25pts. Bonus: correct group winner +3pts, correct group runner-up +2pts.
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(440px, 1fr))', gap: '16px' }}>
@@ -386,7 +386,7 @@ export default function BracketPage() {
         {/* ── CHAMPION TAB ── */}
         {activeTab === 'champion' && (
           <div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '6px' }}>15 PTS IF CORRECT</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '6px' }}>50 PTS IF CORRECT</div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '20px' }}>Who Wins It All?</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px' }}>
               {ALL_TEAMS.map(team => {
@@ -447,9 +447,9 @@ function KnockoutRound({ round, bracket, onPick, isLocked }: {
   isLocked: boolean
 }) {
   const config = {
-    r32: { label: 'Round of 32', pts: '3 pts', count: 16 },
-    r16: { label: 'Round of 16', pts: '3 pts', count: 8 },
-    qf:  { label: 'Quarterfinals', pts: '5 pts', count: 4 },
+    r32: { label: 'Round of 32', pts: '3 pts each', count: 16 },
+    r16: { label: 'Round of 16', pts: '5 pts each', count: 8 },
+    qf:  { label: 'Quarterfinals', pts: '8 pts each', count: 4 },
   }[round]
 
   const picks = bracket[round] as WinnerPick[]
@@ -541,7 +541,7 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
       {/* Semis */}
       {[0, 1].map(i => (
         <div key={i} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '12px' }}>SEMIFINAL {i + 1} · 5 PTS</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '12px' }}>SEMIFINAL {i + 1} · 12 PTS</div>
           <div style={{ display: 'flex', gap: '8px' }}>
             {ALL_TEAMS.slice(i * 8, i * 8 + 8).map(team => {
               const isSelected = (bracket.sf as WinnerPick[])[i] === team.name
@@ -563,7 +563,7 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
 
       {/* Final */}
       <div style={{ background: 'linear-gradient(135deg, rgba(255,214,0,0.06), rgba(0,200,83,0.03))', border: '1.5px solid rgba(255,214,0,0.2)', borderRadius: '12px', padding: '20px' }}>
-        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '12px' }}>THE FINAL · 10 PTS</div>
+        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '12px' }}>THE FINAL · 25 PTS (RUNNER-UP) · 50 PTS (CHAMPION)</div>
         <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', marginBottom: '12px' }}>Pick from the dropdown — who makes the final?</div>
         <div style={{ display: 'flex', gap: '10px' }}>
           {[0, 1].map(side => (

@@ -21,7 +21,7 @@ export default function RulesPage() {
  {[
  {
  title: '1. No Purchase Necessary',
- body: `NO PURCHASE OR PAYMENT OF ANY KIND IS NECESSARY TO ENTER OR WIN. A purchase does not improve your chances of winning. The World Cup Fan Challenge is a skill-based competition. Winners are determined by prediction accuracy and trivia knowledge, not by chance and not by the amount spent on entry fees.
+ body: `NO PURCHASE OR PAYMENT OF ANY KIND IS NECESSARY TO ENTER OR WIN. A purchase does not improve your chances of winning. The World Cup Fan Challenge is a skill-based competition. Winners are determined by prediction accuracy, not by chance and not by the amount spent on entry fees.
 
 To enter without purchase, visit worldcupfanchallenge.com/auth/signup and create a free account. Free accounts are eligible for non-cash prizes including merchandise and activity books.`,
  },
@@ -52,25 +52,37 @@ Paid entry tiers ($5 Premium, $10 Champion Founder) unlock eligibility for cash 
  },
  {
  title: '5. Scoring System',
- body: `Points are awarded as follows:
+ body: `Points are awarded as follows. All skill-based categories are uncapped.
 
-Exact score prediction: 8 points
-Correct draw prediction: 5 points
-Correct winner prediction: 3 points
-Correct goal difference: 2 points
-Tournament champion correct: 15 points
-Runner-up correct: 10 points
-Semifinalist correct: 5 points each
+Match predictions (per match, no cap):
+Correct winner prediction: 10 points
+Correct draw prediction: 12 points
+Correct goal margin (bonus): +5 points
+Exact final score (total including above): 25 points
 
-Daily bonuses:
-Daily streak (consecutive matchdays with picks): +2 points
-Underdog pick correct (lower FIFA ranking wins): +3 points
-Perfect matchday (all match picks correct): +10 points
-Daily point cap: 25 points maximum per matchday (excludes one-time bonuses)
+Group-stage bonus (derived from group match picks, no cap):
+Correct group winner: +3 points
+Correct group runner-up: +2 points
+
+Knockout bracket (no cap):
+Each correct Round-of-32 pick: 3 points
+Each correct Round-of-16 pick: 5 points
+Each correct quarterfinalist: 8 points
+Each correct semifinalist: 12 points
+Correct runner-up (finalist): 25 points
+Correct champion: 50 points
+
+Consistency bonuses (no cap):
+Perfect matchday (all match picks correct): +20 points
+Correct upset/underdog pick (lower FIFA ranking wins): +5 points
+
+Soft bonuses:
+Daily login streak (consecutive matchdays with picks): +2 points per day
+Referral bonus: +2 points per paid referral signup (capped at 10 points per day)
+No overall daily point cap.
 
 One-time bonuses:
 Champion Founder signup: +25 points
-Referral bonus: +5 points per paid referral
 
 The Sponsor Operator reserves the right to correct scoring errors. Decisions of the Sponsor Operator regarding scores and standings are final.`,
  },
