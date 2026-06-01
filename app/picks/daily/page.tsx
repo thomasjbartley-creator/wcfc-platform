@@ -120,25 +120,13 @@ export default function DailyPicksPage() {
     })
   }
 
+  // PREVIEW MODE: save disabled — no writes to DB
+  const PREVIEW_MODE = true
+
   const savePick = useCallback(async (matchId: string) => {
-    if (!userId) return
-    const pick = picks[matchId]
-    if (!pick || pick.locked) return
-
-    setPicks(prev => ({ ...prev, [matchId]: { ...prev[matchId], saving: true } }))
-
-    const { error } = await supabase.from('daily_picks').upsert({
-      user_id: userId,
-      match_id: matchId,
-      predicted_home: pick.home,
-      predicted_away: pick.away,
-    }, { onConflict: 'user_id,match_id' })
-
-    setPicks(prev => ({
-      ...prev,
-      [matchId]: { ...prev[matchId], saving: false, saved: !error }
-    }))
-  }, [userId, picks])
+    // Preview mode: no-op
+    if (PREVIEW_MODE) return
+  }, [])
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#050C0A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -172,7 +160,15 @@ export default function DailyPicksPage() {
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>SCORE PREDICTIONS</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem, 6vw, 3rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>DAILY PICKS</div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginTop: '6px' }}>
-            Predict exact scores · Lock at kickoff · Exact score = 8pts
+            Predict exact scores · Lock at kickoff · Exact score = 25pts
+          </div>
+        </div>
+
+        {/* PREVIEW MODE BANNER */}
+        <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '1.2rem' }}>&#9888;</span>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#FFD600', letterSpacing: '0.5px' }}>
+            Preview mode — fill out your bracket to try it, but saving opens before the June 11 kickoff. Your picks aren&apos;t stored yet.
           </div>
         </div>
 
@@ -280,7 +276,7 @@ export default function DailyPicksPage() {
                           cursor: pick.saving ? 'wait' : 'pointer',
                           transition: 'all 0.2s',
                         }}>
-                          {pick.saving ? 'SAVING...' : pick.saved ? '✓ SAVED' : 'SUBMIT PICK'}
+                          {pick.saved ? '✓ SAVED' : 'SAVING OPENS BEFORE JUNE 11'}
                         </button>
                       </div>
                     )}

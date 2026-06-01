@@ -159,29 +159,14 @@ export default function BracketPage() {
     load()
   }, [])
 
-  // Auto-save on bracket changes (debounced)
-  useEffect(() => {
-    if (!userId || loading || isLocked) return
-    const timer = setTimeout(() => saveBracket(), 1500)
-    return () => clearTimeout(timer)
-  }, [bracket, userId])
+  // PREVIEW MODE: auto-save disabled — no writes to DB
+  // When preview mode is removed, restore the debounced saveBracket() here
+  const PREVIEW_MODE = true
 
   const saveBracket = useCallback(async () => {
-    if (!userId || isLocked) return
-    setSaving(true)
-
-    // Save champion pick
-    if (bracket.champion) {
-      await supabase.from('bracket_picks').upsert({
-        user_id: userId,
-        match_id: '00000000-0000-0000-0000-000000000104', // placeholder for champion
-        predicted_champion: bracket.champion,
-      }, { onConflict: 'user_id,match_id' })
-    }
-
-    setLastSaved(new Date())
-    setSaving(false)
-  }, [userId, bracket, isLocked])
+    // Preview mode: no-op
+    if (PREVIEW_MODE) return
+  }, [])
 
   const updateGroupScore = (group: string, matchIdx: number, side: 'hs' | 'as', delta: number) => {
     if (isLocked) return
@@ -229,8 +214,7 @@ export default function BracketPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px' }}>
           <a href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '3px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></a>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {saving && <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '1px' }}>SAVING...</span>}
-            {!saving && lastSaved && <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '1px' }}>✓ AUTO-SAVED</span>}
+            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '1px' }}>PREVIEW MODE</span>
             <Link href="/picks" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', textDecoration: 'none' }}>← Picks</Link>
           </div>
         </div>
@@ -245,7 +229,7 @@ export default function BracketPage() {
             <div style={{ height: '100%', width: `${pct}%`, background: pct === 100 ? '#00C853' : '#FFD600', borderRadius: '2px', transition: 'width 0.3s' }} />
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '4px' }}>
-            Auto-saves as you pick · Auto-submits {AUTO_SUBMIT_DATE} (1 hour before kickoff)
+            Preview mode — saving opens before June 11 kickoff
           </div>
         </div>
 
@@ -269,6 +253,14 @@ export default function BracketPage() {
       </nav>
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 16px 80px' }}>
+
+        {/* PREVIEW MODE BANNER */}
+        <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '1.2rem' }}>&#9888;</span>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#FFD600', letterSpacing: '0.5px' }}>
+            Preview mode — fill out your bracket to try it, but saving opens before the June 11 kickoff. Your picks aren&apos;t stored yet.
+          </div>
+        </div>
 
         {/* ── GROUPS TAB ── */}
         {activeTab === 'groups' && (
@@ -424,7 +416,7 @@ export default function BracketPage() {
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '1px', marginBottom: '6px' }}>
             {isLocked
               ? 'BRACKET LOCKED — Picks submitted'
-              : `Auto-saves every change · Auto-submits ${AUTO_SUBMIT_DATE}`}
+              : 'Preview mode — saving opens before June 11 kickoff'}
           </div>
           <div style={{ height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', marginBottom: '8px' }}>
             <div style={{ height: '100%', width: `${pct}%`, background: pct === 100 ? '#00C853' : '#FFD600', borderRadius: '2px', transition: 'width 0.3s' }} />
