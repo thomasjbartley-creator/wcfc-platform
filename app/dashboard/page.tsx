@@ -236,7 +236,7 @@ export default function DashboardPage() {
                 </Link>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <a href="https://www.paypal.com/ncp/payment/2CXE6HV7Y3DVG" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
+                  <a href="/checkout" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
                     CHAMPION FOUNDER — $10
                   </a>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', textAlign: 'center', padding: '2px 0' }}>
@@ -262,7 +262,7 @@ export default function DashboardPage() {
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
                     You're in — but free fans aren't eligible for cash prizes. Upgrade before June 11 to compete for $500.
                   </div>
-                  <a href="https://www.paypal.com/ncp/payment/2CXE6HV7Y3DVG" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
+                  <a href="/checkout" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
                     CHAMPION FOUNDER — $10
                   </a>
                 </div>

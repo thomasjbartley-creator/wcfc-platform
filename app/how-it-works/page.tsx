@@ -106,8 +106,8 @@ export default function HowItWorksPage() {
  <div style={{ textAlign: 'center', marginTop: '48px', padding: '40px', background: 'linear-gradient(135deg,rgba(255,214,0,0.07),rgba(0,200,83,0.03))', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px' }}>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Ready to Play?</div>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginBottom: '24px' }}>June 11 bracket deadline · Free to enter · 18+ for cash prizes</div>
- <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>Join as Champion Founder — $10
- </Link>
+ <a href="/checkout" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>Join as Champion Founder — $10
+ </a>
  <div style={{ marginTop: '12px' }}>
  <Link href="/rules" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#3a5a42', letterSpacing: '1px' }}>Read Official Rules →</Link>
  &nbsp;&middot;&nbsp;

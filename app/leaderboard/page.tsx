@@ -85,8 +85,8 @@ export default function LeaderboardPage() {
  <Link href="/sponsors" style={{ display: 'inline-block', padding: '10px 24px', background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.3)', color: '#E53935', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', borderRadius: '5px', textDecoration: 'none' }}>CLAIM A SPOT →</Link>
  </div>
  </div>
- <Link href="/auth/signup?plan=champion" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', marginBottom: '12px' }}>Get on the Leaderboard — $10
- </Link>
+ <a href="/checkout" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', marginBottom: '12px' }}>Get on the Leaderboard — $10
+ </a>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '8px' }}>No purchase necessary to enter · Free fans eligible for non-cash prizes
  </div>
  </div>
