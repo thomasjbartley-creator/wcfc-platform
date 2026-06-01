@@ -292,7 +292,7 @@ export default function DashboardPage() {
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '12px', padding: '20px' }}>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>REFER FRIENDS — EARN POINTS</div>
               <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '14px', lineHeight: '1.5' }}>
-                Share your link. When a friend joins the paid challenge you earn <strong style={{ color: '#00C853' }}>+5 bonus points</strong>.
+                Share your link. When a friend joins the paid challenge you earn <strong style={{ color: '#00C853' }}>+2 bonus points</strong>.
               </div>
 
               <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
@@ -318,7 +318,7 @@ export default function DashboardPage() {
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>FRIENDS JOINED</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', lineHeight: 1 }}>+{profile?.referral_points_earned ?? referralCount * 5}</div>
+                  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', lineHeight: 1 }}>+{profile?.referral_points_earned ?? 0}</div>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>BONUS POINTS</div>
                 </div>
               </div>

@@ -4,7 +4,7 @@
 -- ============================================================
 -- When a user upgrades from 'free' to any paid tier, this trigger:
 --   1. Looks up who referred them (via their referred_by referral code)
---   2. Adds +5 to the referrer's points_total and referral_points_earned
+--   2. Adds +2 to the referrer's points_total and referral_points_earned
 --   3. Increments the referrer's referral_count by 1
 -- ============================================================
 
@@ -21,8 +21,8 @@ BEGIN
       UPDATE public.profiles
       SET
         referral_count          = referral_count + 1,
-        referral_points_earned  = referral_points_earned + 5,
-        points_total            = points_total + 5
+        referral_points_earned  = referral_points_earned + 2,
+        points_total            = points_total + 2
       WHERE referral_code = NEW.referred_by;
     END IF;
   END IF;
