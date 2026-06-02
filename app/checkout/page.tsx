@@ -16,10 +16,14 @@ function CheckoutContent() {
   const [error, setError] = useState('')
   const [processing, setProcessing] = useState(false)
   const [paymentSuccess, setPaymentSuccess] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const buttonsRendered = useRef(false)
   const emailRef = useRef('')
   const passwordRef = useRef('')
   const refCodeRef = useRef('')
+  const firstNameRef = useRef('')
+  const lastNameRef = useRef('')
 
   // Read referral code: ?ref= param first, then wcfc_ref cookie
   useEffect(() => {
@@ -38,6 +42,8 @@ function CheckoutContent() {
   // Keep refs in sync so PayPal callbacks see current values
   useEffect(() => { emailRef.current = email }, [email])
   useEffect(() => { passwordRef.current = password }, [password])
+  useEffect(() => { firstNameRef.current = firstName }, [firstName])
+  useEffect(() => { lastNameRef.current = lastName }, [lastName])
 
   // Load PayPal SDK
   useEffect(() => {
@@ -121,6 +127,8 @@ function CheckoutContent() {
               email: currentEmail,
               password: currentPassword,
               refCode: refCodeRef.current || undefined,
+              firstName: firstNameRef.current.trim() || undefined,
+              lastName: lastNameRef.current.trim() || undefined,
             }),
           })
 
@@ -153,12 +161,12 @@ function CheckoutContent() {
 
           if (signInError) {
             console.warn('Auto sign-in failed:', signInError)
-            // Payment worked, account created — just redirect to login
+            // Payment worked, account created -- just redirect to login
             router.push('/auth/login?upgraded=champion')
             return
           }
 
-          // Signed in — go to dashboard
+          // Signed in -- go to dashboard
           router.push('/dashboard')
 
         } catch (err: any) {
@@ -196,7 +204,7 @@ function CheckoutContent() {
           </div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2.5rem', color: '#FFD600', marginBottom: '16px' }}>$10</div>
           <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '420px', margin: '0 auto' }}>
-            One-time founding membership. +25 bonus points at signup. Name on the Founding Wall. Champion tier on the leaderboard. Includes $2 donation to the Grassroots Fútbol Fund.
+            One-time founding membership. +25 bonus points at signup. Name on the Founding Wall. Champion tier on the leaderboard. Includes $2 donation to the Grassroots F&#250;tbol Fund.
           </p>
         </div>
 
@@ -204,7 +212,7 @@ function CheckoutContent() {
         <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.15)', borderRadius: '12px', padding: '20px', marginBottom: '32px' }}>
           {['+25 bonus points at signup', 'Name on the Founding Wall', 'Champion tier on the leaderboard', '$2 donation to the Grassroots Fútbol Fund'].map(b => (
             <div key={b} style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '6px 0' }}>
-              <span style={{ color: '#FFD600', flexShrink: 0 }}>✓</span>
+              <span style={{ color: '#FFD600', flexShrink: 0 }}>{'✓'}</span>
               <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898' }}>{b}</span>
             </div>
           ))}
@@ -215,15 +223,15 @@ function CheckoutContent() {
           <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.3)', borderRadius: '10px', padding: '20px', marginBottom: '24px', textAlign: 'center' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>Payment Received</div>
             <p style={{ fontFamily: "'Barlow'", fontSize: '0.9rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '12px' }}>
-              Your $10 payment was captured successfully. We&apos;re setting up your Champion account — if it doesn&apos;t appear within a few minutes, contact us.
+              Your $10 payment was captured successfully. We&apos;re setting up your Champion account &mdash; if it doesn&apos;t appear within a few minutes, contact us.
             </p>
             <a href="mailto:thomasjbartley@worldcupfanchallenge.com" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#00C853', textDecoration: 'none' }}>
-              Contact support →
+              Contact support &rarr;
             </a>
           </div>
         )}
 
-        {/* EMAIL + PASSWORD FIELDS */}
+        {/* EMAIL + PASSWORD + NAME FIELDS */}
         {!paymentSuccess && (
           <div style={{ marginBottom: '24px' }}>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '12px' }}>YOUR ACCOUNT</div>
@@ -253,8 +261,34 @@ function CheckoutContent() {
                 />
               </div>
             </div>
+            <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>First Name</label>
+                <input
+                  type="text"
+                  placeholder="First"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  disabled={processing}
+                  maxLength={50}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '11px 14px', fontFamily: "'Barlow'", fontSize: '0.95rem', color: 'white', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', fontWeight: 700, color: '#8ab898', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>Last Name</label>
+                <input
+                  type="text"
+                  placeholder="Last"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  disabled={processing}
+                  maxLength={50}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '11px 14px', fontFamily: "'Barlow'", fontSize: '0.95rem', color: 'white', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+            </div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', marginTop: '8px' }}>
-              Already have an account? Use your existing email — we&apos;ll upgrade it to Champion.
+              Already have an account? Use your existing email &mdash; we&apos;ll upgrade it to Champion.
             </div>
           </div>
         )}
@@ -283,11 +317,11 @@ function CheckoutContent() {
         {/* FINE PRINT */}
         <div style={{ textAlign: 'center', marginTop: '24px' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', lineHeight: 1.8 }}>
-            Secure payment via PayPal · No purchase necessary to enter or win non-cash prizes · 18+ for cash prizes
+            Secure payment via PayPal &middot; No purchase necessary to enter or win non-cash prizes &middot; 18+ for cash prizes
           </div>
           <div style={{ marginTop: '8px' }}>
             <Link href="/auth/signup" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', textDecoration: 'underline' }}>
-              Just want a free account? Sign up here →
+              Just want a free account? Sign up here &rarr;
             </Link>
           </div>
         </div>

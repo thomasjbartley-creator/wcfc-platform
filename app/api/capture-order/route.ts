@@ -4,21 +4,21 @@ import { createAdminClient } from '@/lib/supabase-admin'
 /**
  * POST /api/capture-order
  * Captures a PayPal Orders v2 payment and creates/upgrades a Supabase user to Champion.
- * No prior login required — email + password are submitted with the order.
+ * No prior login required -- email + password are submitted with the order.
  *
- * Expects JSON body: { orderID: string, email: string, password: string, refCode?: string }
+ * Expects JSON body: { orderID: string, email: string, password: string, refCode?: string, firstName?: string, lastName?: string }
  *
  * Flow:
  *   1. Capture the PayPal order (server-side, validates $10)
  *   2. Create Supabase auth user (or find existing)
  *   3. Insert/upgrade profile to champion
- *   4. Return success — client signs in with email+password and redirects
+ *   4. Return success -- client signs in with email+password and redirects
  *
  * Idempotent: same orderID processed twice will not create duplicate users.
  */
 export async function POST(req: NextRequest) {
   try {
-    const { orderID, email, password, refCode } = await req.json()
+    const { orderID, email, password, refCode, firstName, lastName } = await req.json()
 
     if (!orderID || !email || !password) {
       return NextResponse.json({ error: 'Missing orderID, email, or password' }, { status: 400 })
@@ -26,6 +26,8 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = email.trim().toLowerCase()
     const referralCode = refCode ? String(refCode).trim().toUpperCase() : null
+    const cleanFirst = firstName ? String(firstName).trim().slice(0, 50) : ''
+    const cleanLast = lastName ? String(lastName).trim().slice(0, 50) : ''
 
     console.log(`Capture-order: email=${normalizedEmail} orderID=${orderID}`)
 
@@ -71,9 +73,9 @@ export async function POST(req: NextRequest) {
         console.warn('Capture-order: INSTRUMENT_DECLINED for', normalizedEmail)
         return NextResponse.json({ error: 'INSTRUMENT_DECLINED' }, { status: 422 })
       }
-      // ORDER_ALREADY_CAPTURED means this is an idempotent retry — treat as success
+      // ORDER_ALREADY_CAPTURED means this is an idempotent retry -- treat as success
       if (captureData?.details?.[0]?.issue === 'ORDER_ALREADY_CAPTURED') {
-        console.log(`Order ${orderID} already captured — continuing to account creation`)
+        console.log(`Order ${orderID} already captured -- continuing to account creation`)
       } else {
         console.error('PayPal capture failed:', captureRes.status, captureData)
         return NextResponse.json({ error: 'Payment capture failed' }, { status: 500 })
@@ -102,16 +104,16 @@ export async function POST(req: NextRequest) {
       .maybeSingle()
 
     if (existingTxn) {
-      console.log(`Transaction ${transactionId} already processed — returning success`)
+      console.log(`Transaction ${transactionId} already processed -- returning success`)
       return NextResponse.json({ success: true, tier: 'champion', email: existingTxn.email, note: 'Already processed' })
     }
 
     // Check if user already exists in auth
     const { data: existingUsers } = await adminClient.auth.admin.listUsers({ perPage: 1, page: 1 })
-    // listUsers doesn't filter by email — use a profile lookup instead
+    // listUsers doesn't filter by email -- use a profile lookup instead
     const { data: existingProfile } = await adminClient
       .from('profiles')
-      .select('id, tier, email, referred_by')
+      .select('id, tier, email, referred_by, founder_bonus_applied, points_total, username')
       .eq('email', normalizedEmail)
       .maybeSingle()
 
@@ -130,7 +132,7 @@ export async function POST(req: NextRequest) {
       } else if (referrer && referrer.email === normalizedEmail) {
         console.log(`Self-referral blocked: ${normalizedEmail} tried code ${referralCode}`)
       } else {
-        console.log(`Referral code ${referralCode} not found — ignoring`)
+        console.log(`Referral code ${referralCode} not found -- ignoring`)
       }
     }
 
@@ -140,14 +142,26 @@ export async function POST(req: NextRequest) {
       // --- Existing user: upgrade tier (do NOT touch their password) ---
       userId = existingProfile.id
 
+      // Derive founding wall name: first+last, fallback to username, else blank
+      const wallName = [cleanFirst, cleanLast].filter(Boolean).join(' ')
+        || existingProfile.username || ''
+
       const updateFields: Record<string, any> = {
           tier: 'champion',
           paid_at: new Date().toISOString(),
           paypal_transaction_id: transactionId,
+          first_name: cleanFirst || undefined,
+          last_name: cleanLast || undefined,
+          founding_wall_name: wallName,
       }
       // Only set referred_by if not already set (don't overwrite an earlier referral)
       if (validatedRefCode && !existingProfile.referred_by) {
         updateFields.referred_by = validatedRefCode
+      }
+      // Apply founder bonus exactly once
+      if (!existingProfile.founder_bonus_applied) {
+        updateFields.points_total = (existingProfile.points_total || 0) + 25
+        updateFields.founder_bonus_applied = true
       }
 
       const { error: updateError } = await adminClient
@@ -157,12 +171,12 @@ export async function POST(req: NextRequest) {
 
       if (updateError) {
         console.error('Tier upgrade error:', updateError)
-        // Payment captured but upgrade failed — log for manual reconciliation
+        // Payment captured but upgrade failed -- log for manual reconciliation
         await logPaymentWithoutAccount(adminClient, transactionId, normalizedEmail, 'upgrade_failed', updateError.message)
         return NextResponse.json({
           success: false,
           paymentReceived: true,
-          error: 'Payment received but account upgrade failed. We will set you up — contact thomasjbartley@worldcupfanchallenge.com if needed.',
+          error: 'Payment received but account upgrade failed. We will set you up -- contact thomasjbartley@worldcupfanchallenge.com if needed.',
         }, { status: 500 })
       }
 
@@ -185,7 +199,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           success: false,
           paymentReceived: true,
-          error: 'Payment received but account creation failed. We will set you up — contact thomasjbartley@worldcupfanchallenge.com if needed.',
+          error: 'Payment received but account creation failed. We will set you up -- contact thomasjbartley@worldcupfanchallenge.com if needed.',
         }, { status: 500 })
       }
 
@@ -193,10 +207,18 @@ export async function POST(req: NextRequest) {
 
       // The DB trigger on_auth_user_created auto-creates a profile at tier='free'.
       // UPDATE that row to champion instead of inserting a duplicate.
+      // Derive founding wall name: first+last, else blank (new user has no username yet)
+      const newWallName = [cleanFirst, cleanLast].filter(Boolean).join(' ')
+
       const newProfileFields: Record<string, any> = {
           tier: 'champion',
           paypal_transaction_id: transactionId,
           paid_at: new Date().toISOString(),
+          first_name: cleanFirst || undefined,
+          last_name: cleanLast || undefined,
+          founding_wall_name: newWallName,
+          points_total: 25,
+          founder_bonus_applied: true,
       }
       if (validatedRefCode) {
         newProfileFields.referred_by = validatedRefCode
@@ -213,7 +235,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           success: false,
           paymentReceived: true,
-          error: 'Payment received but profile upgrade failed. We will set you up — contact thomasjbartley@worldcupfanchallenge.com if needed.',
+          error: 'Payment received but profile upgrade failed. We will set you up -- contact thomasjbartley@worldcupfanchallenge.com if needed.',
         }, { status: 500 })
       }
 
@@ -243,7 +265,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/** Log a payment that succeeded but account creation failed — for manual reconciliation */
+/** Log a payment that succeeded but account creation failed - for manual reconciliation */
 async function logPaymentWithoutAccount(
   supabase: ReturnType<typeof createAdminClient>,
   transactionId: string,
