@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
   let query = adminClient
     .from('matches')
-    .select('id, match_number, group_name, home_team, away_team, home_score, away_score, status, stage, home_slot, away_slot')
+    .select('id, match_number, group_name, home_team, away_team, home_score, away_score, status, stage, home_slot, away_slot, shootout_winner')
 
   if (stage !== 'all') {
     query = query.eq('stage', stage)

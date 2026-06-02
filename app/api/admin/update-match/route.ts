@@ -6,13 +6,12 @@ const OWNER_EMAIL = 'thomas@bartleytechaisolutions.com'
 
 export async function POST(req: NextRequest) {
   try {
-    const { matchId, homeScore, awayScore, status, userEmail } = await req.json()
+    const { matchId, homeScore, awayScore, status, shootoutWinner, userEmail } = await req.json()
 
     if (!matchId || !userEmail) {
       return NextResponse.json({ error: 'Missing matchId or userEmail' }, { status: 400 })
     }
 
-    // Gate to owner only
     if (userEmail.toLowerCase() !== OWNER_EMAIL) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
@@ -23,6 +22,8 @@ export async function POST(req: NextRequest) {
     if (homeScore !== undefined && homeScore !== null) updateFields.home_score = homeScore
     if (awayScore !== undefined && awayScore !== null) updateFields.away_score = awayScore
     if (status) updateFields.status = status
+    // shootoutWinner can be 'home', 'away', or null (to clear it)
+    if (shootoutWinner !== undefined) updateFields.shootout_winner = shootoutWinner
 
     if (Object.keys(updateFields).length === 0) {
       return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to update match' }, { status: 500 })
     }
 
-    console.log(`Match ${matchId} updated: ${JSON.stringify(updateFields)} by ${userEmail}`)
+    console.log('Match ' + matchId + ' updated: ' + JSON.stringify(updateFields) + ' by ' + userEmail)
     return NextResponse.json({ success: true })
 
   } catch (err) {
