@@ -85,7 +85,7 @@ export default function AffiliatePage() {
  { n: '2', t: 'Get your link + QR code', d: 'You get a personalized link (worldcupfanchallenge.com/ref/YOURCODE) and a scannable QR code to print or share digitally.' },
  { n: '3', t: 'Share it everywhere', d: 'Post on TikTok, Instagram, YouTube, your podcast, team group chats, at games. Every click is tracked.' },
  { n: '4', t: 'Earn per Champion Founder', d: '$0.50 per signup up to 99. Hit 100 and every signup — going back to #1 — becomes $1.00.' },
- { n: '5', t: 'Get paid monthly via PayPal', d: 'Payouts processed on the 1st of every month. Minimum $10 balance to pay out.' },
+ { n: '5', t: 'Get paid monthly via PayPal', d: 'Payouts processed on the 1st of every month. Minimum $25 balance to pay out.' },
  ].map(s => (
  <div key={s.n} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>
  <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,214,0,0.15)', border: '1px solid rgba(255,214,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Bebas Neue'", fontSize: '1rem', color: '#FFD600', flexShrink: 0 }}>{s.n}</div>
@@ -196,7 +196,7 @@ export default function AffiliatePage() {
  )}
  <button type="submit" disabled={submitting} style={{ padding: '14px', background: submitting ? '#8a7a30' : '#FFD600', color: '#050C0A', border: 'none', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', cursor: submitting ? 'default' : 'pointer', marginTop: '6px' }}>{submitting ? 'SUBMITTING...' : 'SUBMIT APPLICATION →'}
  </button>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', textAlign: 'center', letterSpacing: '1px' }}>Paid monthly via PayPal · $10 minimum payout · Champion Founder signups only
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', textAlign: 'center', letterSpacing: '1px' }}>Paid monthly via PayPal · $25 minimum payout · Champion Founder signups only
  </div>
  </form>
  )}

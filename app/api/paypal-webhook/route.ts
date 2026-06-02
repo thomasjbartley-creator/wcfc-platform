@@ -28,16 +28,13 @@ async function verifyPayPalWebhook(req: NextRequest, rawBody: string): Promise<b
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET
   const webhookId    = process.env.PAYPAL_WEBHOOK_ID
 
-  // STRICT: reject all webhooks if credentials are not configured
   if (!clientId || !clientSecret || !webhookId) {
     console.error('PAYPAL credentials missing - rejecting webhook (PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, or PAYPAL_WEBHOOK_ID not set)')
     return false
   }
 
-  // Determine API base from env (sandbox vs live)
   const apiBase = process.env.PAYPAL_API_BASE || 'https://api-m.paypal.com'
 
-  // Get access token
   const tokenRes = await fetch(`${apiBase}/v1/oauth2/token`, {
     method: 'POST',
     headers: {
@@ -52,7 +49,6 @@ async function verifyPayPalWebhook(req: NextRequest, rawBody: string): Promise<b
   }
   const { access_token } = await tokenRes.json()
 
-  // Verify signature
   const verifyRes = await fetch(`${apiBase}/v1/notifications/verify-webhook-signature`, {
     method: 'POST',
     headers: {
@@ -87,10 +83,7 @@ async function addToBrevoList(email: string, listId: number, attributes?: Record
   try {
     const res = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
-      headers: {
-        'api-key': apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email,
         listIds: [listId],
@@ -109,7 +102,7 @@ async function addToBrevoList(email: string, listId: number, attributes?: Record
   }
 }
 
-/* --- Orphan event logger (extended with action field) --- */
+/* --- Orphan event logger — uses action column + metadata JSONB --- */
 async function logOrphanEvent(
   supabase: ReturnType<typeof createAdminClient>,
   transactionId: string,
@@ -126,8 +119,8 @@ async function logOrphanEvent(
       payer_email: payerEmail,
       amount,
       event_payload: eventPayload,
-      ...(action ? { action } : {}),
-      ...(extra || {}),
+      action: action || null,
+      metadata: extra || {},
     }, { onConflict: 'transaction_id' })
 
   if (error) {
@@ -140,9 +133,10 @@ async function logOrphanEvent(
 /* ================================================================
    HANDLER: PAYMENT.CAPTURE.COMPLETED
    - Existing-user tier upgrade (unchanged logic)
-   - New-user auto-account-creation (Task A)
+   - New-user auto-account-creation
+   - Parallelized lookups + fire-and-forget non-critical ops
    ================================================================ */
-async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: string) {
+async function handleCaptureCompleted(event: any) {
   const resource = event.resource
   const transactionId: string = resource?.id ?? ''
   const payerEmail: string | undefined =
@@ -165,48 +159,35 @@ async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: str
 
   const supabase = createAdminClient()
 
-  // Idempotency check: has this transaction already been processed?
-  const { data: existingTxn } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('paypal_transaction_id', transactionId)
-    .maybeSingle()
+  // Parallelized idempotency + profile lookup (3 queries at once instead of sequential)
+  const [txnCheck, orphanCheck, profileLookup] = await Promise.all([
+    supabase.from('profiles').select('id').eq('paypal_transaction_id', transactionId).maybeSingle(),
+    supabase.from('paypal_orphan_events').select('transaction_id').eq('transaction_id', transactionId).eq('action', 'auto_create_attempted').maybeSingle(),
+    supabase.from('profiles').select('id, tier, email').eq('email', payerEmail).maybeSingle(),
+  ])
 
-  if (existingTxn) {
+  if (txnCheck.data) {
     console.log(`Transaction ${transactionId} already processed - skipping`)
     return NextResponse.json({ received: true, note: 'Already processed' })
   }
 
-  // Also check orphan_events for idempotency (auto-create path)
-  const { data: existingOrphan } = await supabase
-    .from('paypal_orphan_events')
-    .select('transaction_id')
-    .eq('transaction_id', transactionId)
-    .eq('action', 'auto_create_attempted')
-    .maybeSingle()
-
-  if (existingOrphan) {
+  if (orphanCheck.data) {
     console.log(`Transaction ${transactionId} already auto-create attempted - skipping`)
     return NextResponse.json({ received: true, note: 'Auto-create already attempted' })
   }
 
-  // Look up profile by email
-  const { data: profile, error: lookupError } = await supabase
-    .from('profiles')
-    .select('id, tier, email')
-    .eq('email', payerEmail)
-    .maybeSingle()
-
-  if (lookupError) {
-    console.error('Profile lookup error:', lookupError)
+  if (profileLookup.error) {
+    console.error('Profile lookup error:', profileLookup.error)
     return NextResponse.json({ error: 'DB lookup failed' }, { status: 500 })
   }
 
-  /* ---- NEW USER: auto-create account (Task A) ---- */
+  const profile = profileLookup.data
+
+  /* ---- NEW USER: auto-create account ---- */
   if (!profile) {
     console.log(`No profile for ${payerEmail} - attempting auto-create (tier=${newTier})`)
 
-    // Step A3: Create Supabase auth user
+    // CRITICAL PATH: Create auth user
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email: payerEmail,
       email_confirm: true,
@@ -219,6 +200,7 @@ async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: str
 
     if (authError || !authData?.user) {
       console.error('Auto-create auth user failed:', authError)
+      // Log failure — awaited because we need this for debugging
       await logOrphanEvent(supabase, transactionId, payerEmail, amount, event, 'auto_create_failed', {
         success: false,
         error_message: authError?.message || 'Unknown auth error',
@@ -229,7 +211,7 @@ async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: str
     const userId = authData.user.id
     console.log(`Auth user created: ${payerEmail} -> ${userId}`)
 
-    // Step A4: Insert profile row
+    // CRITICAL PATH: Insert profile row
     const { error: profileError } = await supabase.from('profiles').insert({
       id: userId,
       email: payerEmail,
@@ -247,36 +229,29 @@ async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: str
         user_id: userId,
         error_message: profileError.message,
       })
-      // Return 200 — do NOT retry, would create duplicate auth users
       return NextResponse.json({ received: true, note: 'Profile insert failed - orphan auth user logged' })
     }
 
     console.log(`Profile created: ${payerEmail} tier=${newTier}`)
 
-    // Step A5: Generate magic link
-    try {
-      const { error: linkError } = await supabase.auth.admin.generateLink({
+    // NON-CRITICAL: fire-and-forget magic link + Brevo + orphan log
+    // These run after we return 200 to PayPal — may not complete on Hobby tier
+    // but the critical work (user + profile) is already saved
+    Promise.allSettled([
+      supabase.auth.admin.generateLink({
         type: 'magiclink',
         email: payerEmail,
         options: { redirectTo: 'https://worldcupfanchallenge.com/dashboard' },
-      })
-      if (linkError) {
-        console.warn('Magic link generation failed (non-fatal):', linkError)
-      } else {
-        console.log(`Magic link sent to ${payerEmail}`)
-      }
-    } catch (linkErr) {
-      console.warn('Magic link error (non-fatal):', linkErr)
-    }
-
-    // Step A6: Add to Brevo with TIER attribute
-    await addToBrevoList(payerEmail, 2, { TIER: newTier, FIRSTNAME: payerFirstName })
-
-    // Step A7: Log success to orphan events
-    await logOrphanEvent(supabase, transactionId, payerEmail, amount, event, 'auto_create_attempted', {
-      success: true,
-      user_id: userId,
-    })
+      }).then(({ error }) => {
+        if (error) console.warn('Magic link generation failed (non-fatal):', error)
+        else console.log(`Magic link sent to ${payerEmail}`)
+      }),
+      addToBrevoList(payerEmail, 2, { TIER: newTier, FIRSTNAME: payerFirstName }),
+      logOrphanEvent(supabase, transactionId, payerEmail, amount, event, 'auto_create_attempted', {
+        success: true,
+        user_id: userId,
+      }),
+    ]).catch(err => console.warn('Non-critical post-create ops error:', err))
 
     return NextResponse.json({ received: true, tier: newTier, auto_created: true })
   }
@@ -292,7 +267,6 @@ async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: str
     return NextResponse.json({ received: true, note: 'Current tier same or higher' })
   }
 
-  // Upgrade the tier
   const { error: updateError } = await supabase
     .from('profiles')
     .update({
@@ -309,14 +283,14 @@ async function handleCaptureCompleted(event: any, req: NextRequest, rawBody: str
 
   console.log(`Tier upgraded: ${payerEmail} ${currentTier} -> ${newTier} (txn: ${transactionId})`)
 
-  // Add to Brevo
-  await addToBrevoList(payerEmail, 2, { TIER: newTier })
+  // Non-critical: fire-and-forget
+  addToBrevoList(payerEmail, 2, { TIER: newTier }).catch(() => {})
 
   return NextResponse.json({ received: true, tier: newTier, upgraded: true })
 }
 
 /* ================================================================
-   HANDLER: PAYMENT.CAPTURE.REFUNDED / REVERSED (Task B)
+   HANDLER: PAYMENT.CAPTURE.REFUNDED / REVERSED
    - Downgrade tier to 'free' for the original payer
    ================================================================ */
 async function handleCaptureRefunded(event: any, actionLabel: string = 'refund_processed') {
@@ -324,23 +298,20 @@ async function handleCaptureRefunded(event: any, actionLabel: string = 'refund_p
   const refundId: string = resource?.id ?? ''
   const refundAmount: string = resource?.amount?.value ?? '0'
 
-  // Extract original capture/transaction ID from links array (rel: 'up' points to original capture)
   let originalTransactionId = ''
   const links: Array<{ href?: string; rel?: string }> = resource?.links ?? []
   for (const link of links) {
     if (link.rel === 'up' && link.href) {
-      // href format: https://api.paypal.com/v2/payments/captures/{capture_id}
       const parts = link.href.split('/')
       originalTransactionId = parts[parts.length - 1] || ''
       break
     }
   }
 
-  console.log(`PayPal CAPTURE.REFUNDED: refundId=${refundId} originalTxn=${originalTransactionId} amount=$${refundAmount}`)
+  console.log(`PayPal ${actionLabel}: refundId=${refundId} originalTxn=${originalTransactionId} amount=$${refundAmount}`)
 
   const supabase = createAdminClient()
 
-  // Idempotency: check if this refund event was already processed
   const { data: existingRefund } = await supabase
     .from('paypal_orphan_events')
     .select('transaction_id')
@@ -353,7 +324,6 @@ async function handleCaptureRefunded(event: any, actionLabel: string = 'refund_p
     return NextResponse.json({ received: true, note: `${actionLabel} already processed` })
   }
 
-  // Look up profile by original transaction_id
   if (!originalTransactionId) {
     console.warn('Refund event missing original transaction ID')
     await logOrphanEvent(supabase, refundId, '', parseFloat(refundAmount), event, 'refund_missing_original_txn')
@@ -362,7 +332,7 @@ async function handleCaptureRefunded(event: any, actionLabel: string = 'refund_p
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, email, tier, auto_created_via_webhook')
+    .select('id, email, tier, auto_created_via_webhook, referred_by')
     .eq('paypal_transaction_id', originalTransactionId)
     .maybeSingle()
 
@@ -374,7 +344,6 @@ async function handleCaptureRefunded(event: any, actionLabel: string = 'refund_p
     return NextResponse.json({ received: true, note: 'No profile found for refunded payment - logged' })
   }
 
-  // Downgrade tier to 'free'
   const previousTier = profile.tier || 'free'
   const { error: downgradeError } = await supabase
     .from('profiles')
@@ -392,24 +361,76 @@ async function handleCaptureRefunded(event: any, actionLabel: string = 'refund_p
 
   console.log(`Refund downgrade: ${profile.email} ${previousTier} -> free (refund ${refundId}, original txn ${originalTransactionId})`)
 
-  // Update Brevo TIER attribute
-  await addToBrevoList(profile.email, 2, { TIER: 'free' })
+  // --- Mark referral row as reversed (affiliate or fan) ---
+  const { data: referralRow } = await supabase
+    .from('referrals')
+    .select('id, affiliate_id, points_awarded')
+    .eq('referred_id', profile.id)
+    .eq('reversed', false)
+    .maybeSingle()
 
-  // Log refund/reversal processed
-  await logOrphanEvent(supabase, refundId, profile.email, parseFloat(refundAmount), event, actionLabel, {
-    success: true,
-    user_id: profile.id,
-    previous_tier: previousTier,
-    original_transaction_id: originalTransactionId,
-  })
+  if (referralRow) {
+    await supabase
+      .from('referrals')
+      .update({ reversed: true, reversed_at: new Date().toISOString() })
+      .eq('id', referralRow.id)
+
+    if (referralRow.affiliate_id) {
+      // Decrement affiliate total_signups
+      const { data: aff } = await supabase
+        .from('affiliates')
+        .select('total_signups')
+        .eq('id', referralRow.affiliate_id)
+        .single()
+      if (aff && (aff.total_signups || 0) > 0) {
+        await supabase
+          .from('affiliates')
+          .update({ total_signups: (aff.total_signups || 0) - 1 })
+          .eq('id', referralRow.affiliate_id)
+      }
+      console.log(`Affiliate referral reversed: affiliate=${referralRow.affiliate_id} buyer=${profile.id}`)
+    }
+  }
+
+  // --- Claw back fan referral points if applicable ---
+  if (profile.referred_by) {
+    const { data: referrer } = await supabase
+      .from('profiles')
+      .select('id, points_total, referral_points_earned, referral_count')
+      .eq('referral_code', profile.referred_by)
+      .maybeSingle()
+
+    if (referrer) {
+      await supabase
+        .from('profiles')
+        .update({
+          points_total: Math.max(0, (referrer.points_total || 0) - 2),
+          referral_points_earned: Math.max(0, (referrer.referral_points_earned || 0) - 2),
+          referral_count: Math.max(0, (referrer.referral_count || 0) - 1),
+        })
+        .eq('id', referrer.id)
+      console.log(`Fan referral points clawed back: referrer=${referrer.id} (-2 pts) for refunded buyer ${profile.id}`)
+    }
+  }
+
+  // Non-critical: fire-and-forget
+  Promise.allSettled([
+    addToBrevoList(profile.email, 2, { TIER: 'free' }),
+    logOrphanEvent(supabase, refundId, profile.email, parseFloat(refundAmount), event, actionLabel, {
+      success: true,
+      user_id: profile.id,
+      previous_tier: previousTier,
+      original_transaction_id: originalTransactionId,
+    }),
+  ]).catch(() => {})
 
   return NextResponse.json({ received: true, refunded: true, previous_tier: previousTier })
 }
 
 /* ================================================================
-   HANDLER: CUSTOMER.DISPUTE.CREATED / RESOLVED (Task C)
+   HANDLER: CUSTOMER.DISPUTE.CREATED / RESOLVED
    - Log all dispute events for manual review
-   - On RESOLVED_BUYER_FAVOUR: downgrade tier (same as refund)
+   - On RESOLVED_BUYER_FAVOUR: downgrade tier
    ================================================================ */
 async function handleDisputeEvent(event: any) {
   const resource = event.resource
@@ -418,25 +439,20 @@ async function handleDisputeEvent(event: any) {
   const reason: string = resource?.reason ?? ''
   const outcome: string = resource?.dispute_outcome?.outcome_code ?? resource?.status ?? ''
 
-  // Try to find the disputed transaction ID
   const disputedTxns: Array<{ seller_transaction_id?: string }> = resource?.disputed_transactions ?? []
   const originalTransactionId = disputedTxns[0]?.seller_transaction_id ?? ''
-
-  // Try to extract buyer email
   const buyerEmail: string = resource?.buyer?.email ?? ''
 
   console.log(`PayPal DISPUTE: type=${eventType} disputeId=${disputeId} outcome=${outcome} reason=${reason} originalTxn=${originalTransactionId} buyer=${buyerEmail}`)
 
   const supabase = createAdminClient()
 
-  // Log every dispute event
   await logOrphanEvent(supabase, disputeId, buyerEmail, 0, event, `dispute_${eventType === 'CUSTOMER.DISPUTE.CREATED' ? 'opened' : 'resolved'}`, {
     dispute_reason: reason,
     dispute_outcome: outcome,
     original_transaction_id: originalTransactionId,
   })
 
-  // On dispute resolved in buyer's favour: downgrade tier (same as refund)
   if (eventType === 'CUSTOMER.DISPUTE.RESOLVED' && outcome === 'RESOLVED_BUYER_FAVOUR') {
     if (!originalTransactionId) {
       console.warn('Dispute resolved buyer favour but no original txn ID — manual review needed')
@@ -452,13 +468,14 @@ async function handleDisputeEvent(event: any) {
     if (profile) {
       const previousTier = profile.tier || 'free'
       await supabase.from('profiles').update({ tier: 'free' }).eq('id', profile.id)
-      await addToBrevoList(profile.email, 2, { TIER: 'free' })
       console.log(`Dispute buyer favour downgrade: ${profile.email} ${previousTier} -> free`)
-      await logOrphanEvent(supabase, `${disputeId}_downgrade`, profile.email, 0, event, 'dispute_buyer_favour_downgrade', {
-        success: true,
-        user_id: profile.id,
-        previous_tier: previousTier,
-      })
+      // Non-critical: fire-and-forget
+      Promise.allSettled([
+        addToBrevoList(profile.email, 2, { TIER: 'free' }),
+        logOrphanEvent(supabase, `${disputeId}_downgrade`, profile.email, 0, event, 'dispute_buyer_favour_downgrade', {
+          success: true, user_id: profile.id, previous_tier: previousTier,
+        }),
+      ]).catch(() => {})
     } else {
       console.warn(`Dispute buyer favour: no profile found for txn ${originalTransactionId}`)
     }
@@ -468,7 +485,7 @@ async function handleDisputeEvent(event: any) {
 }
 
 /* ================================================================
-   MAIN WEBHOOK HANDLER — event type router
+   MAIN WEBHOOK HANDLER -- event type router
    ================================================================ */
 export async function POST(req: NextRequest) {
   try {
@@ -485,10 +502,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
-    // Route by event type
     switch (eventType) {
       case 'PAYMENT.CAPTURE.COMPLETED':
-        return await handleCaptureCompleted(event, req, rawBody)
+        return await handleCaptureCompleted(event)
 
       case 'PAYMENT.CAPTURE.REFUNDED':
         return await handleCaptureRefunded(event, 'refund_processed')
@@ -501,7 +517,6 @@ export async function POST(req: NextRequest) {
         return await handleDisputeEvent(event)
 
       default: {
-        // Log unhandled event types — never return non-200
         console.log(`Unhandled PayPal event type: ${eventType}`)
         const supabase = createAdminClient()
         await logOrphanEvent(supabase, event.id ?? `unhandled_${Date.now()}`, '', 0, event, 'unhandled_event_type', {

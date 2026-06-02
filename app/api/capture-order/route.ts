@@ -12,7 +12,8 @@ import { createAdminClient } from '@/lib/supabase-admin'
  *   1. Capture the PayPal order (server-side, validates $10)
  *   2. Create Supabase auth user (or find existing)
  *   3. Insert/upgrade profile to champion
- *   4. Return success -- client signs in with email+password and redirects
+ *   4. Credit affiliate or fan referral (separate paths, never both)
+ *   5. Return success -- client signs in with email+password and redirects
  *
  * Idempotent: same orderID processed twice will not create duplicate users.
  */
@@ -117,22 +118,46 @@ export async function POST(req: NextRequest) {
       .eq('email', normalizedEmail)
       .maybeSingle()
 
-    // Validate referral code: must exist and must not be self-referral
-    let validatedRefCode: string | null = null
+    // --- Resolve referral code: affiliate first, then fan ---
+    // These two paths are mutually exclusive. Affiliate codes earn money only (zero points).
+    // Fan referral codes earn leaderboard points only (zero money).
+    let validatedRefCode: string | null = null   // fan referral code (sets profiles.referred_by)
+    let matchedAffiliate: { id: string; email: string; user_id: string | null } | null = null
+
     if (referralCode) {
-      const { data: referrer } = await adminClient
-        .from('profiles')
-        .select('id, email, referral_code')
-        .eq('referral_code', referralCode)
+      // Check affiliates table first
+      const { data: affiliate } = await adminClient
+        .from('affiliates')
+        .select('id, email, user_id')
+        .eq('code', referralCode)
+        .eq('approved', true)
+        .eq('is_active', true)
         .maybeSingle()
 
-      if (referrer && referrer.email !== normalizedEmail) {
-        validatedRefCode = referralCode
-        console.log(`Referral validated: ${referralCode} -> referrer ${referrer.email}`)
-      } else if (referrer && referrer.email === normalizedEmail) {
-        console.log(`Self-referral blocked: ${normalizedEmail} tried code ${referralCode}`)
+      if (affiliate) {
+        // Block self-referral: affiliate cannot credit their own purchase
+        if (affiliate.email !== normalizedEmail && affiliate.user_id !== existingProfile?.id) {
+          matchedAffiliate = affiliate
+          console.log(`Affiliate matched: code=${referralCode} affiliate=${affiliate.id}`)
+        } else {
+          console.log(`Affiliate self-referral blocked: ${normalizedEmail} code=${referralCode}`)
+        }
       } else {
-        console.log(`Referral code ${referralCode} not found -- ignoring`)
+        // Not an affiliate code -- check fan referral codes
+        const { data: referrer } = await adminClient
+          .from('profiles')
+          .select('id, email, referral_code')
+          .eq('referral_code', referralCode)
+          .maybeSingle()
+
+        if (referrer && referrer.email !== normalizedEmail) {
+          validatedRefCode = referralCode
+          console.log(`Fan referral validated: ${referralCode} -> referrer ${referrer.email}`)
+        } else if (referrer && referrer.email === normalizedEmail) {
+          console.log(`Fan self-referral blocked: ${normalizedEmail} tried code ${referralCode}`)
+        } else {
+          console.log(`Referral code ${referralCode} not found in affiliates or profiles -- ignoring`)
+        }
       }
     }
 
@@ -154,7 +179,7 @@ export async function POST(req: NextRequest) {
           last_name: cleanLast || undefined,
           founding_wall_name: wallName,
       }
-      // Only set referred_by if not already set (don't overwrite an earlier referral)
+      // Only set referred_by if not already set AND this is a fan referral (not affiliate)
       if (validatedRefCode && !existingProfile.referred_by) {
         updateFields.referred_by = validatedRefCode
       }
@@ -171,7 +196,6 @@ export async function POST(req: NextRequest) {
 
       if (updateError) {
         console.error('Tier upgrade error:', updateError)
-        // Payment captured but upgrade failed -- log for manual reconciliation
         await logPaymentWithoutAccount(adminClient, transactionId, normalizedEmail, 'upgrade_failed', updateError.message)
         return NextResponse.json({
           success: false,
@@ -207,7 +231,6 @@ export async function POST(req: NextRequest) {
 
       // The DB trigger on_auth_user_created auto-creates a profile at tier='free'.
       // UPDATE that row to champion instead of inserting a duplicate.
-      // Derive founding wall name: first+last, else blank (new user has no username yet)
       const newWallName = [cleanFirst, cleanLast].filter(Boolean).join(' ')
 
       const newProfileFields: Record<string, any> = {
@@ -220,6 +243,7 @@ export async function POST(req: NextRequest) {
           points_total: 25,
           founder_bonus_applied: true,
       }
+      // Only set referred_by for fan referrals (not affiliate)
       if (validatedRefCode) {
         newProfileFields.referred_by = validatedRefCode
       }
@@ -240,6 +264,52 @@ export async function POST(req: NextRequest) {
       }
 
       console.log(`New user created: ${normalizedEmail} -> champion (txn: ${transactionId})`)
+    }
+
+    // --- Step 3: Affiliate attribution (money path, zero points) ---
+    // Only one affiliate conversion per buyer (referred_id has a UNIQUE constraint).
+    // A retry that hits ORDER_ALREADY_CAPTURED returns early above, but even if it
+    // reaches here, the insert on referred_id ensures no double-count.
+    if (matchedAffiliate) {
+      // Check if this buyer already has a referral row (idempotency guard)
+      const { data: existingReferral } = await adminClient
+        .from('referrals')
+        .select('id')
+        .eq('referred_id', userId)
+        .maybeSingle()
+
+      if (!existingReferral) {
+        const { error: refInsertErr } = await adminClient
+          .from('referrals')
+          .insert({
+            affiliate_id: matchedAffiliate.id,
+            referred_id: userId,
+            was_paid: true,
+            paid_at: new Date().toISOString(),
+            points_awarded: 0,
+          })
+
+        if (refInsertErr) {
+          // Non-fatal: payment and account are already done
+          console.error('Affiliate referral insert failed (non-fatal):', refInsertErr)
+        } else {
+          // Increment affiliate total_signups
+          const { data: aff } = await adminClient
+            .from('affiliates')
+            .select('total_signups')
+            .eq('id', matchedAffiliate.id)
+            .single()
+          if (aff) {
+            await adminClient
+              .from('affiliates')
+              .update({ total_signups: (aff.total_signups || 0) + 1 })
+              .eq('id', matchedAffiliate.id)
+          }
+          console.log(`Affiliate conversion recorded: affiliate=${matchedAffiliate.id} buyer=${userId}`)
+        }
+      } else {
+        console.log(`Affiliate referral already exists for buyer ${userId} -- skipping`)
+      }
     }
 
     // Non-critical: Brevo (fire-and-forget)
