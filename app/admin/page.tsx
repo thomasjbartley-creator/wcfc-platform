@@ -46,33 +46,26 @@ export default function AdminPage() {
     })
   }, [router])
 
-  // Load matches
+  // Load matches via server-side admin API (bypasses RLS)
   useEffect(() => {
-    if (!authorized) return
-    const supabase = createClient()
-    supabase
-      .from('matches')
-      .select('id, match_number, group_name, home_team, away_team, home_score, away_score, status')
-      .eq('stage', 'group')
-      .order('group_name')
-      .order('match_number')
-      .then(({ data }) => {
-        if (data) {
-          setMatches(data)
-          // Initialize edit scores from current DB values
+    if (!authorized || !user) return
+    fetch(`/api/admin/matches?email=${encodeURIComponent(user.email)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.matches) {
+          setMatches(data.matches)
           const scores: Record<string, { home: string; away: string }> = {}
-          for (const m of data) {
+          for (const m of data.matches) {
             scores[m.id] = {
               home: m.home_score !== null ? String(m.home_score) : '',
               away: m.away_score !== null ? String(m.away_score) : '',
             }
           }
           setEditScores(scores)
-          // Compute standings
-          setStandings(computeAllGroupStandings(data as GroupMatch[]))
+          setStandings(computeAllGroupStandings(data.matches as GroupMatch[]))
         }
       })
-  }, [authorized])
+  }, [authorized, user])
 
   const saveMatch = useCallback(async (matchId: string, markFinished: boolean) => {
     if (!user) return
