@@ -60,3 +60,40 @@ export function scoreMatchPick(
 
   return winner
 }
+
+/**
+ * Score a user's knockout bracket picks against actual results.
+ *
+ * Does not score match 103 (third-place match — not in the ladder).
+ * Never awards points when the actual value is null (undecided).
+ */
+export function scoreKnockoutBracket(input: {
+  predictedWinners: Record<number, string>
+  predictedChampion: string | null
+  predictedRunnerUp: string | null
+  actualWinners: Record<number, string | null>
+  actualChampion: string | null
+  actualRunnerUp: string | null
+}): { r32: number; r16: number; qf: number; sf: number; champion: number; runnerUp: number; total: number } {
+  const { predictedWinners, predictedChampion, predictedRunnerUp, actualWinners, actualChampion, actualRunnerUp } = input
+  const ko = SCORING.knockout
+
+  function sumRange(start: number, end: number, pts: number): number {
+    let sum = 0
+    for (let n = start; n <= end; n++) {
+      const actual = actualWinners[n]
+      if (actual != null && predictedWinners[n] === actual) sum += pts
+    }
+    return sum
+  }
+
+  const r32 = sumRange(73, 88, ko.r32)
+  const r16 = sumRange(89, 96, ko.r16)
+  const qf = sumRange(97, 100, ko.qf)
+  const sf = sumRange(101, 102, ko.sf)
+  const champion = (predictedChampion != null && actualChampion != null && predictedChampion === actualChampion) ? ko.champion : 0
+  const runnerUp = (predictedRunnerUp != null && actualRunnerUp != null && predictedRunnerUp === actualRunnerUp) ? ko.runnerUp : 0
+  const total = r32 + r16 + qf + sf + champion + runnerUp
+
+  return { r32, r16, qf, sf, champion, runnerUp, total }
+}
