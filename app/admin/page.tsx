@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { computeAllGroupStandings, type GroupMatch, type GroupStandings } from '@/lib/standings'
+import { getQualifiers, buildR32, type R32Matchup, type Qualifiers } from '@/lib/advancement'
 
-// TODO: Replace with proper admin role when roles are implemented
 const OWNER_EMAIL = 'thomas@bartleytechaisolutions.com'
 
 interface Match {
@@ -19,7 +19,7 @@ interface Match {
   status: string
 }
 
-type Tab = 'results' | 'standings'
+type Tab = 'results' | 'standings' | 'bracket'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -30,90 +30,91 @@ export default function AdminPage() {
   const [editScores, setEditScores] = useState<Record<string, { home: string; away: string }>>({})
   const [saving, setSaving] = useState<Record<string, boolean>>({})
   const [standings, setStandings] = useState<GroupStandings[]>([])
+  const [r32Matchups, setR32Matchups] = useState<R32Matchup[]>([])
+  const [qualifiers, setQualifiers] = useState<Qualifiers | null>(null)
   const [activeTab, setActiveTab] = useState<Tab>('results')
 
-  // Auth check
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user || user.email?.toLowerCase() !== OWNER_EMAIL) {
+    supabase.auth.getUser().then(({ data: { user: u } }) => {
+      if (!u || u.email?.toLowerCase() !== OWNER_EMAIL) {
         router.replace('/')
         return
       }
-      setUser(user)
+      setUser(u)
       setAuthorized(true)
       setLoading(false)
     })
   }, [router])
 
-  // Load matches via server-side admin API (bypasses RLS)
   useEffect(() => {
     if (!authorized || !user) return
-    fetch(`/api/admin/matches?email=${encodeURIComponent(user.email)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.matches) {
-          setMatches(data.matches)
-          const scores: Record<string, { home: string; away: string }> = {}
-          for (const m of data.matches) {
-            scores[m.id] = {
-              home: m.home_score !== null ? String(m.home_score) : '',
-              away: m.away_score !== null ? String(m.away_score) : '',
-            }
+    const enc = encodeURIComponent(user.email)
+    Promise.all([
+      fetch('/api/admin/matches?email=' + enc + '&stage=group').then(r => r.json()),
+      fetch('/api/admin/matches?email=' + enc + '&stage=r32').then(r => r.json()),
+    ]).then(([groupData, r32Data]) => {
+      if (groupData.matches) {
+        setMatches(groupData.matches)
+        const sc: Record<string, { home: string; away: string }> = {}
+        for (const m of groupData.matches) {
+          sc[m.id] = {
+            home: m.home_score !== null ? String(m.home_score) : '',
+            away: m.away_score !== null ? String(m.away_score) : '',
           }
-          setEditScores(scores)
-          setStandings(computeAllGroupStandings(data.matches as GroupMatch[]))
         }
-      })
+        setEditScores(sc)
+        const st = computeAllGroupStandings(groupData.matches as GroupMatch[])
+        setStandings(st)
+        if (r32Data.matches) {
+          const q = getQualifiers(st)
+          setQualifiers(q)
+          const mu = buildR32(st, r32Data.matches.map((m: any) => ({
+            match_number: m.match_number,
+            home_slot: m.home_slot || '',
+            away_slot: m.away_slot || '',
+          })))
+          setR32Matchups(mu)
+        }
+      }
+    })
   }, [authorized, user])
 
   const saveMatch = useCallback(async (matchId: string, markFinished: boolean) => {
     if (!user) return
-    const scores = editScores[matchId]
-    if (!scores) return
-
-    const homeScore = scores.home !== '' ? parseInt(scores.home, 10) : null
-    const awayScore = scores.away !== '' ? parseInt(scores.away, 10) : null
-
-    if (markFinished && (homeScore === null || awayScore === null || isNaN(homeScore) || isNaN(awayScore))) {
+    const sc = editScores[matchId]
+    if (!sc) return
+    const hs = sc.home !== '' ? parseInt(sc.home, 10) : null
+    const as_ = sc.away !== '' ? parseInt(sc.away, 10) : null
+    if (markFinished && (hs === null || as_ === null || isNaN(hs) || isNaN(as_))) {
       alert('Enter both scores before marking as finished.')
       return
     }
-
     setSaving(prev => ({ ...prev, [matchId]: true }))
-
-    const body: any = {
-      matchId,
-      userEmail: user.email,
-      homeScore,
-      awayScore,
-    }
+    const body: any = { matchId, userEmail: user.email, homeScore: hs, awayScore: as_ }
     if (markFinished) body.status = 'finished'
-
     const res = await fetch('/api/admin/update-match', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
-
     if (res.ok) {
-      // Update local state
       setMatches(prev => prev.map(m =>
-        m.id === matchId
-          ? { ...m, home_score: homeScore, away_score: awayScore, status: markFinished ? 'finished' : m.status }
-          : m
+        m.id === matchId ? { ...m, home_score: hs, away_score: as_, status: markFinished ? 'finished' : m.status } : m
       ))
-      // Recompute standings
       const updated = matches.map(m =>
-        m.id === matchId
-          ? { ...m, home_score: homeScore, away_score: awayScore, status: markFinished ? 'finished' : m.status }
-          : m
+        m.id === matchId ? { ...m, home_score: hs, away_score: as_, status: markFinished ? 'finished' : m.status } : m
       )
-      setStandings(computeAllGroupStandings(updated as GroupMatch[]))
+      const st = computeAllGroupStandings(updated as GroupMatch[])
+      setStandings(st)
+      const q = getQualifiers(st)
+      setQualifiers(q)
+      if (r32Matchups.length > 0) {
+        setR32Matchups(buildR32(st, r32Matchups.map(m => ({ match_number: m.match_number, home_slot: m.home_slot, away_slot: m.away_slot }))))
+      }
     }
-
     setSaving(prev => ({ ...prev, [matchId]: false }))
-  }, [user, editScores, matches])
+  }, [user, editScores, matches, r32Matchups])
 
   if (loading || !authorized) {
     return (
@@ -123,7 +124,6 @@ export default function AdminPage() {
     )
   }
 
-  // Group matches by group_name
   const groups = new Map<string, Match[]>()
   for (const m of matches) {
     const arr = groups.get(m.group_name) || []
@@ -132,109 +132,51 @@ export default function AdminPage() {
   }
   const sortedGroups = Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b))
 
+  const inputStyle = { width: '44px', textAlign: 'center' as const, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', padding: '5px', color: 'white', fontFamily: "'Bebas Neue'", fontSize: '1rem' }
+
   return (
     <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>
       <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
-
-      {/* HEADER */}
       <div style={{ background: 'rgba(229,57,53,0.08)', borderBottom: '1px solid rgba(229,57,53,0.2)', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <span style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#E53935', letterSpacing: '2px' }}>ADMIN</span>
           <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', marginLeft: '12px' }}>{user?.email}</span>
         </div>
-        <a href="/" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', textDecoration: 'none' }}>← Back to site</a>
+        <a href="/" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', textDecoration: 'none' }}>Back to site</a>
       </div>
-
-      {/* TABS */}
       <div style={{ display: 'flex', gap: '4px', padding: '16px 24px 0' }}>
-        {(['results', 'standings'] as Tab[]).map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} style={{
-            padding: '8px 20px',
-            background: activeTab === tab ? '#E53935' : 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(229,57,53,0.3)',
-            borderRadius: '6px 6px 0 0',
-            color: activeTab === tab ? 'white' : '#5a8a68',
-            fontFamily: "'Barlow Condensed'",
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            textTransform: 'uppercase',
-          }}>
-            {tab}
-          </button>
+        {(['results', 'standings', 'bracket'] as Tab[]).map(tab => (
+          <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '8px 20px', background: activeTab === tab ? '#E53935' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(229,57,53,0.3)', borderRadius: '6px 6px 0 0', color: activeTab === tab ? 'white' : '#5a8a68', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', fontWeight: 700, letterSpacing: '1px', cursor: 'pointer', textTransform: 'uppercase' as const }}>{tab}</button>
         ))}
       </div>
-
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
 
-        {/* ═══ RESULTS TAB ═══ */}
         {activeTab === 'results' && (
           <div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Group Stage Results</div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>
-              Enter scores and mark matches as finished. {matches.filter(m => m.status === 'finished').length}/72 finished.
-            </div>
-
-            {sortedGroups.map(([groupName, groupMatches]) => (
-              <div key={groupName} style={{ marginBottom: '32px' }}>
-                <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.2rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '10px' }}>GROUP {groupName}</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>Enter scores and mark matches as finished. {matches.filter(m => m.status === 'finished').length}/72 finished.</div>
+            {sortedGroups.map(([gn, gm]) => (
+              <div key={gn} style={{ marginBottom: '32px' }}>
+                <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.2rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '10px' }}>GROUP {gn}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {groupMatches.map(m => {
-                    const scores = editScores[m.id] || { home: '', away: '' }
-                    const isFinished = m.status === 'finished'
-                    const isSaving = saving[m.id] || false
-
+                  {gm.map(m => {
+                    const s = editScores[m.id] || { home: '', away: '' }
+                    const fin = m.status === 'finished'
+                    const sv = saving[m.id] || false
                     return (
-                      <div key={m.id} style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '8px 12px',
-                        background: isFinished ? 'rgba(0,200,83,0.05)' : '#0a1410',
-                        border: `1px solid ${isFinished ? 'rgba(0,200,83,0.2)' : 'rgba(255,255,255,0.06)'}`,
-                        borderRadius: '8px',
-                        flexWrap: 'wrap',
-                      }}>
+                      <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: fin ? 'rgba(0,200,83,0.05)' : '#0a1410', border: '1px solid ' + (fin ? 'rgba(0,200,83,0.2)' : 'rgba(255,255,255,0.06)'), borderRadius: '8px', flexWrap: 'wrap' as const }}>
                         <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', minWidth: '28px' }}>#{m.match_number}</span>
-                        <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', fontWeight: 700, color: 'white', minWidth: '120px', textAlign: 'right' }}>{m.home_team}</span>
-                        <input
-                          type="number"
-                          min="0"
-                          value={scores.home}
-                          onChange={e => setEditScores(prev => ({ ...prev, [m.id]: { ...prev[m.id], home: e.target.value } }))}
-                          disabled={isFinished}
-                          style={{ width: '44px', textAlign: 'center', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', padding: '5px', color: 'white', fontFamily: "'Bebas Neue'", fontSize: '1rem' }}
-                        />
-                        <span style={{ color: '#3a5a42', fontSize: '0.75rem' }}>–</span>
-                        <input
-                          type="number"
-                          min="0"
-                          value={scores.away}
-                          onChange={e => setEditScores(prev => ({ ...prev, [m.id]: { ...prev[m.id], away: e.target.value } }))}
-                          disabled={isFinished}
-                          style={{ width: '44px', textAlign: 'center', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', padding: '5px', color: 'white', fontFamily: "'Bebas Neue'", fontSize: '1rem' }}
-                        />
+                        <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', fontWeight: 700, color: 'white', minWidth: '120px', textAlign: 'right' as const }}>{m.home_team}</span>
+                        <input type="number" min="0" value={s.home} onChange={e => setEditScores(p => ({ ...p, [m.id]: { ...p[m.id], home: e.target.value } }))} disabled={fin} style={inputStyle} />
+                        <span style={{ color: '#3a5a42', fontSize: '0.75rem' }}>-</span>
+                        <input type="number" min="0" value={s.away} onChange={e => setEditScores(p => ({ ...p, [m.id]: { ...p[m.id], away: e.target.value } }))} disabled={fin} style={inputStyle} />
                         <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', fontWeight: 700, color: 'white', minWidth: '120px' }}>{m.away_team}</span>
-
-                        {isFinished ? (
+                        {fin ? (
                           <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '1px' }}>FINISHED</span>
                         ) : (
                           <div style={{ display: 'flex', gap: '6px', marginLeft: 'auto' }}>
-                            <button
-                              onClick={() => saveMatch(m.id, false)}
-                              disabled={isSaving}
-                              style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', color: '#8ab898', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '1px' }}
-                            >
-                              {isSaving ? '...' : 'SAVE'}
-                            </button>
-                            <button
-                              onClick={() => saveMatch(m.id, true)}
-                              disabled={isSaving}
-                              style={{ padding: '4px 10px', background: 'rgba(0,200,83,0.15)', border: '1px solid rgba(0,200,83,0.3)', borderRadius: '4px', color: '#00C853', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '1px' }}
-                            >
-                              {isSaving ? '...' : 'MARK FINAL'}
-                            </button>
+                            <button onClick={() => saveMatch(m.id, false)} disabled={sv} style={{ padding: '4px 10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', color: '#8ab898', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '1px' }}>{sv ? '...' : 'SAVE'}</button>
+                            <button onClick={() => saveMatch(m.id, true)} disabled={sv} style={{ padding: '4px 10px', background: 'rgba(0,200,83,0.15)', border: '1px solid rgba(0,200,83,0.3)', borderRadius: '4px', color: '#00C853', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', cursor: 'pointer', letterSpacing: '1px' }}>{sv ? '...' : 'MARK FINAL'}</button>
                           </div>
                         )}
                       </div>
@@ -246,57 +188,88 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ═══ STANDINGS TAB ═══ */}
         {activeTab === 'standings' && (
           <div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Group Standings</div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>
-              Computed from finished matches. Rankings follow FIFA tiebreaker rules.
-            </div>
-
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>Computed from finished matches. Rankings follow FIFA tiebreaker rules.</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
               {standings.map(g => (
-                <div key={g.group} style={{ background: '#0a1410', border: `1px solid ${g.hasTiebreak ? 'rgba(255,214,0,0.3)' : 'rgba(255,255,255,0.07)'}`, borderRadius: '12px', overflow: 'hidden' }}>
+                <div key={g.group} style={{ background: '#0a1410', border: '1px solid ' + (g.hasTiebreak ? 'rgba(255,214,0,0.3)' : 'rgba(255,255,255,0.07)'), borderRadius: '12px', overflow: 'hidden' }}>
                   <div style={{ padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#FFD600', letterSpacing: '2px' }}>GROUP {g.group}</span>
-                    {g.hasTiebreak && (
-                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#FFD600', background: 'rgba(255,214,0,0.15)', padding: '2px 8px', borderRadius: '4px', letterSpacing: '1px' }}>TIEBREAK NEEDED</span>
-                    )}
+                    {g.hasTiebreak && <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#FFD600', background: 'rgba(255,214,0,0.15)', padding: '2px 8px', borderRadius: '4px', letterSpacing: '1px' }}>TIEBREAK NEEDED</span>}
                   </div>
-
-                  {/* Table header */}
                   <div style={{ display: 'grid', gridTemplateColumns: '24px 1fr repeat(8, 32px)', gap: '2px', padding: '6px 10px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     {['#', 'Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map(h => (
-                      <div key={h} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.6rem', color: '#3a5a42', letterSpacing: '1px', textAlign: h === 'Team' ? 'left' : 'center' }}>{h}</div>
+                      <div key={h} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.6rem', color: '#3a5a42', letterSpacing: '1px', textAlign: h === 'Team' ? 'left' as const : 'center' as const }}>{h}</div>
                     ))}
                   </div>
-
-                  {/* Team rows */}
                   {g.teams.map((t, idx) => (
-                    <div key={t.team} style={{
-                      display: 'grid',
-                      gridTemplateColumns: '24px 1fr repeat(8, 32px)',
-                      gap: '2px',
-                      padding: '5px 10px',
-                      borderBottom: idx < g.teams.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none',
-                      background: idx < 2 ? 'rgba(0,200,83,0.03)' : 'transparent',
-                    }}>
-                      <div style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: t.tiebreakNeeded ? '#FFD600' : (idx < 2 ? '#00C853' : '#5a8a68'), textAlign: 'center' }}>
-                        {t.tiebreakNeeded ? '?' : t.rank}
-                      </div>
-                      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        {t.team}
-                        {t.tiebreakNeeded && <span style={{ fontSize: '0.6rem', color: '#FFD600' }}>&#9888;</span>}
-                      </div>
+                    <div key={t.team} style={{ display: 'grid', gridTemplateColumns: '24px 1fr repeat(8, 32px)', gap: '2px', padding: '5px 10px', borderBottom: idx < g.teams.length - 1 ? '1px solid rgba(255,255,255,0.03)' : 'none', background: idx < 2 ? 'rgba(0,200,83,0.03)' : 'transparent' }}>
+                      <div style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: t.tiebreakNeeded ? '#FFD600' : (idx < 2 ? '#00C853' : '#5a8a68'), textAlign: 'center' }}>{t.tiebreakNeeded ? '?' : t.rank}</div>
+                      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: 'white', fontWeight: 700 }}>{t.team}</div>
                       {[t.played, t.won, t.drawn, t.lost, t.goalsFor, t.goalsAgainst, t.goalDifference, t.points].map((v, vi) => (
-                        <div key={vi} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: vi === 7 ? '#FFD600' : '#8ab898', textAlign: 'center', fontWeight: vi === 7 ? 700 : 400 }}>
-                          {v > 0 && vi === 6 ? `+${v}` : v}
-                        </div>
+                        <div key={vi} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: vi === 7 ? '#FFD600' : '#8ab898', textAlign: 'center', fontWeight: vi === 7 ? 700 : 400 }}>{v > 0 && vi === 6 ? '+' + v : v}</div>
                       ))}
                     </div>
                   ))}
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'bracket' && (
+          <div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Round of 32 Bracket</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>Computed from group standings. 24 teams from 1st/2nd place, 8 from best third-place teams.</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px', alignItems: 'start' }}>
+              <div>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '12px' }}>16 MATCHES</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {r32Matchups.map(m => (
+                    <div key={m.match_number} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px' }}>
+                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', minWidth: '28px' }}>#{m.match_number}</span>
+                      <div style={{ flex: 1, textAlign: 'right' as const }}>
+                        {m.home_team ? (
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, color: 'white' }}>{m.home_team}</span>
+                        ) : m.home_cluster ? (
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600' }}>3rd of {m.home_cluster.split('').join('/')} - TBD</span>
+                        ) : (
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>{m.home_slot}</span>
+                        )}
+                      </div>
+                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', padding: '0 4px' }}>vs</span>
+                      <div style={{ flex: 1 }}>
+                        {m.away_team ? (
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, color: 'white' }}>{m.away_team}</span>
+                        ) : m.away_cluster ? (
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600' }}>3rd of {m.away_cluster.split('').join('/')} - TBD</span>
+                        ) : (
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>{m.away_slot}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '16px', position: 'sticky' as const, top: '80px' }}>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '10px' }}>THIRD-PLACE RANKING</div>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#3a5a42', marginBottom: '8px' }}>Best 8 qualify (green). Pts / GD / GF.</div>
+                {qualifiers && qualifiers.thirds.map((t, idx) => (
+                  <div key={t.team} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 8px', borderBottom: idx === 7 ? '2px solid rgba(229,57,53,0.4)' : '1px solid rgba(255,255,255,0.03)', background: t.qualified ? 'rgba(0,200,83,0.04)' : 'transparent' }}>
+                    <span style={{ fontFamily: "'Bebas Neue'", fontSize: '0.85rem', color: t.tiebreakNeeded ? '#FFD600' : (t.qualified ? '#00C853' : '#E53935'), minWidth: '18px', textAlign: 'center' }}>{t.tiebreakNeeded ? '?' : t.thirdRank}</span>
+                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', minWidth: '16px' }}>({t.group})</span>
+                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: 'white', flex: 1 }}>{t.team}</span>
+                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898' }}>{t.points}pts</span>
+                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68' }}>{t.goalDifference > 0 ? '+' + t.goalDifference : t.goalDifference}</span>
+                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42' }}>{t.goalsFor}gf</span>
+                  </div>
+                ))}
+                {qualifiers && qualifiers.thirds.some(t => t.tiebreakNeeded) && (
+                  <div style={{ marginTop: '8px', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', background: 'rgba(255,214,0,0.08)', padding: '8px', borderRadius: '6px' }}>Tiebreak needed at the 8th/9th boundary. Manual resolution required.</div>
+                )}
+              </div>
             </div>
           </div>
         )}
