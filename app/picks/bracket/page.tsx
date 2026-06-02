@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import { BRACKET_LOCK_UTC } from '@/lib/bracket-lock'
 
 const TWEMOJI = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72'
 const FLAGS: Record<string, string> = {
@@ -27,7 +28,7 @@ function FlagImg({ code, size = 28 }: { code: string, size?: number }) {
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 4, objectFit: 'cover', display: 'block', flexShrink: 0 }} alt={code} />
 }
 
-// ── GROUP DEFINITIONS ──────────────────────────────────────────────
+// -- GROUP DEFINITIONS --
 const GROUPS: Record<string, { teams: { name: string; flag: string }[] }> = {
   A: { teams: [{ name: 'Mexico', flag: 'MX' }, { name: 'South Africa', flag: 'ZA' }, { name: 'South Korea', flag: 'KR' }, { name: 'Czechia', flag: 'CZ' }] },
   B: { teams: [{ name: 'Canada', flag: 'CA' }, { name: 'Bosnia', flag: 'BA' }, { name: 'Qatar', flag: 'QA' }, { name: 'Switzerland', flag: 'CH' }] },
@@ -43,28 +44,24 @@ const GROUPS: Record<string, { teams: { name: string; flag: string }[] }> = {
   L: { teams: [{ name: 'England', flag: 'GB' }, { name: 'Croatia', flag: 'HR' }, { name: 'Ghana', flag: 'GH' }, { name: 'Panama', flag: 'PA' }] },
 }
 
-// Group matches: [homeIdx, awayIdx]
-const GROUP_MATCHES = [
-  [0,1],[2,3],[0,2],[1,3],[0,3],[1,2]
-]
+const GROUP_MATCHES = [[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]]
 
-// All 48 teams flat list for knockout dropdowns
 const ALL_TEAMS = Object.entries(GROUPS).flatMap(([g, { teams }]) =>
   teams.map(t => ({ ...t, group: g }))
 )
 
-// ── TYPES ──────────────────────────────────────────────────────────
-type ScorePick = { hs: number; as: number }    // home score, away score
-type WinnerPick = string | null                 // team name
+// -- TYPES --
+type ScorePick = { hs: number; as: number }
+type WinnerPick = string | null
 
 interface BracketState {
-  groups: Record<string, ScorePick[]>           // group → 6 match scores
-  r32:    (WinnerPick)[]                        // 16 winners
-  r16:    (WinnerPick)[]                        // 8 winners
-  qf:     (WinnerPick)[]                        // 4 winners
-  sf:     (WinnerPick)[]                        // 2 winners
-  final:  WinnerPick                            // 1 winner
-  champion: WinnerPick                          // tournament champion
+  groups: Record<string, ScorePick[]>
+  r32:    (WinnerPick)[]
+  r16:    (WinnerPick)[]
+  qf:     (WinnerPick)[]
+  sf:     (WinnerPick)[]
+  final:  WinnerPick
+  champion: WinnerPick
 }
 
 const defaultState = (): BracketState => ({
@@ -77,7 +74,6 @@ const defaultState = (): BracketState => ({
   champion: null,
 })
 
-// Calculate group standings from score picks
 function getGroupStandings(groupKey: string, scores: ScorePick[]) {
   const teams = GROUPS[groupKey].teams.map(t => ({ ...t, pts: 0, gf: 0, ga: 0, gd: 0 }))
   GROUP_MATCHES.forEach(([hi, ai], mi) => {
@@ -100,8 +96,7 @@ const TAB_LABELS: Record<Tab, string> = {
   groups: 'Groups', r32: 'R32', r16: 'R16', qf: 'QF', sf: 'SF / Final', champion: 'Champ'
 }
 
-const AUTO_SUBMIT_DATE = 'June 11 at 12:00 PM CT'
-const LOCK_DATE = new Date('2026-06-11T17:00:00Z') // 12pm CT = 17:00 UTC
+const LOCK_DATE = new Date(BRACKET_LOCK_UTC)
 
 export default function BracketPage() {
   const router = useRouter()
@@ -112,10 +107,23 @@ export default function BracketPage() {
   const [activeTab, setActiveTab] = useState<Tab>('groups')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  const [matchIds, setMatchIds] = useState<Record<string, string>>({}) // "group_matchNum" → uuid
+  const [submitting, setSubmitting] = useState(false)
+  const [statusMsg, setStatusMsg] = useState('')
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [matchIds, setMatchIds] = useState<Record<string, string>>({})
+  // match_number -> uuid for knockout matches
+  const [knockoutIds, setKnockoutIds] = useState<Record<number, string>>({})
 
-  const isLocked = new Date() >= LOCK_DATE
+  const [isLocked, setIsLocked] = useState(new Date() >= LOCK_DATE)
+  const [hasLockedRows, setHasLockedRows] = useState(false)
+
+  // Re-check lock state every 30s
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (new Date() >= LOCK_DATE) setIsLocked(true)
+    }, 30000)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     async function load() {
@@ -123,21 +131,25 @@ export default function BracketPage() {
       if (!user) { router.push('/auth/login'); return }
       setUserId(user.id)
 
-      // Load group stage match IDs from DB
+      // Load ALL match IDs from DB
       const { data: dbMatches } = await supabase
         .from('matches')
         .select('id, match_number, stage, group_name')
-        .eq('stage', 'group')
         .order('match_number')
 
-      const idMap: Record<string, string> = {}
+      const groupIdMap: Record<string, string> = {}
+      const koIdMap: Record<number, string> = {}
+
       dbMatches?.forEach(m => {
-        if (m.group_name) {
-          const groupMatchNum = dbMatches.filter(x => x.group_name === m.group_name).indexOf(m)
-          idMap[`${m.group_name}_${groupMatchNum}`] = m.id
+        if (m.stage === 'group' && m.group_name) {
+          const groupMatchNum = dbMatches!.filter(x => x.group_name === m.group_name && x.match_number <= m.match_number).length - 1
+          groupIdMap[`${m.group_name}_${groupMatchNum}`] = m.id
+        } else {
+          koIdMap[m.match_number] = m.id
         }
       })
-      setMatchIds(idMap)
+      setMatchIds(groupIdMap)
+      setKnockoutIds(koIdMap)
 
       // Load existing bracket picks
       const { data: picks } = await supabase
@@ -147,11 +159,48 @@ export default function BracketPage() {
 
       if (picks && picks.length > 0) {
         const newBracket = defaultState()
+        const matchNumById: Record<string, number> = {}
+        dbMatches?.forEach(m => { matchNumById[m.id] = m.match_number })
+
         picks.forEach(p => {
-          if (p.predicted_champion) newBracket.champion = p.predicted_champion
+          const matchNum = matchNumById[p.match_id]
+          const match = dbMatches?.find(m => m.id === p.match_id)
+
+          if (match?.stage === 'group' && match.group_name) {
+            const groupMatches = dbMatches!.filter(x => x.group_name === match.group_name).sort((a, b) => a.match_number - b.match_number)
+            const idx = groupMatches.findIndex(x => x.id === p.match_id)
+            if (idx >= 0 && p.predicted_home != null && p.predicted_away != null) {
+              newBracket.groups[match.group_name][idx] = { hs: p.predicted_home, as: p.predicted_away }
+            }
+          } else if (match?.stage === 'r32' && p.predicted_winner) {
+            const idx = matchNum - 73
+            if (idx >= 0 && idx < 16) newBracket.r32[idx] = p.predicted_winner
+          } else if (match?.stage === 'r16' && p.predicted_winner) {
+            const idx = matchNum - 89
+            if (idx >= 0 && idx < 8) newBracket.r16[idx] = p.predicted_winner
+          } else if (match?.stage === 'qf' && p.predicted_winner) {
+            const idx = matchNum - 97
+            if (idx >= 0 && idx < 4) newBracket.qf[idx] = p.predicted_winner
+          } else if (match?.stage === 'sf' && p.predicted_winner) {
+            const idx = matchNum - 101
+            if (idx >= 0 && idx < 2) newBracket.sf[idx] = p.predicted_winner
+          } else if (match?.stage === 'final') {
+            if (p.predicted_winner) newBracket.final = p.predicted_winner
+            if (p.predicted_champion) newBracket.champion = p.predicted_champion
+          }
+
+          if (p.predicted_champion && !newBracket.champion) {
+            newBracket.champion = p.predicted_champion
+          }
         })
+
         setBracket(newBracket)
-        if (picks.length > 0) setLastSaved(new Date(picks[0].submitted_at))
+
+        // Check if any picks are submitted or locked
+        const anySubmitted = picks.some(p => p.submitted_at != null)
+        const anyLocked = picks.some(p => p.locked_at != null)
+        setIsSubmitted(anySubmitted)
+        if (anyLocked) { setHasLockedRows(true); setIsLocked(true) }
       }
 
       setLoading(false)
@@ -159,14 +208,105 @@ export default function BracketPage() {
     load()
   }, [])
 
-  // PREVIEW MODE: auto-save disabled — no writes to DB
-  // When preview mode is removed, restore the debounced saveBracket() here
-  const PREVIEW_MODE = true
+  // Build picks array from bracket state
+  const buildPicks = useCallback(() => {
+    const picks: any[] = []
 
-  const saveBracket = useCallback(async () => {
-    // Preview mode: no-op
-    if (PREVIEW_MODE) return
-  }, [])
+    // Group stage picks
+    Object.entries(bracket.groups).forEach(([groupKey, scores]) => {
+      scores.forEach((s, mi) => {
+        const matchId = matchIds[`${groupKey}_${mi}`]
+        if (matchId) {
+          picks.push({
+            match_id: matchId,
+            predicted_home: s.hs,
+            predicted_away: s.as,
+          })
+        }
+      })
+    })
+
+    // R32 picks (match_numbers 73-88)
+    bracket.r32.forEach((winner, i) => {
+      const matchId = knockoutIds[73 + i]
+      if (matchId && winner) {
+        picks.push({ match_id: matchId, predicted_winner: winner })
+      }
+    })
+
+    // R16 picks (match_numbers 89-96)
+    bracket.r16.forEach((winner, i) => {
+      const matchId = knockoutIds[89 + i]
+      if (matchId && winner) {
+        picks.push({ match_id: matchId, predicted_winner: winner })
+      }
+    })
+
+    // QF picks (match_numbers 97-100)
+    bracket.qf.forEach((winner, i) => {
+      const matchId = knockoutIds[97 + i]
+      if (matchId && winner) {
+        picks.push({ match_id: matchId, predicted_winner: winner })
+      }
+    })
+
+    // SF picks (match_numbers 101-102)
+    bracket.sf.forEach((winner, i) => {
+      const matchId = knockoutIds[101 + i]
+      if (matchId && winner) {
+        picks.push({ match_id: matchId, predicted_winner: winner })
+      }
+    })
+
+    // Final (match_number 104) + champion
+    const finalId = knockoutIds[104]
+    if (finalId && (bracket.final || bracket.champion)) {
+      picks.push({
+        match_id: finalId,
+        predicted_winner: bracket.final || null,
+        predicted_champion: bracket.champion || null,
+      })
+    }
+
+    return picks
+  }, [bracket, matchIds, knockoutIds])
+
+  const handleSave = async () => {
+    if (isLocked) return
+    const picks = buildPicks()
+    if (picks.length === 0) { setStatusMsg('No picks to save'); return }
+    setSaving(true); setStatusMsg('')
+    try {
+      const res = await fetch('/api/bracket-picks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save', picks }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setStatusMsg(data.error || 'Save failed'); return }
+      setStatusMsg(`Draft saved (${data.count} picks)`)
+    } catch { setStatusMsg('Network error') }
+    finally { setSaving(false) }
+  }
+
+  const handleSubmit = async () => {
+    if (isLocked) return
+    const picks = buildPicks()
+    if (picks.length === 0) { setStatusMsg('No picks to submit'); return }
+    setSubmitting(true); setStatusMsg('')
+    try {
+      const res = await fetch('/api/bracket-picks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'submit', picks }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setStatusMsg(data.error || 'Submit failed'); return }
+      setIsSubmitted(true)
+      setStatusMsg('Bracket submitted! You can still edit and re-submit until lock.')
+    } catch { setStatusMsg('Network error') }
+    finally { setSubmitting(false) }
+  }
 
   const updateGroupScore = (group: string, matchIdx: number, side: 'hs' | 'as', delta: number) => {
     if (isLocked) return
@@ -198,6 +338,7 @@ export default function BracketPage() {
   }
 
   const pct = Math.round((totalPicks() / 73) * 100)
+  const locked = isLocked || hasLockedRows
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#050C0A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -214,8 +355,9 @@ export default function BracketPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px' }}>
           <a href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '3px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></a>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '1px' }}>PREVIEW MODE</span>
-            <Link href="/picks" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', textDecoration: 'none' }}>← Picks</Link>
+            {locked && <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#E53935', letterSpacing: '1px' }}>LOCKED</span>}
+            {isSubmitted && !locked && <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '1px' }}>SUBMITTED</span>}
+            <Link href="/picks" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', textDecoration: 'none' }}>&larr; Picks</Link>
           </div>
         </div>
 
@@ -223,13 +365,10 @@ export default function BracketPage() {
         <div style={{ padding: '0 20px 10px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
             <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>BRACKET COMPLETION</span>
-            <span style={{ fontFamily: "'Bebas Neue'", fontSize: '0.85rem', color: pct === 100 ? '#00C853' : '#FFD600' }}>{pct}% — {totalPicks()}/73 PICKS</span>
+            <span style={{ fontFamily: "'Bebas Neue'", fontSize: '0.85rem', color: pct === 100 ? '#00C853' : '#FFD600' }}>{pct}% &mdash; {totalPicks()}/73 PICKS</span>
           </div>
           <div style={{ height: '3px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px' }}>
             <div style={{ height: '100%', width: `${pct}%`, background: pct === 100 ? '#00C853' : '#FFD600', borderRadius: '2px', transition: 'width 0.3s' }} />
-          </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '4px' }}>
-            Preview mode — saving opens before June 11 kickoff
           </div>
         </div>
 
@@ -252,23 +391,25 @@ export default function BracketPage() {
         </div>
       </nav>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 16px 80px' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 16px 120px' }}>
 
-        {/* PREVIEW MODE BANNER */}
-        <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '1.2rem' }}>&#9888;</span>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#FFD600', letterSpacing: '0.5px' }}>
-            Preview mode — fill out your bracket to try it, but saving opens before the June 11 kickoff. Your picks aren&apos;t stored yet.
+        {/* LOCKED BANNER */}
+        {locked && (
+          <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '1.2rem' }}>&#128274;</span>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#E53935', letterSpacing: '0.5px' }}>
+              Picks locked &mdash; tournament has started. Your bracket is final.
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* ── GROUPS TAB ── */}
+        {/* -- GROUPS TAB -- */}
         {activeTab === 'groups' && (
           <div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '6px' }}>GROUP STAGE</div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Predict Every Score</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>
-              Scores determine group standings — the winner/runner-up auto-fill your R32 bracket. Exact score = 25pts. Bonus: correct group winner +3pts, correct group runner-up +2pts.
+              Scores determine group standings &mdash; the winner/runner-up auto-fill your R32 bracket. Exact score = 25pts. Bonus: correct group winner +3pts, correct group runner-up +2pts.
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(440px, 1fr))', gap: '16px' }}>
@@ -279,7 +420,6 @@ export default function BracketPage() {
 
                 return (
                   <div key={groupKey} style={{ background: '#0a1410', border: `1px solid ${complete ? 'rgba(0,200,83,0.25)' : 'rgba(255,255,255,0.07)'}`, borderRadius: '12px', overflow: 'hidden' }}>
-                    {/* Group header */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                       <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1rem', color: '#FFD600', letterSpacing: '2px' }}>GROUP {groupKey}</div>
                       <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: complete ? '#00C853' : '#5a8a68', letterSpacing: '1px' }}>
@@ -287,7 +427,6 @@ export default function BracketPage() {
                       </div>
                     </div>
 
-                    {/* Predicted standings */}
                     <div style={{ padding: '8px 14px', background: 'rgba(0,0,0,0.2)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         {standings.slice(0, 2).map((t, i) => (
@@ -298,12 +437,11 @@ export default function BracketPage() {
                           </div>
                         ))}
                         {standings[0].pts === 0 && standings[1].pts === 0 && (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#3a5a42' }}>← predicted standings</span>
+                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#3a5a42' }}>&larr; predicted standings</span>
                         )}
                       </div>
                     </div>
 
-                    {/* Match rows */}
                     <div style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {GROUP_MATCHES.map(([hi, ai], mi) => {
                         const home = teams[hi]
@@ -315,26 +453,23 @@ export default function BracketPage() {
 
                         return (
                           <div key={mi} style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '6px', alignItems: 'center', padding: '6px 4px', borderRadius: '6px', background: 'rgba(255,255,255,0.01)' }}>
-                            {/* Home */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: homeWins ? 'rgba(0,200,83,0.08)' : isDraw ? 'rgba(255,214,0,0.05)' : 'transparent', borderRadius: '5px', padding: '4px 6px' }}>
                               <FlagImg code={home.flag} size={18} />
                               <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', fontWeight: 700, color: homeWins ? '#00C853' : 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{home.name}</span>
                             </div>
-                            {/* Score inputs */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: `1px solid ${homeWins ? 'rgba(0,200,83,0.3)' : isDraw ? 'rgba(255,214,0,0.25)' : 'rgba(255,255,255,0.1)'}`, borderRadius: '5px', overflow: 'hidden' }}>
-                                <button onClick={() => updateGroupScore(groupKey, mi, 'hs', -1)} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>−</button>
+                                <button onClick={() => updateGroupScore(groupKey, mi, 'hs', -1)} disabled={locked} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: locked ? 'default' : 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>&minus;</button>
                                 <span style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: homeWins ? '#00C853' : isDraw ? '#FFD600' : 'white', width: 22, textAlign: 'center', lineHeight: '28px' }}>{s.hs}</span>
-                                <button onClick={() => updateGroupScore(groupKey, mi, 'hs', 1)} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>+</button>
+                                <button onClick={() => updateGroupScore(groupKey, mi, 'hs', 1)} disabled={locked} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: locked ? 'default' : 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>+</button>
                               </div>
                               <span style={{ fontFamily: "'Bebas Neue'", fontSize: '0.8rem', color: 'rgba(255,255,255,0.2)' }}>-</span>
                               <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: `1px solid ${awayWins ? 'rgba(229,57,53,0.3)' : isDraw ? 'rgba(255,214,0,0.25)' : 'rgba(255,255,255,0.1)'}`, borderRadius: '5px', overflow: 'hidden' }}>
-                                <button onClick={() => updateGroupScore(groupKey, mi, 'as', -1)} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>−</button>
+                                <button onClick={() => updateGroupScore(groupKey, mi, 'as', -1)} disabled={locked} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: locked ? 'default' : 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>&minus;</button>
                                 <span style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: awayWins ? '#E53935' : isDraw ? '#FFD600' : 'white', width: 22, textAlign: 'center', lineHeight: '28px' }}>{s.as}</span>
-                                <button onClick={() => updateGroupScore(groupKey, mi, 'as', 1)} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>+</button>
+                                <button onClick={() => updateGroupScore(groupKey, mi, 'as', 1)} disabled={locked} style={{ width: 20, height: 28, background: 'none', border: 'none', color: '#5a8a68', cursor: locked ? 'default' : 'pointer', fontSize: '0.9rem', fontWeight: 700 }}>+</button>
                               </div>
                             </div>
-                            {/* Away */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', justifyContent: 'flex-end', background: awayWins ? 'rgba(229,57,53,0.08)' : isDraw ? 'rgba(255,214,0,0.05)' : 'transparent', borderRadius: '5px', padding: '4px 6px' }}>
                               <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', fontWeight: 700, color: awayWins ? '#E53935' : 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'right' }}>{away.name}</span>
                               <FlagImg code={away.flag} size={18} />
@@ -350,32 +485,32 @@ export default function BracketPage() {
           </div>
         )}
 
-        {/* ── KNOCKOUT TABS (R32, R16, QF) ── */}
+        {/* -- KNOCKOUT TABS (R32, R16, QF) -- */}
         {(['r32', 'r16', 'qf'] as const).includes(activeTab as 'r32' | 'r16' | 'qf') && (
           <KnockoutRound
             round={activeTab as 'r32' | 'r16' | 'qf'}
             bracket={bracket}
             onPick={(round, idx, team) => setKnockoutPick(round as keyof Omit<BracketState, 'groups' | 'final' | 'champion'>, idx, team)}
-            isLocked={isLocked}
+            isLocked={locked}
           />
         )}
 
-        {/* ── SF / FINAL TAB ── */}
+        {/* -- SF / FINAL TAB -- */}
         {activeTab === 'sf' && (
           <div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '20px' }}>Semifinals + Final</div>
             <SFAndFinal bracket={bracket} onPick={(round, idx, team) => {
-              if (isLocked) return
+              if (locked) return
               if (round === 'final') {
                 setBracket(prev => ({ ...prev, final: prev.final === team ? null : team }))
               } else {
                 setKnockoutPick(round as keyof Omit<BracketState, 'groups' | 'final' | 'champion'>, idx, team)
               }
-            }} isLocked={isLocked} />
+            }} isLocked={locked} />
           </div>
         )}
 
-        {/* ── CHAMPION TAB ── */}
+        {/* -- CHAMPION TAB -- */}
         {activeTab === 'champion' && (
           <div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '6px' }}>50 PTS IF CORRECT</div>
@@ -385,14 +520,14 @@ export default function BracketPage() {
                 const isSelected = bracket.champion === team.name
                 return (
                   <button key={`${team.group}_${team.name}`} onClick={() => {
-                    if (isLocked) return
+                    if (locked) return
                     setBracket(prev => ({ ...prev, champion: prev.champion === team.name ? null : team.name }))
                   }} style={{
                     display: 'flex', alignItems: 'center', gap: '10px',
                     padding: '12px 14px',
                     background: isSelected ? 'rgba(255,214,0,0.12)' : 'rgba(255,255,255,0.03)',
                     border: `1.5px solid ${isSelected ? '#FFD600' : 'rgba(255,255,255,0.07)'}`,
-                    borderRadius: '10px', cursor: isLocked ? 'default' : 'pointer',
+                    borderRadius: '10px', cursor: locked ? 'default' : 'pointer',
                     transition: 'all 0.15s', textAlign: 'left',
                   }}>
                     <FlagImg code={team.flag} size={28} />
@@ -400,7 +535,7 @@ export default function BracketPage() {
                       <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', fontWeight: 700, color: isSelected ? '#FFD600' : 'white' }}>{team.name}</div>
                       <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68' }}>Group {team.group}</div>
                     </div>
-                    {isSelected && <div style={{ marginLeft: 'auto', fontFamily: "'Bebas Neue'", fontSize: '1rem', color: '#FFD600' }}>✓</div>}
+                    {isSelected && <div style={{ marginLeft: 'auto', fontFamily: "'Bebas Neue'", fontSize: '1rem', color: '#FFD600' }}>{'✓'}</div>}
                   </button>
                 )
               })}
@@ -410,20 +545,39 @@ export default function BracketPage() {
 
       </div>
 
-      {/* STICKY BOTTOM STATUS */}
+      {/* STICKY BOTTOM: Save / Submit buttons (or locked message) */}
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(5,12,10,0.98) 30%)', padding: '20px 20px 16px' }}>
         <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '1px', marginBottom: '6px' }}>
-            {isLocked
-              ? 'BRACKET LOCKED — Picks submitted'
-              : 'Preview mode — saving opens before June 11 kickoff'}
-          </div>
-          <div style={{ height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', marginBottom: '8px' }}>
-            <div style={{ height: '100%', width: `${pct}%`, background: pct === 100 ? '#00C853' : '#FFD600', borderRadius: '2px', transition: 'width 0.3s' }} />
-          </div>
-          <div style={{ fontFamily: "'Bebas Neue'", fontSize: '0.85rem', color: pct === 100 ? '#00C853' : '#FFD600', letterSpacing: '2px' }}>
-            {pct === 100 ? '✓ BRACKET COMPLETE — GOOD LUCK!' : `${totalPicks()} / 73 PICKS · ${100 - pct}% REMAINING`}
-          </div>
+          {locked ? (
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#E53935', letterSpacing: '1px' }}>
+              &#128274; BRACKET LOCKED &mdash; Picks submitted. Tournament has started.
+            </div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}>
+                <button onClick={handleSave} disabled={saving || submitting} style={{
+                  flex: 1, padding: '12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '8px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px',
+                  color: '#8ab898', cursor: saving ? 'default' : 'pointer',
+                }}>
+                  {saving ? 'SAVING...' : 'SAVE DRAFT'}
+                </button>
+                <button onClick={handleSubmit} disabled={saving || submitting} style={{
+                  flex: 1, padding: '12px', background: '#00C853', border: 'none',
+                  borderRadius: '8px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px',
+                  color: '#050C0A', cursor: submitting ? 'default' : 'pointer',
+                }}>
+                  {submitting ? 'SUBMITTING...' : isSubmitted ? 'RE-SUBMIT' : 'SUBMIT BRACKET'}
+                </button>
+              </div>
+              {statusMsg && (
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: statusMsg.includes('fail') || statusMsg.includes('error') ? '#E53935' : '#00C853', letterSpacing: '0.5px', marginBottom: '4px' }}>{statusMsg}</div>
+              )}
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#3a5a42', letterSpacing: '1px' }}>
+                Auto-submits June 11 at 12:00 PM CT &mdash; you can edit until then
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -431,7 +585,7 @@ export default function BracketPage() {
   )
 }
 
-// ── KNOCKOUT ROUND COMPONENT ───────────────────────────────────────
+// -- KNOCKOUT ROUND COMPONENT --
 function KnockoutRound({ round, bracket, onPick, isLocked }: {
   round: 'r32' | 'r16' | 'qf'
   bracket: BracketState
@@ -486,17 +640,15 @@ function KnockoutMatchCard({ index, round, picked, onPick, isLocked }: {
       <div style={{ padding: '8px 14px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px' }}>
         {roundLabel} MATCH {index + 1}
       </div>
-      {/* Team selectors */}
       <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <select value={homeTeam} onChange={e => setHomeTeam(e.target.value)} disabled={isLocked} style={{ width: '100%', background: '#0d1c14', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '8px 10px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: 'white', outline: 'none', cursor: isLocked ? 'default' : 'pointer' }}>
-          <option value="">— Select home team —</option>
+          <option value="">&mdash; Select home team &mdash;</option>
           {ALL_TEAMS.map(t => <option key={`h_${t.group}_${t.name}`} value={t.name}>{t.name} (Group {t.group})</option>)}
         </select>
         <select value={awayTeam} onChange={e => setAwayTeam(e.target.value)} disabled={isLocked} style={{ width: '100%', background: '#0d1c14', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '8px 10px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: 'white', outline: 'none', cursor: isLocked ? 'default' : 'pointer' }}>
-          <option value="">— Select away team —</option>
+          <option value="">&mdash; Select away team &mdash;</option>
           {ALL_TEAMS.map(t => <option key={`a_${t.group}_${t.name}`} value={t.name}>{t.name} (Group {t.group})</option>)}
         </select>
-        {/* Winner pick */}
         {homeTeam && awayTeam && (
           <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
             {[homeTeam, awayTeam].map(team => {
@@ -511,7 +663,7 @@ function KnockoutMatchCard({ index, round, picked, onPick, isLocked }: {
                 }}>
                   <FlagImg code={flag} size={20} />
                   <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', fontWeight: 700, color: isSelected ? '#00C853' : 'white' }}>{team}</span>
-                  {isSelected && <span style={{ marginLeft: 'auto', color: '#00C853', fontSize: '0.9rem' }}>✓</span>}
+                  {isSelected && <span style={{ marginLeft: 'auto', color: '#00C853', fontSize: '0.9rem' }}>{'✓'}</span>}
                 </button>
               )
             })}
@@ -522,7 +674,7 @@ function KnockoutMatchCard({ index, round, picked, onPick, isLocked }: {
   )
 }
 
-// ── SF + FINAL COMPONENT ───────────────────────────────────────────
+// -- SF + FINAL COMPONENT --
 function SFAndFinal({ bracket, onPick, isLocked }: {
   bracket: BracketState
   onPick: (round: string, idx: number, team: string) => void
@@ -530,10 +682,9 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '600px' }}>
-      {/* Semis */}
       {[0, 1].map(i => (
         <div key={i} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '12px' }}>SEMIFINAL {i + 1} · 12 PTS</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '12px' }}>SEMIFINAL {i + 1} &middot; 12 PTS</div>
           <div style={{ display: 'flex', gap: '8px' }}>
             {ALL_TEAMS.slice(i * 8, i * 8 + 8).map(team => {
               const isSelected = (bracket.sf as WinnerPick[])[i] === team.name
@@ -553,14 +704,13 @@ function SFAndFinal({ bracket, onPick, isLocked }: {
         </div>
       ))}
 
-      {/* Final */}
       <div style={{ background: 'linear-gradient(135deg, rgba(255,214,0,0.06), rgba(0,200,83,0.03))', border: '1.5px solid rgba(255,214,0,0.2)', borderRadius: '12px', padding: '20px' }}>
-        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '12px' }}>THE FINAL · 25 PTS (RUNNER-UP) · 50 PTS (CHAMPION)</div>
-        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', marginBottom: '12px' }}>Pick from the dropdown — who makes the final?</div>
+        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '12px' }}>THE FINAL &middot; 25 PTS (RUNNER-UP) &middot; 50 PTS (CHAMPION)</div>
+        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', marginBottom: '12px' }}>Pick from the dropdown &mdash; who makes the final?</div>
         <div style={{ display: 'flex', gap: '10px' }}>
           {[0, 1].map(side => (
             <select key={side} onChange={e => onPick('final', side, e.target.value)} disabled={isLocked} style={{ flex: 1, background: '#0d1c14', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '6px', padding: '9px 10px', fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: 'white', outline: 'none', cursor: isLocked ? 'default' : 'pointer' }}>
-              <option value="">{side === 0 ? '— Finalist 1 —' : '— Finalist 2 —'}</option>
+              <option value="">{side === 0 ? '-- Finalist 1 --' : '-- Finalist 2 --'}</option>
               {ALL_TEAMS.map(t => <option key={`f${side}_${t.name}`} value={t.name}>{t.name} (Group {t.group})</option>)}
             </select>
           ))}
