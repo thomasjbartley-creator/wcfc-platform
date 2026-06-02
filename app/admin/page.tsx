@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { computeAllGroupStandings, type GroupMatch, type GroupStandings } from '@/lib/standings'
-import { getQualifiers, buildR32, type R32Matchup, type Qualifiers } from '@/lib/advancement'
+import { getQualifiers, buildR32, type R32Matchup, type Qualifiers, type ThirdPlaceTeam } from '@/lib/advancement'
 
 const OWNER_EMAIL = 'thomas@bartleytechaisolutions.com'
 
@@ -32,6 +32,7 @@ export default function AdminPage() {
   const [standings, setStandings] = useState<GroupStandings[]>([])
   const [r32Matchups, setR32Matchups] = useState<R32Matchup[]>([])
   const [qualifiers, setQualifiers] = useState<Qualifiers | null>(null)
+  const [thirdOverrides, setThirdOverrides] = useState<Record<number, string>>({})
   const [activeTab, setActiveTab] = useState<Tab>('results')
 
   useEffect(() => {
@@ -221,36 +222,60 @@ export default function AdminPage() {
 
         {activeTab === 'bracket' && (
           <div>
-            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Round of 32 Bracket</div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '24px' }}>Computed from group standings. 24 teams from 1st/2nd place, 8 from best third-place teams.</div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '4px' }}>Round of 32 Bracket</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '4px' }}>24 from 1st/2nd, 8 best thirds via Annex C.</div>
+            {r32Matchups.length > 0 && r32Matchups[0].thirdsResolved ? (
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', marginBottom: '20px' }}>Annex C resolved - all 32 teams assigned.</div>
+            ) : (
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', marginBottom: '20px' }}>Third-place slots not yet resolved (groups incomplete or tiebreak pending).</div>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px', alignItems: 'start' }}>
               <div>
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '12px' }}>16 MATCHES</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {r32Matchups.map(m => (
-                    <div key={m.match_number} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px' }}>
-                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', minWidth: '28px' }}>#{m.match_number}</span>
-                      <div style={{ flex: 1, textAlign: 'right' as const }}>
-                        {m.home_team ? (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, color: 'white' }}>{m.home_team}</span>
-                        ) : m.home_cluster ? (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600' }}>3rd of {m.home_cluster.split('').join('/')} - TBD</span>
-                        ) : (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>{m.home_slot}</span>
+                  {r32Matchups.map(m => {
+                    const isThirdSlot = m.away_slot.startsWith('3:') || m.home_slot.startsWith('3:')
+                    const overrideTeam = thirdOverrides[m.match_number]
+                    const displayAway = overrideTeam || m.away_team
+                    const displayHome = m.home_team
+                    return (
+                      <div key={m.match_number} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: '#0a1410', border: '1px solid ' + (isThirdSlot && m.thirdsResolved ? 'rgba(0,200,83,0.15)' : 'rgba(255,255,255,0.06)'), borderRadius: '8px', flexWrap: 'wrap' as const }}>
+                        <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', minWidth: '28px' }}>#{m.match_number}</span>
+                        <div style={{ flex: 1, textAlign: 'right' as const }}>
+                          {displayHome ? (
+                            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, color: 'white' }}>{displayHome}</span>
+                          ) : (
+                            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>{m.home_slot}</span>
+                          )}
+                        </div>
+                        <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', padding: '0 4px' }}>vs</span>
+                        <div style={{ flex: 1 }}>
+                          {displayAway ? (
+                            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, color: isThirdSlot ? '#4FC3F7' : 'white' }}>{displayAway}</span>
+                          ) : m.away_cluster ? (
+                            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600' }}>3rd of {m.away_cluster.split('').join('/')} - TBD</span>
+                          ) : (
+                            <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>{m.away_slot}</span>
+                          )}
+                        </div>
+                        {isThirdSlot && m.away_slot.startsWith('3:') && qualifiers && (
+                          <select
+                            value={overrideTeam || m.away_team || ''}
+                            onChange={e => {
+                              const v = e.target.value
+                              setThirdOverrides(p => v ? { ...p, [m.match_number]: v } : (() => { const n = { ...p }; delete n[m.match_number]; return n })())
+                            }}
+                            style={{ background: '#0d1c14', border: '1px solid rgba(79,195,247,0.3)', borderRadius: '4px', padding: '3px 6px', fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#4FC3F7', cursor: 'pointer' }}
+                          >
+                            <option value="">Annex C</option>
+                            {qualifiers.qualifiedThirds.map(t => (
+                              <option key={t.team} value={t.team}>{t.team} ({t.group})</option>
+                            ))}
+                          </select>
                         )}
                       </div>
-                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', padding: '0 4px' }}>vs</span>
-                      <div style={{ flex: 1 }}>
-                        {m.away_team ? (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, color: 'white' }}>{m.away_team}</span>
-                        ) : m.away_cluster ? (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600' }}>3rd of {m.away_cluster.split('').join('/')} - TBD</span>
-                        ) : (
-                          <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68' }}>{m.away_slot}</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
               <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '16px', position: 'sticky' as const, top: '80px' }}>
@@ -262,12 +287,12 @@ export default function AdminPage() {
                     <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', minWidth: '16px' }}>({t.group})</span>
                     <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', fontWeight: 700, color: 'white', flex: 1 }}>{t.team}</span>
                     <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898' }}>{t.points}pts</span>
-                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68' }}>{t.goalDifference > 0 ? '+' + t.goalDifference : t.goalDifference}</span>
+                    <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68' }}>{t.goalDifference > 0 ? '+' + t.goalDifference : String(t.goalDifference)}</span>
                     <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42' }}>{t.goalsFor}gf</span>
                   </div>
                 ))}
                 {qualifiers && qualifiers.thirds.some(t => t.tiebreakNeeded) && (
-                  <div style={{ marginTop: '8px', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', background: 'rgba(255,214,0,0.08)', padding: '8px', borderRadius: '6px' }}>Tiebreak needed at the 8th/9th boundary. Manual resolution required.</div>
+                  <div style={{ marginTop: '8px', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', background: 'rgba(255,214,0,0.08)', padding: '8px', borderRadius: '6px' }}>Tiebreak at 8th/9th boundary. Manual resolution required.</div>
                 )}
               </div>
             </div>

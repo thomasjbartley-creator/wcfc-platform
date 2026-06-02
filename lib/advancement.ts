@@ -6,10 +6,16 @@
  * - Best 8 of 12 third-place teams advance
  * - Third-place ranking: points -> GD -> GF (NO head-to-head, different groups)
  *
+ * resolveThirdSlots uses FIFA Annex C table to assign each qualifying
+ * third-place team to a specific R32 match slot.
+ *
  * Pure functions, no DB writes.
  */
 
 import { type GroupStandings, type TeamStanding } from './standings'
+import annexCData from './data/annex_c.json'
+
+const annexC: Record<string, Record<string, string>> = annexCData
 
 export interface ThirdPlaceTeam extends TeamStanding {
   qualified: boolean
@@ -18,11 +24,11 @@ export interface ThirdPlaceTeam extends TeamStanding {
 }
 
 export interface Qualifiers {
-  winners: Map<string, TeamStanding>      // group letter -> winner
-  runnersUp: Map<string, TeamStanding>    // group letter -> runner-up
-  thirds: ThirdPlaceTeam[]                // all 12 third-place teams, ranked
-  qualifiedThirds: ThirdPlaceTeam[]       // best 8
-  eliminatedThirds: ThirdPlaceTeam[]      // worst 4
+  winners: Map<string, TeamStanding>
+  runnersUp: Map<string, TeamStanding>
+  thirds: ThirdPlaceTeam[]
+  qualifiedThirds: ThirdPlaceTeam[]
+  eliminatedThirds: ThirdPlaceTeam[]
 }
 
 export interface R32Matchup {
@@ -31,8 +37,9 @@ export interface R32Matchup {
   away_slot: string
   home_team: string | null
   away_team: string | null
-  home_cluster: string | null   // for 3rd-place slots, e.g. "ABCDF"
+  home_cluster: string | null
   away_cluster: string | null
+  thirdsResolved: boolean
 }
 
 /**
@@ -45,7 +52,6 @@ export function getQualifiers(allStandings: GroupStandings[]): Qualifiers {
   const thirdPlaceRaw: TeamStanding[] = []
 
   for (const gs of allStandings) {
-    // Teams are already sorted by rank from standings engine
     const sorted = [...gs.teams].sort((a, b) => a.rank - b.rank)
     if (sorted.length >= 1) winners.set(gs.group, sorted[0])
     if (sorted.length >= 2) runnersUp.set(gs.group, sorted[1])
@@ -67,7 +73,6 @@ export function getQualifiers(allStandings: GroupStandings[]): Qualifiers {
     return 0
   })
 
-  // Assign third-place ranks (sequential)
   for (let i = 0; i < thirds.length; i++) {
     thirds[i].thirdRank = i + 1
   }
@@ -86,7 +91,6 @@ export function getQualifiers(allStandings: GroupStandings[]): Qualifiers {
     }
   }
 
-  // Best 8 qualify (unless tiebreak needed at boundary)
   for (let i = 0; i < Math.min(8, thirds.length); i++) {
     thirds[i].qualified = true
   }
@@ -98,11 +102,86 @@ export function getQualifiers(allStandings: GroupStandings[]): Qualifiers {
 }
 
 /**
+ * Resolve the 8 third-place cluster slots using FIFA Annex C.
+ * Returns the R32 matchups with away_team filled for third-place slots.
+ *
+ * If exactly 8 thirds are resolved and the combo key exists in Annex C,
+ * each third-slot match gets its away_team assigned.
+ * Otherwise returns matchups unchanged with thirdsResolved=false.
+ */
+export function resolveThirdSlots(
+  matchups: R32Matchup[],
+  qualifiers: Qualifiers,
+  allStandings: GroupStandings[]
+): R32Matchup[] {
+  // Collect the 8 qualifying group letters
+  const qualGroups = qualifiers.qualifiedThirds.map(t => t.group)
+  if (qualGroups.length !== 8) {
+    // Not enough resolved thirds
+    return matchups.map(m => ({ ...m, thirdsResolved: false }))
+  }
+
+  // Check if any tiebreak is unresolved at the boundary
+  if (qualifiers.thirds.some(t => t.tiebreakNeeded)) {
+    return matchups.map(m => ({ ...m, thirdsResolved: false }))
+  }
+
+  const comboKey = qualGroups.slice().sort().join('')
+  const mapping = annexC[comboKey]
+  if (!mapping) {
+    // No Annex C entry for this combination
+    return matchups.map(m => ({ ...m, thirdsResolved: false }))
+  }
+
+  // Build a lookup: group letter -> third-place team name
+  const thirdByGroup = new Map<string, string>()
+  for (const gs of allStandings) {
+    const sorted = [...gs.teams].sort((a, b) => a.rank - b.rank)
+    if (sorted.length >= 3) {
+      thirdByGroup.set(gs.group, sorted[2].team)
+    }
+  }
+
+  // Apply: for each matchup that has a 3:cluster away_slot, resolve using Annex C
+  return matchups.map(m => {
+    if (!m.away_cluster && !m.home_cluster) {
+      // Not a third-place slot
+      return { ...m, thirdsResolved: true }
+    }
+
+    const result = { ...m, thirdsResolved: true }
+
+    // Check if this match's home_slot has an Annex C mapping
+    if (m.away_cluster && mapping[m.home_slot]) {
+      const assignedGroup = mapping[m.home_slot]
+      const team = thirdByGroup.get(assignedGroup)
+      if (team) {
+        result.away_team = team
+        result.away_cluster = assignedGroup
+      }
+    }
+
+    // Same for home_cluster (unlikely in current data but future-proof)
+    if (m.home_cluster && mapping[m.away_slot]) {
+      const assignedGroup = mapping[m.away_slot]
+      const team = thirdByGroup.get(assignedGroup)
+      if (team) {
+        result.home_team = team
+        result.home_cluster = assignedGroup
+      }
+    }
+
+    return result
+  })
+}
+
+/**
  * Build 16 R32 matchups by resolving slot codes against standings.
+ * Then applies Annex C third-place resolution.
  * Slot formats:
  *   '1X' -> winner of group X
  *   '2X' -> runner-up of group X
- *   '3:XXXXX' -> one of the qualified 3rd-place teams from groups X/X/X/X/X (TBD)
+ *   '3:XXXXX' -> resolved via Annex C to a specific third-place team
  */
 export function buildR32(
   allStandings: GroupStandings[],
@@ -113,21 +192,18 @@ export function buildR32(
   function resolveSlot(slot: string): { team: string | null; cluster: string | null } {
     if (!slot) return { team: null, cluster: null }
 
-    // '1X' format - group winner
     if (slot.length === 2 && slot[0] === '1') {
       const group = slot[1]
       const winner = qualifiers.winners.get(group)
       return { team: winner ? winner.team : null, cluster: null }
     }
 
-    // '2X' format - group runner-up
     if (slot.length === 2 && slot[0] === '2') {
       const group = slot[1]
       const ru = qualifiers.runnersUp.get(group)
       return { team: ru ? ru.team : null, cluster: null }
     }
 
-    // '3:XXXXX' format - third-place cluster
     if (slot.startsWith('3:')) {
       const cluster = slot.substring(2)
       return { team: null, cluster }
@@ -136,7 +212,7 @@ export function buildR32(
     return { team: null, cluster: null }
   }
 
-  return r32Rows.map(row => {
+  const baseMatchups: R32Matchup[] = r32Rows.map(row => {
     const home = resolveSlot(row.home_slot)
     const away = resolveSlot(row.away_slot)
 
@@ -148,6 +224,10 @@ export function buildR32(
       away_team: away.team,
       home_cluster: home.cluster,
       away_cluster: away.cluster,
+      thirdsResolved: false,
     }
   })
+
+  // Apply Annex C resolution
+  return resolveThirdSlots(baseMatchups, qualifiers, allStandings)
 }
