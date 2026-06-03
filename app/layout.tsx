@@ -31,6 +31,23 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Script id="translate-crash-guard" strategy="beforeInteractive">
+          {`
+            (function () {
+              if (typeof Node !== 'function' || !Node.prototype) return;
+              var origRemove = Node.prototype.removeChild;
+              Node.prototype.removeChild = function (child) {
+                if (child && child.parentNode !== this) { return child; }
+                return origRemove.apply(this, arguments);
+              };
+              var origInsert = Node.prototype.insertBefore;
+              Node.prototype.insertBefore = function (newNode, referenceNode) {
+                if (referenceNode && referenceNode.parentNode !== this) { return newNode; }
+                return origInsert.apply(this, arguments);
+              };
+            })();
+          `}
+        </Script>
         <Script
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
           strategy="afterInteractive"
