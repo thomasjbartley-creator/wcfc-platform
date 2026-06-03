@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback, useMemo } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
@@ -8,27 +8,25 @@ import { BRACKET_LOCK_UTC } from "@/lib/bracket-lock"
 
 const TWEMOJI = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72"
 const FLAGS: Record<string, string> = {
-  MX:"1f1f2-1f1fd", ZA:"1f1ff-1f1e6", KR:"1f1f0-1f1f7", CZ:"1f1e8-1f1ff",
-  CA:"1f1e8-1f1e6", BA:"1f1e7-1f1e6", QA:"1f1f6-1f1e6", CH:"1f1e8-1f1ed",
-  BR:"1f1e7-1f1f7", MA:"1f1f2-1f1e6", HT:"1f1ed-1f1f9", GB:"1f1ec-1f1e7",
-  US:"1f1fa-1f1f8", PY:"1f1f5-1f1fe", AU:"1f1e6-1f1fa", TR:"1f1f9-1f1f7",
-  DE:"1f1e9-1f1ea", CW:"1f1e8-1f1fc", CI:"1f1e8-1f1ee", EC:"1f1ea-1f1e8",
-  NL:"1f1f3-1f1f1", JP:"1f1ef-1f1f5", SE:"1f1f8-1f1ea", TN:"1f1f9-1f1f3",
-  BE:"1f1e7-1f1ea", EG:"1f1ea-1f1ec", IR:"1f1ee-1f1f7", NZ:"1f1f3-1f1ff",
-  ES:"1f1ea-1f1f8", CV:"1f1e8-1f1fb", SA:"1f1f8-1f1e6", UY:"1f1fa-1f1fe",
-  FR:"1f1eb-1f1f7", SN:"1f1f8-1f1f3", IQ:"1f1ee-1f1f6", NO:"1f1f3-1f1f4",
-  AR:"1f1e6-1f1f7", DZ:"1f1e9-1f1ff", AT:"1f1e6-1f1f9", JO:"1f1ef-1f1f4",
-  PT:"1f1f5-1f1f9", CD:"1f1e8-1f1e9", UZ:"1f1fa-1f1ff", CO:"1f1e8-1f1f4",
-  HR:"1f1ed-1f1f7", GH:"1f1ec-1f1ed", PA:"1f1f5-1f1e6",
+  MX:"1f1f2-1f1fd",ZA:"1f1ff-1f1e6",KR:"1f1f0-1f1f7",CZ:"1f1e8-1f1ff",
+  CA:"1f1e8-1f1e6",BA:"1f1e7-1f1e6",QA:"1f1f6-1f1e6",CH:"1f1e8-1f1ed",
+  BR:"1f1e7-1f1f7",MA:"1f1f2-1f1e6",HT:"1f1ed-1f1f9",GB:"1f1ec-1f1e7",
+  US:"1f1fa-1f1f8",PY:"1f1f5-1f1fe",AU:"1f1e6-1f1fa",TR:"1f1f9-1f1f7",
+  DE:"1f1e9-1f1ea",CW:"1f1e8-1f1fc",CI:"1f1e8-1f1ee",EC:"1f1ea-1f1e8",
+  NL:"1f1f3-1f1f1",JP:"1f1ef-1f1f5",SE:"1f1f8-1f1ea",TN:"1f1f9-1f1f3",
+  BE:"1f1e7-1f1ea",EG:"1f1ea-1f1ec",IR:"1f1ee-1f1f7",NZ:"1f1f3-1f1ff",
+  ES:"1f1ea-1f1f8",CV:"1f1e8-1f1fb",SA:"1f1f8-1f1e6",UY:"1f1fa-1f1fe",
+  FR:"1f1eb-1f1f7",SN:"1f1f8-1f1f3",IQ:"1f1ee-1f1f6",NO:"1f1f3-1f1f4",
+  AR:"1f1e6-1f1f7",DZ:"1f1e9-1f1ff",AT:"1f1e6-1f1f9",JO:"1f1ef-1f1f4",
+  PT:"1f1f5-1f1f9",CD:"1f1e8-1f1e9",UZ:"1f1fa-1f1ff",CO:"1f1e8-1f1f4",
+  HR:"1f1ed-1f1f7",GH:"1f1ec-1f1ed",PA:"1f1f5-1f1e6",
 }
-
 function FlagImg({ code, size = 28 }: { code: string; size?: number }) {
   const cp = FLAGS[code]
   if (!cp) return <div style={{ width: size, height: size, borderRadius: 4, background: "rgba(255,255,255,0.1)" }} />
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 4, objectFit: "cover", display: "block", flexShrink: 0 }} alt={code} />
 }
 
-/* ---- GROUP DEFINITIONS ---- */
 const GROUPS: Record<string, { teams: { name: string; flag: string }[] }> = {
   A:{teams:[{name:"Mexico",flag:"MX"},{name:"South Africa",flag:"ZA"},{name:"South Korea",flag:"KR"},{name:"Czechia",flag:"CZ"}]},
   B:{teams:[{name:"Canada",flag:"CA"},{name:"Bosnia",flag:"BA"},{name:"Qatar",flag:"QA"},{name:"Switzerland",flag:"CH"}]},
@@ -43,21 +41,17 @@ const GROUPS: Record<string, { teams: { name: string; flag: string }[] }> = {
   K:{teams:[{name:"Portugal",flag:"PT"},{name:"DR Congo",flag:"CD"},{name:"Uzbekistan",flag:"UZ"},{name:"Colombia",flag:"CO"}]},
   L:{teams:[{name:"England",flag:"GB"},{name:"Croatia",flag:"HR"},{name:"Ghana",flag:"GH"},{name:"Panama",flag:"PA"}]},
 }
-
 const GROUP_MATCH_PAIRS = [[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]]
+const ALL_TEAMS = Object.entries(GROUPS).flatMap(([g, { teams }]) => teams.map(t => ({ ...t, group: g })))
 
-const ALL_TEAMS = Object.entries(GROUPS).flatMap(([g, { teams }]) =>
-  teams.map(t => ({ ...t, group: g }))
-)
-
-/* ---- BRACKET STRUCTURE: which matches feed into which ---- */
-const R16_SOURCES: Record<number,[number,number]> = {89:[73,74],90:[75,76],91:[77,78],92:[79,80],93:[81,82],94:[83,84],95:[85,86],96:[87,88]}
-const QF_SOURCES: Record<number,[number,number]> = {97:[89,90],98:[91,92],99:[93,94],100:[95,96]}
-const SF_SOURCES: Record<number,[number,number]> = {101:[97,98],102:[99,100]}
+/* ---- Bracket structure ---- */
+const R16_SRC: Record<number,[number,number]> = {89:[73,74],90:[75,76],91:[77,78],92:[79,80],93:[81,82],94:[83,84],95:[85,86],96:[87,88]}
+const QF_SRC: Record<number,[number,number]> = {97:[89,90],98:[91,92],99:[93,94],100:[95,96]}
+const SF_SRC: Record<number,[number,number]> = {101:[97,98],102:[99,100]}
+const THIRD_MATCH = 103
 const FINAL_MATCH = 104
-const FINAL_SOURCES: [number,number] = [101,102]
+const FINAL_SRC: [number,number] = [101,102]
 
-/* ---- R32 slot definitions from the database ---- */
 const R32_SLOTS: Record<number, { home: string; away: string }> = {
   73:{home:"2A",away:"2B"},74:{home:"1E",away:"3:ABCDF"},
   75:{home:"1F",away:"2C"},76:{home:"1C",away:"2F"},
@@ -68,48 +62,35 @@ const R32_SLOTS: Record<number, { home: string; away: string }> = {
   85:{home:"1B",away:"3:EFGIJ"},86:{home:"1J",away:"2H"},
   87:{home:"1K",away:"3:DEIJL"},88:{home:"2D",away:"2G"},
 }
-
-/* ---- Third-place slot assignment ---- */
 const THIRD_PLACE_SLOT_ALLOWED: [number, string[]][] = [
-  [74,["A","B","C","D","F"]],
-  [77,["C","D","F","G","H"]],
-  [79,["C","E","F","H","I"]],
-  [80,["E","H","I","J","K"]],
-  [81,["B","E","F","I","J"]],
-  [82,["A","E","H","I","J"]],
-  [85,["E","F","G","I","J"]],
-  [87,["D","E","I","J","L"]],
+  [74,["A","B","C","D","F"]],[77,["C","D","F","G","H"]],
+  [79,["C","E","F","H","I"]],[80,["E","H","I","J","K"]],
+  [81,["B","E","F","I","J"]],[82,["A","E","H","I","J"]],
+  [85,["E","F","G","I","J"]],[87,["D","E","I","J","L"]],
 ]
-
 function assignThirdPlaceToSlots(qualGroups: string[]): Record<number, string> {
-  const result: Record<number, string> = {}
-  const used = new Set<string>()
+  const result: Record<number, string> = {}; const used = new Set<string>()
   function solve(si: number): boolean {
     if (si >= THIRD_PLACE_SLOT_ALLOWED.length) return true
-    const [matchNum, allowed] = THIRD_PLACE_SLOT_ALLOWED[si]
+    const [mn, allowed] = THIRD_PLACE_SLOT_ALLOWED[si]
     for (const g of qualGroups) {
       if (used.has(g) || !allowed.includes(g)) continue
-      used.add(g); result[matchNum] = g
+      used.add(g); result[mn] = g
       if (solve(si + 1)) return true
-      used.delete(g); delete result[matchNum]
+      used.delete(g); delete result[mn]
     }
     return false
   }
-  solve(0)
-  return result
+  solve(0); return result
 }
 
-/* ---- Types ---- */
 type ScorePick = { hs: number; as: number }
 type TeamInfo = { name: string; flag: string } | null
-
-type Tab = "groups" | "r32" | "r16" | "qf" | "sf" | "champion"
-const TABS: Tab[] = ["groups","r32","r16","qf","sf","champion"]
-const TAB_LABELS: Record<Tab, string> = { groups:"Groups", r32:"R32", r16:"R16", qf:"QF", sf:"SF / Final", champion:"Champ" }
-
+type Tab = "groups" | "r32" | "r16" | "qf" | "sf"
+const TABS: Tab[] = ["groups","r32","r16","qf","sf"]
+const TAB_LABELS: Record<Tab, string> = { groups:"Groups", r32:"R32", r16:"R16", qf:"QF", sf:"SF / Final" }
 const LOCK_DATE = new Date(BRACKET_LOCK_UTC)
 
-/* ---- Group standings calculation ---- */
 function getGroupStandings(groupKey: string, scores: ScorePick[]) {
   const teams = GROUPS[groupKey].teams.map(t => ({ ...t, pts: 0, gf: 0, ga: 0, gd: 0 }))
   GROUP_MATCH_PAIRS.forEach(([hi, ai], mi) => {
@@ -124,31 +105,18 @@ function getGroupStandings(groupKey: string, scores: ScorePick[]) {
   return [...teams].sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf)
 }
 
-/* ============================================================ */
-/*  MAIN COMPONENT                                              */
-/* ============================================================ */
 export default function BracketPage() {
   const router = useRouter()
   const supabase = createClient()
-
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-
-  // Group scores: 12 groups x 6 matches
   const [groupScores, setGroupScores] = useState<Record<string, ScorePick[]>>(
     Object.fromEntries(Object.keys(GROUPS).map(g => [g, GROUP_MATCH_PAIRS.map(() => ({ hs: 0, as: 0 }))]))
   )
-  // Track which group games the user has actually touched (clicked +/-)
   const [touchedGames, setTouchedGames] = useState<Set<string>>(new Set())
-
-  // Knockout winners: match_number -> predicted winner team name
   const [knockoutWinners, setKnockoutWinners] = useState<Record<number, string>>({})
-  const [champion, setChampion] = useState<string | null>(null)
-
-  // Match IDs from DB
-  const [groupMatchIds, setGroupMatchIds] = useState<Record<string, string>>({}) // "A_0" -> uuid
-  const [koMatchIds, setKoMatchIds] = useState<Record<number, string>>({})       // 73 -> uuid
-
+  const [groupMatchIds, setGroupMatchIds] = useState<Record<string, string>>({})
+  const [koMatchIds, setKoMatchIds] = useState<Record<number, string>>({})
   const [activeTab, setActiveTab] = useState<Tab>("groups")
   const [saving, setSaving] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -157,31 +125,28 @@ export default function BracketPage() {
   const [isLocked, setIsLocked] = useState(new Date() >= LOCK_DATE)
   const [hasLockedRows, setHasLockedRows] = useState(false)
 
+  // Champion is derived from the Final winner pick — no separate state
+  const champion = knockoutWinners[FINAL_MATCH] || null
+
   useEffect(() => {
     const t = setInterval(() => { if (new Date() >= LOCK_DATE) setIsLocked(true) }, 30000)
     return () => clearInterval(t)
   }, [])
 
-  /* ---- Load matches + existing picks ---- */
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push("/auth/login"); return }
       setUserId(user.id)
-
       const { data: dbMatches } = await supabase.from("matches").select("id, match_number, stage, group_name").order("match_number")
-
       const gMap: Record<string, string> = {}
       const kMap: Record<number, string> = {}
-      // Build per-group match index
       const groupMatchOrder: Record<string, number[]> = {}
       dbMatches?.filter(m => m.stage === "group" && m.group_name).forEach(m => {
         if (!groupMatchOrder[m.group_name!]) groupMatchOrder[m.group_name!] = []
         groupMatchOrder[m.group_name!].push(m.match_number)
       })
-      // Sort each group's match numbers
       Object.values(groupMatchOrder).forEach(arr => arr.sort((a, b) => a - b))
-
       dbMatches?.forEach(m => {
         if (m.stage === "group" && m.group_name) {
           const idx = groupMatchOrder[m.group_name].indexOf(m.match_number)
@@ -193,37 +158,37 @@ export default function BracketPage() {
       setGroupMatchIds(gMap)
       setKoMatchIds(kMap)
 
-      // Load existing picks
+      // Rehydrate from DB
       const { data: picks } = await supabase.from("bracket_picks").select("*").eq("user_id", user.id)
       if (picks && picks.length > 0) {
-        const newScores = Object.fromEntries(Object.keys(GROUPS).map(g => [g, GROUP_MATCH_PAIRS.map(() => ({ hs: 0, as: 0 }))]))
+        const newScores: Record<string, ScorePick[]> = Object.fromEntries(
+          Object.keys(GROUPS).map(g => [g, GROUP_MATCH_PAIRS.map(() => ({ hs: 0, as: 0 }))])
+        )
         const newTouched = new Set<string>()
         const newKoWinners: Record<number, string> = {}
-        let newChamp: string | null = null
-
         const matchNumById: Record<string, { num: number; stage: string; group: string | null }> = {}
         dbMatches?.forEach(m => { matchNumById[m.id] = { num: m.match_number, stage: m.stage, group: m.group_name } })
 
         picks.forEach(p => {
           const info = matchNumById[p.match_id]
           if (!info) return
-
           if (info.stage === "group" && info.group) {
             const idx = groupMatchOrder[info.group]?.indexOf(info.num) ?? -1
             if (idx >= 0 && p.predicted_home != null && p.predicted_away != null) {
               newScores[info.group][idx] = { hs: p.predicted_home, as: p.predicted_away }
               newTouched.add(`${info.group}_${idx}`)
             }
-          } else if (info.stage !== "group" && info.stage !== "third") {
+          } else if (info.stage !== "group") {
             if (p.predicted_winner) newKoWinners[info.num] = p.predicted_winner
-            if (p.predicted_champion) newChamp = p.predicted_champion
+            // If champion was stored but final winner wasn't, set it
+            if (info.num === FINAL_MATCH && p.predicted_champion && !p.predicted_winner) {
+              newKoWinners[FINAL_MATCH] = p.predicted_champion
+            }
           }
         })
-
         setGroupScores(newScores)
         setTouchedGames(newTouched)
         setKnockoutWinners(newKoWinners)
-        setChampion(newChamp)
         setIsSubmitted(picks.some(p => p.submitted_at != null))
         if (picks.some(p => p.locked_at != null)) { setHasLockedRows(true); setIsLocked(true) }
       }
@@ -234,23 +199,20 @@ export default function BracketPage() {
 
   const locked = isLocked || hasLockedRows
 
-  /* ---- Compute group standings ---- */
+  /* ---- Compute group standings (DO NOT TOUCH - verified working) ---- */
   const allStandings = useMemo(() => {
     const s: Record<string, ReturnType<typeof getGroupStandings>> = {}
     Object.keys(GROUPS).forEach(g => { s[g] = getGroupStandings(g, groupScores[g]) })
     return s
   }, [groupScores])
 
-  /* ---- Resolve R32 teams from group standings + third place ---- */
+  /* ---- Resolve R32 teams (DO NOT TOUCH - verified working) ---- */
   const r32Teams = useMemo(() => {
-    // Group winners and runners-up
     const pos: Record<string, { name: string; flag: string }> = {}
     Object.entries(allStandings).forEach(([g, st]) => {
       pos[`1${g}`] = { name: st[0].name, flag: st[0].flag }
       pos[`2${g}`] = { name: st[1].name, flag: st[1].flag }
     })
-
-    // Third-place teams: rank and pick top 8
     const thirds = Object.entries(allStandings).map(([g, st]) => ({
       group: g, name: st[2].name, flag: st[2].flag,
       pts: st[2].pts, gd: st[2].gd, gf: st[2].gf,
@@ -259,141 +221,92 @@ export default function BracketPage() {
     const qualGroups = thirds.slice(0, 8).map(t => t.group)
     const thirdByGroup: Record<string, { name: string; flag: string }> = {}
     thirds.forEach(t => { thirdByGroup[t.group] = { name: t.name, flag: t.flag } })
-
-    // Assign third-place teams to R32 slots
     const assignment = assignThirdPlaceToSlots(qualGroups)
-
-    // Resolve each R32 match
     const result: Record<number, { home: TeamInfo; away: TeamInfo }> = {}
     for (let mn = 73; mn <= 88; mn++) {
       const slot = R32_SLOTS[mn]
       const homeTeam = pos[slot.home] || null
       let awayTeam: TeamInfo = null
       if (slot.away.startsWith("3:")) {
-        // Third-place slot: look up assignment for this match
-        const assignedGroup = assignment[mn]
-        if (assignedGroup) awayTeam = thirdByGroup[assignedGroup] || null
-      } else {
-        awayTeam = pos[slot.away] || null
-      }
+        const ag = assignment[mn]; if (ag) awayTeam = thirdByGroup[ag] || null
+      } else { awayTeam = pos[slot.away] || null }
       result[mn] = { home: homeTeam, away: awayTeam }
     }
     return result
   }, [allStandings])
 
-  /* ---- Resolve R16+ teams from knockout winners ---- */
+  /* ---- Resolve R16+ teams including Third Place and Final ---- */
   const resolvedKO = useMemo(() => {
     const teams: Record<number, { home: TeamInfo; away: TeamInfo }> = {}
-
-    // R32 teams already resolved
-    for (let mn = 73; mn <= 88; mn++) teams[mn] = r32Teams[mn]
-
-    // Helper: get team info by name
     const teamByName = (name: string): TeamInfo => ALL_TEAMS.find(t => t.name === name) || null
-
+    // R32
+    for (let mn = 73; mn <= 88; mn++) teams[mn] = r32Teams[mn]
     // R16
-    Object.entries(R16_SOURCES).forEach(([mn, [s1, s2]]) => {
+    Object.entries(R16_SRC).forEach(([mn, [s1, s2]]) => {
       const n = Number(mn)
-      const w1 = knockoutWinners[s1] ? teamByName(knockoutWinners[s1]) : null
-      const w2 = knockoutWinners[s2] ? teamByName(knockoutWinners[s2]) : null
-      teams[n] = { home: w1, away: w2 }
+      teams[n] = { home: knockoutWinners[s1] ? teamByName(knockoutWinners[s1]) : null, away: knockoutWinners[s2] ? teamByName(knockoutWinners[s2]) : null }
     })
     // QF
-    Object.entries(QF_SOURCES).forEach(([mn, [s1, s2]]) => {
+    Object.entries(QF_SRC).forEach(([mn, [s1, s2]]) => {
       const n = Number(mn)
       teams[n] = { home: knockoutWinners[s1] ? teamByName(knockoutWinners[s1]) : null, away: knockoutWinners[s2] ? teamByName(knockoutWinners[s2]) : null }
     })
     // SF
-    Object.entries(SF_SOURCES).forEach(([mn, [s1, s2]]) => {
+    Object.entries(SF_SRC).forEach(([mn, [s1, s2]]) => {
       const n = Number(mn)
       teams[n] = { home: knockoutWinners[s1] ? teamByName(knockoutWinners[s1]) : null, away: knockoutWinners[s2] ? teamByName(knockoutWinners[s2]) : null }
     })
-    // Final
+    // Third place = SF losers
+    const sf101 = teams[101]; const sf102 = teams[102]
+    const loser1 = (sf101?.home && sf101?.away && knockoutWinners[101])
+      ? (knockoutWinners[101] === sf101.home.name ? sf101.away : sf101.home) : null
+    const loser2 = (sf102?.home && sf102?.away && knockoutWinners[102])
+      ? (knockoutWinners[102] === sf102.home.name ? sf102.away : sf102.home) : null
+    teams[THIRD_MATCH] = { home: loser1, away: loser2 }
+    // Final = SF winners
     teams[FINAL_MATCH] = {
-      home: knockoutWinners[FINAL_SOURCES[0]] ? teamByName(knockoutWinners[FINAL_SOURCES[0]]) : null,
-      away: knockoutWinners[FINAL_SOURCES[1]] ? teamByName(knockoutWinners[FINAL_SOURCES[1]]) : null,
+      home: knockoutWinners[FINAL_SRC[0]] ? teamByName(knockoutWinners[FINAL_SRC[0]]) : null,
+      away: knockoutWinners[FINAL_SRC[1]] ? teamByName(knockoutWinners[FINAL_SRC[1]]) : null,
     }
     return teams
   }, [r32Teams, knockoutWinners])
 
-  /* ---- Completion counter ---- */
+  /* ---- Completion counter (Bug 7: all 104 matches, dynamic denominator) ---- */
   const completion = useMemo(() => {
-    // Group: count only touched games
     const groupDone = touchedGames.size
-    const groupTotal = 72
-
-    // Knockout: count resolved matches where user picked a winner
-    let koDone = 0
-    let koTotal = 0
-    for (let mn = 73; mn <= 88; mn++) {
+    let koDone = 0, koTotal = 0
+    for (let mn = 73; mn <= 104; mn++) {
       const t = resolvedKO[mn]
       if (t?.home && t?.away) { koTotal++; if (knockoutWinners[mn]) koDone++ }
     }
-    // R16
-    for (let mn = 89; mn <= 96; mn++) {
-      const t = resolvedKO[mn]
-      if (t?.home && t?.away) { koTotal++; if (knockoutWinners[mn]) koDone++ }
-    }
-    // QF
-    for (let mn = 97; mn <= 100; mn++) {
-      const t = resolvedKO[mn]
-      if (t?.home && t?.away) { koTotal++; if (knockoutWinners[mn]) koDone++ }
-    }
-    // SF
-    for (let mn = 101; mn <= 102; mn++) {
-      const t = resolvedKO[mn]
-      if (t?.home && t?.away) { koTotal++; if (knockoutWinners[mn]) koDone++ }
-    }
-    // Final
-    const ft = resolvedKO[FINAL_MATCH]
-    if (ft?.home && ft?.away) { koTotal++; if (knockoutWinners[FINAL_MATCH]) koDone++ }
-
-    // Champion
-    const champTotal = 1
-    const champDone = champion ? 1 : 0
-
-    const done = groupDone + koDone + champDone
-    const total = groupTotal + koTotal + champTotal
+    const done = groupDone + koDone
+    const total = 72 + koTotal
     return { done, total, pct: total > 0 ? Math.round((done / total) * 100) : 0 }
-  }, [touchedGames, knockoutWinners, champion, resolvedKO])
+  }, [touchedGames, knockoutWinners, resolvedKO])
 
-  /* ---- Build picks for API ---- */
-  const buildPicks = useCallback(() => {
+  /* ---- Build picks for save/submit (Bug 1 fix: plain function, reads state directly) ---- */
+  function buildPicks() {
     const picks: any[] = []
-
-    // Group picks: only touched games
+    // Group: all touched games (includes real 0-0)
     touchedGames.forEach(key => {
       const matchId = groupMatchIds[key]
       if (!matchId) return
-      const [g, mi] = [key.split("_")[0], parseInt(key.split("_")[1])]
-      const s = groupScores[g]?.[mi]
-      if (s != null) {
-        picks.push({ match_id: matchId, predicted_home: s.hs, predicted_away: s.as })
-      }
+      const parts = key.split("_")
+      const s = groupScores[parts[0]]?.[parseInt(parts[1])]
+      if (s != null) picks.push({ match_id: matchId, predicted_home: s.hs, predicted_away: s.as })
     })
-
-    // Knockout winners
+    // Knockout winners (73-104)
     Object.entries(knockoutWinners).forEach(([mnStr, winner]) => {
       const mn = Number(mnStr)
       const matchId = koMatchIds[mn]
-      if (matchId && winner) {
-        const row: any = { match_id: matchId, predicted_winner: winner }
-        // Store champion on the final match row
-        if (mn === FINAL_MATCH && champion) row.predicted_champion = champion
-        picks.push(row)
-      }
+      if (!matchId || !winner) return
+      const row: any = { match_id: matchId, predicted_winner: winner }
+      if (mn === FINAL_MATCH) row.predicted_champion = winner
+      picks.push(row)
     })
-
-    // Champion without a final winner pick: store on final match row
-    if (champion && !knockoutWinners[FINAL_MATCH]) {
-      const matchId = koMatchIds[FINAL_MATCH]
-      if (matchId) picks.push({ match_id: matchId, predicted_champion: champion })
-    }
-
     return picks
-  }, [touchedGames, groupScores, groupMatchIds, knockoutWinners, koMatchIds, champion])
+  }
 
-  /* ---- Save / Submit handlers ---- */
   const handleAction = async (action: "save" | "submit") => {
     if (locked) return
     const picks = buildPicks()
@@ -402,39 +315,35 @@ export default function BracketPage() {
     setStatusMsg("")
     try {
       const res = await fetch("/api/bracket-picks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action, picks }),
       })
       const data = await res.json()
       if (!res.ok) { setStatusMsg(data.error || `${action} failed`); return }
       if (action === "submit") setIsSubmitted(true)
-      setStatusMsg(action === "save" ? `Draft saved (${data.count} picks)` : "Bracket submitted! You can still edit and re-submit until lock.")
+      setStatusMsg(action === "save" ? `Draft saved (${data.count} picks)` : "Bracket submitted! You can edit and re-submit until lock.")
     } catch { setStatusMsg("Network error") }
     finally { setSaving(false); setSubmitting(false) }
   }
 
-  /* ---- Group score updater ---- */
   const updateGroupScore = (group: string, mi: number, side: "hs" | "as", delta: number) => {
     if (locked) return
-    const key = `${group}_${mi}`
-    setTouchedGames(prev => new Set(prev).add(key))
+    setTouchedGames(prev => { const n = new Set(prev); n.add(`${group}_${mi}`); return n })
     setGroupScores(prev => {
-      const newG = { ...prev }
-      const scores = [...newG[group]]
+      const newG = { ...prev }; const scores = [...newG[group]]
       scores[mi] = { ...scores[mi], [side]: Math.max(0, scores[mi][side] + delta) }
-      newG[group] = scores
-      return newG
+      newG[group] = scores; return newG
     })
   }
 
-  /* ---- Knockout winner picker ---- */
   const pickKnockoutWinner = (matchNum: number, team: string) => {
     if (locked) return
     setKnockoutWinners(prev => {
       const next = { ...prev }
       if (next[matchNum] === team) delete next[matchNum]
       else next[matchNum] = team
+      // If picking final winner changed, clear stale champion reference
+      // (champion is derived from knockoutWinners[FINAL_MATCH], no extra state)
       return next
     })
   }
@@ -449,7 +358,7 @@ export default function BracketPage() {
     <div style={{ minHeight: "100vh", background: "#050C0A", fontFamily: "'Barlow', sans-serif", color: "#d0ead8" }}>
       <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
 
-      {/* STICKY NAV */}
+      {/* NAV */}
       <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(5,12,10,0.97)", borderBottom: "1px solid rgba(255,255,255,0.07)", backdropFilter: "blur(12px)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px" }}>
           <a href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: "1.4rem", color: "white", letterSpacing: "3px", textDecoration: "none" }}>WCFC<span style={{ color: "#00C853" }}>.</span></a>
@@ -472,8 +381,8 @@ export default function BracketPage() {
           {TABS.map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)} style={{
               flexShrink: 0, padding: "6px 14px",
-              background: activeTab === tab ? (tab === "champion" ? "#FFD600" : "#00C853") : "rgba(255,255,255,0.04)",
-              border: `1px solid ${activeTab === tab ? (tab === "champion" ? "#FFD600" : "#00C853") : "rgba(255,255,255,0.08)"}`,
+              background: activeTab === tab ? "#00C853" : "rgba(255,255,255,0.04)",
+              border: `1px solid ${activeTab === tab ? "#00C853" : "rgba(255,255,255,0.08)"}`,
               borderRadius: "16px", fontFamily: "'Barlow Condensed'", fontSize: "0.78rem", fontWeight: 700,
               color: activeTab === tab ? "#050C0A" : "#5a8a68", cursor: "pointer", letterSpacing: "1px",
             }}>{TAB_LABELS[tab]}</button>
@@ -486,7 +395,7 @@ export default function BracketPage() {
         {locked && (
           <div style={{ background: "rgba(229,57,53,0.08)", border: "1px solid rgba(229,57,53,0.25)", borderRadius: "12px", padding: "16px 20px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "12px" }}>
             <span style={{ fontSize: "1.2rem" }}>&#128274;</span>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.88rem", color: "#E53935", letterSpacing: "0.5px" }}>Picks locked &mdash; tournament has started. Your bracket is final.</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.88rem", color: "#E53935" }}>Picks locked &mdash; tournament has started. Your bracket is final.</div>
           </div>
         )}
 
@@ -560,99 +469,63 @@ export default function BracketPage() {
           </div>
         )}
 
-        {/* ---- KNOCKOUT TABS (R32, R16, QF, SF) ---- */}
-        {(["r32","r16","qf","sf"] as const).includes(activeTab as any) && (() => {
-          const roundConfig: Record<string, { label: string; pts: string; range: [number,number]; sources?: Record<number,[number,number]> }> = {
-            r32: { label: "Round of 32", pts: "3", range: [73,88] },
-            r16: { label: "Round of 16", pts: "5", range: [89,96], sources: R16_SOURCES },
-            qf:  { label: "Quarterfinals", pts: "8", range: [97,100], sources: QF_SOURCES },
-            sf:  { label: "Semifinals", pts: "12", range: [101,102], sources: SF_SOURCES },
+        {/* ---- KNOCKOUT TABS: R32, R16, QF ---- */}
+        {(["r32","r16","qf"] as const).includes(activeTab as any) && (() => {
+          const cfg: Record<string,{label:string;pts:string;range:[number,number]}> = {
+            r32:{label:"Round of 32",pts:"3",range:[73,88]},
+            r16:{label:"Round of 16",pts:"5",range:[89,96]},
+            qf:{label:"Quarterfinals",pts:"8",range:[97,100]},
           }
-          const cfg = roundConfig[activeTab]
-          if (!cfg) return null
-          const matchNums: number[] = []
-          for (let i = cfg.range[0]; i <= cfg.range[1]; i++) matchNums.push(i)
+          const c = cfg[activeTab]; if (!c) return null
+          const nums: number[] = []; for (let i = c.range[0]; i <= c.range[1]; i++) nums.push(i)
           return (
             <div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.75rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "6px" }}>{cfg.pts} PTS PER CORRECT PICK</div>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: "1.8rem", color: "white", letterSpacing: "2px", marginBottom: "8px" }}>{cfg.label}</div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.82rem", color: "#5a8a68", marginBottom: "20px" }}>
-                Teams are auto-filled from your predictions. Pick the winner of each match.
-              </div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.75rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "6px" }}>{c.pts} PTS PER CORRECT PICK</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: "1.8rem", color: "white", letterSpacing: "2px", marginBottom: "8px" }}>{c.label}</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.82rem", color: "#5a8a68", marginBottom: "20px" }}>Teams are auto-filled from your predictions. Pick the winner.</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))", gap: "14px" }}>
-                {matchNums.map(mn => {
-                  const t = resolvedKO[mn]
-                  const picked = knockoutWinners[mn] || null
-                  const roundLabel = activeTab.toUpperCase()
-                  return (
-                    <div key={mn} style={{ background: "#0a1410", border: `1px solid ${picked ? "rgba(0,200,83,0.2)" : "rgba(255,255,255,0.07)"}`, borderRadius: "12px", overflow: "hidden" }}>
-                      <div style={{ padding: "8px 14px", background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.05)", fontFamily: "'Barlow Condensed'", fontSize: "0.72rem", color: "#5a8a68", letterSpacing: "2px" }}>
-                        {roundLabel} MATCH {mn - cfg.range[0] + 1}
-                      </div>
-                      <div style={{ padding: "12px 14px" }}>
-                        {(!t?.home || !t?.away) ? (
-                          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.82rem", color: "#3a5a42", textAlign: "center", padding: "16px 0" }}>
-                            Complete earlier rounds to reveal teams
-                          </div>
-                        ) : (
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            {[t.home, t.away].map(team => {
-                              if (!team) return null
-                              const isSel = picked === team.name
-                              return (
-                                <button key={team.name} onClick={() => pickKnockoutWinner(mn, team.name)} disabled={locked} style={{
-                                  flex: 1, display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px",
-                                  background: isSel ? "rgba(0,200,83,0.15)" : "rgba(255,255,255,0.03)",
-                                  border: `1.5px solid ${isSel ? "#00C853" : "rgba(255,255,255,0.08)"}`,
-                                  borderRadius: "8px", cursor: locked ? "default" : "pointer", transition: "all 0.15s",
-                                }}>
-                                  <FlagImg code={team.flag} size={20} />
-                                  <span style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.85rem", fontWeight: 700, color: isSel ? "#00C853" : "white" }}>{team.name}</span>
-                                  {isSel && <span style={{ marginLeft: "auto", color: "#00C853", fontSize: "0.9rem" }}>{"✓"}</span>}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
+                {nums.map(mn => <KOCard key={mn} mn={mn} label={`${activeTab.toUpperCase()} MATCH ${mn - c.range[0] + 1}`} teams={resolvedKO[mn]} picked={knockoutWinners[mn]||null} onPick={pickKnockoutWinner} locked={locked} />)}
               </div>
             </div>
           )
         })()}
 
-        {/* ---- CHAMPION TAB ---- */}
-        {activeTab === "champion" && (
+        {/* ---- SF / FINAL TAB (Bug 3+4+5: renders SF, 3rd Place, Final) ---- */}
+        {activeTab === "sf" && (
           <div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.75rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "6px" }}>50 PTS IF CORRECT</div>
-            <div style={{ fontFamily: "'Bebas Neue'", fontSize: "1.8rem", color: "white", letterSpacing: "2px", marginBottom: "20px" }}>Who Wins It All?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
-              {ALL_TEAMS.map(team => {
-                const isSel = champion === team.name
-                return (
-                  <button key={`${team.group}_${team.name}`} onClick={() => { if (!locked) setChampion(champion === team.name ? null : team.name) }} style={{
-                    display: "flex", alignItems: "center", gap: "10px", padding: "12px 14px",
-                    background: isSel ? "rgba(255,214,0,0.12)" : "rgba(255,255,255,0.03)",
-                    border: `1.5px solid ${isSel ? "#FFD600" : "rgba(255,255,255,0.07)"}`,
-                    borderRadius: "10px", cursor: locked ? "default" : "pointer", transition: "all 0.15s", textAlign: "left",
-                  }}>
-                    <FlagImg code={team.flag} size={28} />
-                    <div>
-                      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.88rem", fontWeight: 700, color: isSel ? "#FFD600" : "white" }}>{team.name}</div>
-                      <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.68rem", color: "#5a8a68" }}>Group {team.group}</div>
-                    </div>
-                    {isSel && <div style={{ marginLeft: "auto", fontFamily: "'Bebas Neue'", fontSize: "1rem", color: "#FFD600" }}>{"✓"}</div>}
-                  </button>
-                )
-              })}
+            {/* Semifinals */}
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.75rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "6px" }}>12 PTS PER CORRECT PICK</div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: "1.8rem", color: "white", letterSpacing: "2px", marginBottom: "16px" }}>Semifinals</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))", gap: "14px", marginBottom: "32px" }}>
+              {[101, 102].map(mn => <KOCard key={mn} mn={mn} label={`SEMIFINAL ${mn - 100}`} teams={resolvedKO[mn]} picked={knockoutWinners[mn]||null} onPick={pickKnockoutWinner} locked={locked} />)}
             </div>
+
+            {/* Third Place */}
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.75rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "6px" }}>5 PTS</div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: "1.4rem", color: "white", letterSpacing: "2px", marginBottom: "16px" }}>Third-Place Playoff</div>
+            <div style={{ marginBottom: "32px" }}>
+              <KOCard mn={THIRD_MATCH} label="3RD PLACE MATCH" teams={resolvedKO[THIRD_MATCH]} picked={knockoutWinners[THIRD_MATCH]||null} onPick={pickKnockoutWinner} locked={locked} />
+            </div>
+
+            {/* Final */}
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.75rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "6px" }}>50 PTS &mdash; PICK THE CHAMPION</div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: "1.8rem", color: "white", letterSpacing: "2px", marginBottom: "16px" }}>The Final</div>
+            <KOCard mn={FINAL_MATCH} label="FINAL" teams={resolvedKO[FINAL_MATCH]} picked={knockoutWinners[FINAL_MATCH]||null} onPick={pickKnockoutWinner} locked={locked} highlight />
+            {champion && (
+              <div style={{ marginTop: "16px", textAlign: "center", padding: "16px", background: "rgba(255,214,0,0.08)", border: "1px solid rgba(255,214,0,0.25)", borderRadius: "12px" }}>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.72rem", color: "#FFD600", letterSpacing: "3px", marginBottom: "4px" }}>YOUR PREDICTED CHAMPION</div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                  <FlagImg code={ALL_TEAMS.find(t => t.name === champion)?.flag || ""} size={24} />
+                  <span style={{ fontFamily: "'Bebas Neue'", fontSize: "1.6rem", color: "#FFD600", letterSpacing: "2px" }}>{champion}</span>
+                </div>
+              </div>
+            )}
           </div>
         )}
+
       </div>
 
-      {/* STICKY BOTTOM */}
+      {/* STICKY FOOTER */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(5,12,10,0.98) 30%)", padding: "20px 20px 16px" }}>
         <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
           {locked ? (
@@ -674,7 +547,7 @@ export default function BracketPage() {
                 }}>{submitting ? "SUBMITTING..." : isSubmitted ? "RE-SUBMIT" : "SUBMIT BRACKET"}</button>
               </div>
               {statusMsg && (
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.78rem", color: statusMsg.includes("fail") || statusMsg.includes("error") || statusMsg.includes("No picks") ? "#E53935" : "#00C853", letterSpacing: "0.5px", marginBottom: "4px" }}>{statusMsg}</div>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.78rem", color: statusMsg.includes("fail") || statusMsg.includes("error") || statusMsg.includes("No picks") ? "#E53935" : "#00C853", marginBottom: "4px" }}>{statusMsg}</div>
               )}
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.68rem", color: "#3a5a42", letterSpacing: "1px" }}>
                 Auto-submits June 11 at 12:00 PM CT &mdash; you can edit until then
@@ -683,7 +556,51 @@ export default function BracketPage() {
           )}
         </div>
       </div>
+    </div>
+  )
+}
 
+/* ---- Knockout match card (shared by all knockout rounds) ---- */
+function KOCard({ mn, label, teams, picked, onPick, locked, highlight }: {
+  mn: number; label: string; teams: { home: TeamInfo; away: TeamInfo } | undefined
+  picked: string | null; onPick: (mn: number, team: string) => void; locked: boolean; highlight?: boolean
+}) {
+  const t = teams
+  const borderColor = highlight
+    ? (picked ? "rgba(255,214,0,0.4)" : "rgba(255,214,0,0.2)")
+    : (picked ? "rgba(0,200,83,0.2)" : "rgba(255,255,255,0.07)")
+  return (
+    <div style={{ background: highlight ? "rgba(255,214,0,0.03)" : "#0a1410", border: `1px solid ${borderColor}`, borderRadius: "12px", overflow: "hidden" }}>
+      <div style={{ padding: "8px 14px", background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.05)", fontFamily: "'Barlow Condensed'", fontSize: "0.72rem", color: highlight ? "#FFD600" : "#5a8a68", letterSpacing: "2px" }}>
+        {label}
+      </div>
+      <div style={{ padding: "12px 14px" }}>
+        {(!t?.home || !t?.away) ? (
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.82rem", color: "#3a5a42", textAlign: "center", padding: "16px 0" }}>
+            Complete earlier rounds to reveal teams
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: "8px" }}>
+            {[t.home, t.away].map(team => {
+              if (!team) return null
+              const isSel = picked === team.name
+              const selColor = highlight ? "#FFD600" : "#00C853"
+              return (
+                <button key={team.name} onClick={() => onPick(mn, team.name)} disabled={locked} style={{
+                  flex: 1, display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px",
+                  background: isSel ? (highlight ? "rgba(255,214,0,0.15)" : "rgba(0,200,83,0.15)") : "rgba(255,255,255,0.03)",
+                  border: `1.5px solid ${isSel ? selColor : "rgba(255,255,255,0.08)"}`,
+                  borderRadius: "8px", cursor: locked ? "default" : "pointer", transition: "all 0.15s",
+                }}>
+                  <FlagImg code={team.flag} size={20} />
+                  <span style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.85rem", fontWeight: 700, color: isSel ? selColor : "white" }}>{team.name}</span>
+                  {isSel && <span style={{ marginLeft: "auto", color: selColor, fontSize: "0.9rem" }}>{"✓"}</span>}
+                </button>
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
