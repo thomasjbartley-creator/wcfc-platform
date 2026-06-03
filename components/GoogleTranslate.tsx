@@ -22,6 +22,18 @@ declare global {
   }
 }
 
+function findVisibleSlot(): HTMLElement | null {
+  for (const id of ['translate-widget-slot', 'translate-widget-slot-mobile']) {
+    const el = document.getElementById(id)
+    // offsetParent is null when the element (or an ancestor) is display:none
+    if (el && el.offsetParent !== null) return el
+  }
+  return (
+    document.getElementById('translate-widget-slot') ||
+    document.getElementById('translate-widget-slot-mobile')
+  )
+}
+
 export default function GoogleTranslate() {
   const [mounted, setMounted] = useState(false)
   const [target, setTarget] = useState<HTMLElement | null>(null)
@@ -60,7 +72,7 @@ export default function GoogleTranslate() {
     // Watch for the translate-widget-slot appearing/reappearing in the DOM
     // (Nav remounts on each page navigation, creating a new slot div)
     const observer = new MutationObserver(() => {
-      const slot = document.getElementById('translate-widget-slot')
+      const slot = findVisibleSlot()
       if (slot && slot !== target) {
         setTarget(slot)
       }
@@ -69,10 +81,14 @@ export default function GoogleTranslate() {
     observer.observe(document.body, { childList: true, subtree: true })
 
     // Initial find
-    const slot = document.getElementById('translate-widget-slot')
+    const slot = findVisibleSlot()
     if (slot) setTarget(slot)
 
-    return () => observer.disconnect()
+    // Resize handler: CSS breakpoints flip visibility without DOM mutations
+    const onResize = () => { const s = findVisibleSlot(); if (s) setTarget(s) }
+    window.addEventListener('resize', onResize)
+
+    return () => { observer.disconnect(); window.removeEventListener('resize', onResize) }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // When target changes (new Nav mounted), re-init widget after portal renders
