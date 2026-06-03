@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
-import { createClient } from '@/lib/supabase'
 import { isBracketLocked } from '@/lib/bracket-lock'
 
 /**
  * POST /api/bracket-picks
  * Save or submit bracket picks.
+ *
+ * Auth: pass the user's access token in the Authorization header.
+ * The admin client verifies it and extracts user.id — this works
+ * regardless of cookie/session handling in the Route Handler.
  *
  * Body: {
  *   action: 'save' | 'submit',
@@ -17,21 +20,23 @@ import { isBracketLocked } from '@/lib/bracket-lock'
  *     predicted_champion?: string | null,
  *   }>
  * }
- *
- * Save:   upserts with submitted_at = NULL (draft)
- * Submit: upserts with submitted_at = now()
- * Both rejected if bracket is locked.
  */
 export async function POST(req: NextRequest) {
   try {
-    // --- Auth ---
-    const supabase = createClient()
-    const { data: { user }, error: authErr } = await supabase.auth.getUser()
+    const admin = createAdminClient()
+
+    // --- Auth: verify token from header ---
+    const authHeader = req.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    }
+    const { data: { user }, error: authErr } = await admin.auth.getUser(token)
     if (authErr || !user) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    // --- Lock guard (server-side, cannot be bypassed) ---
+    // --- Lock guard ---
     if (isBracketLocked()) {
       return NextResponse.json(
         { error: 'Bracket is locked. Picks can no longer be saved or submitted.' },
@@ -42,17 +47,14 @@ export async function POST(req: NextRequest) {
     const { action, picks } = await req.json()
 
     if (!action || !['save', 'submit'].includes(action)) {
-      return NextResponse.json({ error: 'Invalid action. Must be "save" or "submit".' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid action.' }, { status: 400 })
     }
-
     if (!Array.isArray(picks) || picks.length === 0) {
       return NextResponse.json({ error: 'No picks provided.' }, { status: 400 })
     }
 
-    const admin = createAdminClient()
     const now = new Date().toISOString()
 
-    // Build upsert rows
     const rows = picks.map((p: any) => ({
       user_id: user.id,
       match_id: p.match_id,
@@ -69,7 +71,7 @@ export async function POST(req: NextRequest) {
 
     if (upsertErr) {
       console.error('Bracket picks upsert failed:', upsertErr)
-      return NextResponse.json({ error: 'Failed to save picks.' }, { status: 500 })
+      return NextResponse.json({ error: 'Failed to save picks: ' + upsertErr.message }, { status: 500 })
     }
 
     console.log(`Bracket ${action}: user=${user.id} picks=${rows.length}`)
