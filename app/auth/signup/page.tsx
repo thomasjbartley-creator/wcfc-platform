@@ -4,69 +4,13 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 
-function generateReferralCode(username: string): string {
+function generateReferralCode(seed: string): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   const suffix = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
-  const base = username.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5)
+  const base = (seed || 'FAN').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5)
   return base + suffix
 }
-const COUNTRIES = [
-  // AFC (8)
-  { code: 'AU', name: 'Australia' },
-  { code: 'IR', name: 'Iran' },
-  { code: 'IQ', name: 'Iraq' },
-  { code: 'JP', name: 'Japan' },
-  { code: 'JO', name: 'Jordan' },
-  { code: 'KR', name: 'South Korea' },
-  { code: 'QA', name: 'Qatar' },
-  { code: 'SA', name: 'Saudi Arabia' },
-  { code: 'UZ', name: 'Uzbekistan' },
-  // CAF (9)
-  { code: 'DZ', name: 'Algeria' },
-  { code: 'CV', name: 'Cabo Verde' },
-  { code: 'CD', name: 'Congo DR' },
-  { code: 'CI', name: 'Côte d\'Ivoire' },
-  { code: 'EG', name: 'Egypt' },
-  { code: 'GH', name: 'Ghana' },
-  { code: 'MA', name: 'Morocco' },
-  { code: 'SN', name: 'Senegal' },
-  { code: 'ZA', name: 'South Africa' },
-  { code: 'TN', name: 'Tunisia' },
-  // CONCACAF (6 inc. hosts)
-  { code: 'CA', name: 'Canada' },
-  { code: 'CW', name: 'Curaçao' },
-  { code: 'HT', name: 'Haiti' },
-  { code: 'MX', name: 'Mexico' },
-  { code: 'PA', name: 'Panama' },
-  { code: 'US', name: 'United States' },
-  // CONMEBOL (6)
-  { code: 'AR', name: 'Argentina' },
-  { code: 'BR', name: 'Brazil' },
-  { code: 'CO', name: 'Colombia' },
-  { code: 'EC', name: 'Ecuador' },
-  { code: 'PY', name: 'Paraguay' },
-  { code: 'UY', name: 'Uruguay' },
-  // OFC (1)
-  { code: 'NZ', name: 'New Zealand' },
-  // UEFA (16)
-  { code: 'AT', name: 'Austria' },
-  { code: 'BE', name: 'Belgium' },
-  { code: 'BA', name: 'Bosnia & Herzegovina' },
-  { code: 'HR', name: 'Croatia' },
-  { code: 'CZ', name: 'Czechia' },
-  { code: 'GB', name: 'England' },
-  { code: 'FR', name: 'France' },
-  { code: 'DE', name: 'Germany' },
-  { code: 'NL', name: 'Netherlands' },
-  { code: 'NO', name: 'Norway' },
-  { code: 'PT', name: 'Portugal' },
-  { code: 'SCO', name: 'Scotland' },
-  { code: 'ES', name: 'Spain' },
-  { code: 'SE', name: 'Sweden' },
-  { code: 'CH', name: 'Switzerland' },
-  { code: 'TR', name: 'Turkiye' },
-  { code: 'OTHER', name: 'Other Country' },
-]
+
 export default function SignupPage() { return <Suspense fallback={null}><SignupPageContent /></Suspense> }
 
 function SignupPageContent() {
@@ -75,79 +19,46 @@ function SignupPageContent() {
   const supabase = createClient()
   const [referredBy, setReferredBy] = useState<string | null>(null)
   const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    username: '',
-    country: '',
-    dateOfBirth: '',
-    isJunior: false,
   })
 
   useEffect(() => {
     const ref = searchParams.get('ref')
     if (ref) setReferredBy(ref)
   }, [])
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const isUnder18 = (dob: string) => {
-    if (!dob) return false
-    const birthDate = new Date(dob)
-    const today = new Date()
-    const age = today.getFullYear() - birthDate.getFullYear()
-    const m = today.getMonth() - birthDate.getMonth()
-    return age < 18 || (age === 18 && m < 0)
-  }
-  const validateUsername = (username: string) => {
-    if (username.length < 3) return 'Username must be at least 3 characters'
-    if (username.length > 25) return 'Username must be 25 characters or less'
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) return 'Username can only contain letters, numbers, and underscores'
-    const blocked = ['admin','wcfc','champion','founder','moderator','staff','support','official']
-    if (blocked.some(w => username.toLowerCase().includes(w))) return 'This username is reserved'
-    return null
-  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
-    if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match')
+    if (!form.firstName.trim()) {
+      setError('Please enter your first name')
       setLoading(false)
       return
     }
-    if (form.password.length < 8) {
-      setError('Password must be at least 8 characters')
+    if (form.password.length < 6) {
+      setError('Password must be at least 6 characters')
       setLoading(false)
       return
     }
-    const usernameError = validateUsername(form.username)
-    if (usernameError) {
-      setError(usernameError)
-      setLoading(false)
-      return
-    }
-    if (!form.country) {
-      setError('Please select a country to support')
-      setLoading(false)
-      return
-    }
-    if (!form.dateOfBirth) {
-      setError('Please enter your date of birth')
-      setLoading(false)
-      return
-    }
-    const junior = isUnder18(form.dateOfBirth)
-    const referralCode = generateReferralCode(form.username)
+    const cleanFirst = form.firstName.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'FAN'
+    const username = cleanFirst + Math.floor(1000 + Math.random() * 9000)
+    const referralCode = generateReferralCode(form.firstName)
+    const cleanEmail = form.email.trim().toLowerCase()
     try {
       const { data, error: authError } = await supabase.auth.signUp({
-        email: form.email,
+        email: cleanEmail,
         password: form.password,
         options: {
           data: {
-            username: form.username,
-            country_supported: form.country,
-            date_of_birth: form.dateOfBirth,
-            is_junior: junior,
+            first_name: form.firstName.trim(),
+            last_name: form.lastName.trim(),
           }
         }
       })
@@ -157,11 +68,10 @@ function SignupPageContent() {
           .from('profiles')
           .upsert({
             id: data.user.id,
-            email: form.email,
-            username: form.username,
-            country_supported: form.country,
-            date_of_birth: form.dateOfBirth,
-            is_junior: junior,
+            email: cleanEmail,
+            first_name: form.firstName.trim(),
+            last_name: form.lastName.trim(),
+            username,
             referral_code: referralCode,
             referred_by: referredBy ?? null,
           })
@@ -175,6 +85,7 @@ function SignupPageContent() {
       setLoading(false)
     }
   }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -210,7 +121,7 @@ function SignupPageContent() {
             Create Your Account
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '28px', letterSpacing: '0.5px' }}>
-            Join the global fan challenge — free to play, win cash & prizes
+            Join the global fan challenge — free to play, win cash &amp; prizes
           </div>
           {referredBy && (
             <div style={{
@@ -241,6 +152,29 @@ function SignupPageContent() {
             </div>
           )}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div>
+                <label style={labelStyle}>First Name</label>
+                <input
+                  type="text"
+                  required
+                  value={form.firstName}
+                  onChange={e => setForm({ ...form, firstName: e.target.value })}
+                  placeholder="First"
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label style={labelStyle}>Last Name</label>
+                <input
+                  type="text"
+                  value={form.lastName}
+                  onChange={e => setForm({ ...form, lastName: e.target.value })}
+                  placeholder="Last"
+                  style={inputStyle}
+                />
+              </div>
+            </div>
             <div>
               <label style={labelStyle}>Email Address</label>
               <input
@@ -253,72 +187,15 @@ function SignupPageContent() {
               />
             </div>
             <div>
-              <label style={labelStyle}>Username <span style={{ color: '#5a8a68' }}>(shown on leaderboard)</span></label>
+              <label style={labelStyle}>Password</label>
               <input
-                type="text"
+                type="password"
                 required
-                value={form.username}
-                onChange={e => setForm({ ...form, username: e.target.value })}
-                placeholder="SoccerFan99"
-                maxLength={25}
+                value={form.password}
+                onChange={e => setForm({ ...form, password: e.target.value })}
+                placeholder="At least 6 characters"
                 style={inputStyle}
               />
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', marginTop: '4px' }}>
-                3–25 characters · Letters, numbers, underscores only · Usernames are reviewed — violations may result in suspension
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label style={labelStyle}>Password</label>
-                <input
-                  type="password"
-                  required
-                  value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })}
-                  placeholder="Min 8 characters"
-                  style={inputStyle}
-                />
-              </div>
-              <div>
-                <label style={labelStyle}>Confirm Password</label>
-                <input
-                  type="password"
-                  required
-                  value={form.confirmPassword}
-                  onChange={e => setForm({ ...form, confirmPassword: e.target.value })}
-                  placeholder="Repeat password"
-                  style={inputStyle}
-                />
-              </div>
-            </div>
-            <div>
-              <label style={labelStyle}>Country You're Supporting</label>
-              <select
-                required
-                value={form.country}
-                onChange={e => setForm({ ...form, country: e.target.value })}
-                style={{ ...inputStyle, cursor: 'pointer' }}
-              >
-                <option value="" style={{ color: '#111', background: 'white' }}>Select your country...</option>
-                {COUNTRIES.map(c => (
-                  <option key={c.code} value={c.code} style={{ color: '#111', background: 'white' }}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label style={labelStyle}>Date of Birth <span style={{ color: '#5a8a68' }}>(required for prize eligibility)</span></label>
-              <input
-                type="date"
-                required
-                value={form.dateOfBirth}
-                onChange={e => setForm({ ...form, dateOfBirth: e.target.value })}
-                style={inputStyle}
-              />
-              {form.dateOfBirth && isUnder18(form.dateOfBirth) && (
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600', marginTop: '4px', padding: '8px', background: 'rgba(255,214,0,0.06)', borderRadius: '6px', border: '1px solid rgba(255,214,0,0.2)' }}>
-                  Junior Fan Account — Under 18. Cash prizes not available. Merch, trophies & activity books only. Parent/guardian will need to verify this account.
-                </div>
-              )}
             </div>
             <div style={{ fontSize: '0.78rem', color: '#5a8a68', fontFamily: "'Barlow Condensed'", lineHeight: '1.5', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
               By creating an account you agree that no purchase is necessary to enter or win. This is a skill-based competition. You must be 18+ to win cash prizes.
@@ -350,7 +227,7 @@ function SignupPageContent() {
           </div>
         </div>
         <div style={{ textAlign: 'center', marginTop: '16px', fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px' }}>
-          ✓ No purchase necessary to win &nbsp;·&nbsp; ✓ Skill-based competition &nbsp;·&nbsp; ✓ Secure & private
+          {'✓'} No purchase necessary to win {' '}{'·'}{' '} {'✓'} Skill-based competition {' '}{'·'}{' '} {'✓'} Secure &amp; private
         </div>
       </div>
     </div>
