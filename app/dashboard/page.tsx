@@ -228,7 +228,7 @@ export default function DashboardPage() {
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '16px', lineHeight: '1.5' }}>
                 {isPaid
                   ? 'Predict every match. Submit your bracket before June 11.'
-                  : 'Upgrade to Plus or Premium to submit picks and win cash prizes.'}
+                  : 'Upgrade to Champion Founder to submit picks and win cash prizes.'}
               </div>
               {isPaid ? (
                 <Link href="/picks" style={{ display: 'block', padding: '12px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
@@ -239,17 +239,6 @@ export default function DashboardPage() {
                   <a href="/checkout" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
                     CHAMPION FOUNDER — $10
                   </a>
-                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', textAlign: 'center', padding: '2px 0' }}>
-                    or choose a smaller entry:
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <a href="https://www.paypal.com/ncp/payment/JAJYWPYW4UTWJ" style={{ flex: 1, display: 'block', padding: '9px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.3)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                      PREMIUM — $5
-                    </a>
-                    <a href="https://www.paypal.com/ncp/payment/WG2JPTXWRRUF4" style={{ flex: 1, display: 'block', padding: '9px', background: 'rgba(79,195,247,0.08)', border: '1px solid rgba(79,195,247,0.25)', color: '#4FC3F7', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                      PLUS — $3
-                    </a>
-                  </div>
                 </div>
               )}
             </div>
