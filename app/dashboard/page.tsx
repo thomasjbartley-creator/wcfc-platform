@@ -228,7 +228,7 @@ export default function DashboardPage() {
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '16px', lineHeight: '1.5' }}>
                 {isPaid
                   ? 'Predict every match. Submit your bracket before June 11.'
-                  : 'Upgrade to Champion Founder to submit picks and win cash prizes.'}
+                  : 'Make your picks and climb the global leaderboard — free. Play for bragging rights and a winner\'s shirt.'}
               </div>
               {isPaid ? (
                 <Link href="/picks" style={{ display: 'block', padding: '12px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
@@ -236,8 +236,11 @@ export default function DashboardPage() {
                 </Link>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <Link href="/picks/bracket" style={{ display: 'block', padding: '13px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
+                    PLAY YOUR BRACKET — FREE
+                  </Link>
                   <a href="/checkout" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                    CHAMPION FOUNDER — $10
+                    UPGRADE — WIN CASH &amp; FUND FÚTBOL · $10
                   </a>
                 </div>
               )}
@@ -249,7 +252,7 @@ export default function DashboardPage() {
               {tier === 'free' && (
                 <div>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
-                    You're in — but free fans aren't eligible for cash prizes. Upgrade before June 11 to compete for $500.
+                    You're playing for bragging rights and a winner's shirt. Upgrade to Champion to win cash and help fund youth fútbol.
                   </div>
                   <a href="/checkout" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
                     CHAMPION FOUNDER — $10

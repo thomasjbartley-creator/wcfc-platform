@@ -33,7 +33,7 @@ export default function Home() {
           WIN REAL PRIZES.
         </h1>
         <p style={{ fontFamily: "'Barlow'", fontSize: 'clamp(1rem,2vw,1.2rem)', color: '#8ab898', maxWidth: '600px', margin: '0 auto 40px', lineHeight: 1.7 }}>
-          The global fan challenge for the 2026 World Cup. Pick the result and score of every match. Climb the leaderboard. Compete for $500 cash.
+          The global fan challenge for the 2026 World Cup. Predict every match and climb the global leaderboard. Free to play for bragging rights — go Champion to win cash and help fund youth fútbol worldwide.
         </p>
 
         {/* CTAs */}
@@ -41,12 +41,14 @@ export default function Home() {
           <a href="/checkout" style={{ display: 'inline-block', padding: '18px 48px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.3rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', boxShadow: '0 0 32px rgba(255,214,0,0.25)' }}>
             JOIN AS CHAMPION FOUNDER — $10
           </a>
-          <Link href="/shop" style={{ display: 'inline-block', padding: '10px 28px', background: 'transparent', color: '#5a8a68', border: '1px solid rgba(255,255,255,0.1)', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', fontWeight: 700, letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none', textTransform: 'uppercase' }}>
-            Books &amp; Donations →
+          <Link href="/auth/signup" style={{ display: 'inline-block', padding: '15px 44px', background: 'rgba(0,200,83,0.12)', color: '#00C853', border: '1px solid rgba(0,200,83,0.4)', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
+            PLAY FREE →
           </Link>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '4px' }}>
-            ✓ No purchase necessary to enter or win &nbsp;·&nbsp; ✓ 18+ for cash prizes &nbsp;·&nbsp;
-            <Link href="/auth/signup" style={{ color: '#3a5a42', textDecoration: 'underline' }}>Free entry available</Link>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#8ab898', letterSpacing: '0.5px', marginTop: '4px', maxWidth: '440px', lineHeight: 1.5 }}>
+            Free fans play for bragging rights and a winner&apos;s shirt. Champions win cash and help fund youth fútbol.
+          </div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '2px' }}>
+            ✓ No purchase necessary to enter or win &nbsp;·&nbsp; ✓ 18+ for cash prizes
           </div>
         </div>
       </section>
