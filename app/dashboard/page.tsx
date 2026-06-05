@@ -10,7 +10,7 @@ const TIER_COLORS: Record<string, string> = {
   founder:  '#FF9800',
   premium:  '#00C853',
   plus:     '#4FC3F7',
-  free:     '#5a8a68',
+  free:     '#8ab898',
 }
 const TIER_LABELS: Record<string, string> = {
   champion: 'Champion Founder',
@@ -137,7 +137,11 @@ export default function DashboardPage() {
     const msg = `I just joined the World Cup Fan Challenge representing ${country}! Predict scores, win cash prizes, and help fund youth futbol. Join me\n${referralLink}`
     if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`, '_blank')
     if (platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank')
-    if (platform === 'native' && navigator.share) navigator.share({ title: 'World Cup Fan Challenge', text: msg, url: referralLink })
+    if (platform === 'facebook') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank')
+    if (platform === 'native') {
+      if (navigator.share) { navigator.share({ title: 'World Cup Fan Challenge', text: msg, url: referralLink }) }
+      else { navigator.clipboard.writeText(referralLink); alert('Link copied — paste it into TikTok, Instagram, or any app.') }
+    }
   }
 
   if (loading) return (
@@ -148,7 +152,7 @@ export default function DashboardPage() {
   )
 
   const tier = profile?.tier || 'free'
-  const tierColor = TIER_COLORS[tier] ?? '#5a8a68'
+  const tierColor = TIER_COLORS[tier] ?? '#8ab898'
   const tierLabel = TIER_LABELS[tier] ?? tier.toUpperCase()
   const isPaid = ['champion', 'founder', 'premium', 'plus'].includes(tier)
   const referralCount = profile?.referral_count ?? 0
@@ -164,7 +168,7 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div id="translate-widget-slot" style={{ display: 'inline-block' }} />
           <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: tierColor, fontWeight: 700, letterSpacing: '1px' }}>{tierLabel}</span>
-          <button onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', padding: '7px 14px', fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', cursor: 'pointer', letterSpacing: '1px' }}>
+          <button onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', padding: '7px 14px', fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#8ab898', cursor: 'pointer', letterSpacing: '1px' }}>
             SIGN OUT
           </button>
         </div>
@@ -176,7 +180,7 @@ export default function DashboardPage() {
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>
             HEY, {(profile?.username || 'FAN').toUpperCase()}!
           </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginTop: '4px' }}>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', marginTop: '4px' }}>
             {userEmail}{profile?.country_supported ? ` · Supporting ${profile.country_supported}` : ''}
           </div>
         </div>
@@ -190,8 +194,8 @@ export default function DashboardPage() {
           ].map(s => (
             <div key={s.label} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '10px', padding: '16px', textAlign: 'center' }}>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: s.color, lineHeight: 1 }}>{s.value}</div>
-              {s.note && <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '2px' }}>{s.note}</div>}
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68', letterSpacing: '2px', textTransform: 'uppercase', marginTop: '4px' }}>{s.label}</div>
+              {s.note && <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.65rem', color: '#7a9988', letterSpacing: '1px', marginTop: '2px' }}>{s.note}</div>}
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898', letterSpacing: '2px', textTransform: 'uppercase', marginTop: '4px' }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -203,15 +207,15 @@ export default function DashboardPage() {
                 Next Match — {nextMatch.group_name ? `Group ${nextMatch.group_name}` : nextMatch.stage.toUpperCase()}
               </div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px' }}>
-                {nextMatch.home_flag ?? ''} {nextMatch.home_team} <span style={{ color: '#5a8a68' }}>vs</span> {nextMatch.away_team} {nextMatch.away_flag ?? ''}
+                {nextMatch.home_flag ?? ''} {nextMatch.home_team} <span style={{ color: '#8ab898' }}>vs</span> {nextMatch.away_team} {nextMatch.away_flag ?? ''}
               </div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', marginTop: '2px' }}>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#8ab898', marginTop: '2px' }}>
                 {nextMatch.stadium} · {nextMatch.city} · {new Date(nextMatch.kickoff_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: '#FFD600', letterSpacing: '2px' }}>{countdown}</div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#5a8a68', letterSpacing: '2px' }}>UNTIL KICKOFF</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#8ab898', letterSpacing: '2px' }}>UNTIL KICKOFF</div>
             </div>
           </div>
         )}
@@ -225,7 +229,7 @@ export default function DashboardPage() {
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '6px' }}>
                 {isPaid ? 'Make Your Picks' : 'Enter the Challenge'}
               </div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '16px', lineHeight: '1.5' }}>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', marginBottom: '16px', lineHeight: '1.5' }}>
                 {isPaid
                   ? 'Predict every match. Submit your bracket before June 11.'
                   : 'Make your picks and climb the global leaderboard — free. Play for bragging rights and a winner\'s shirt.'}
@@ -247,11 +251,11 @@ export default function DashboardPage() {
             </div>
 
             <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '12px' }}>YOUR MEMBERSHIP</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', letterSpacing: '3px', marginBottom: '12px' }}>YOUR MEMBERSHIP</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.5rem', color: tierColor, letterSpacing: '1px', marginBottom: '14px' }}>{tierLabel}</div>
               {tier === 'free' && (
                 <div>
-                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
+                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', lineHeight: '1.6', marginBottom: '14px' }}>
                     You're playing for bragging rights and a winner's shirt. Upgrade to Champion to win cash and help fund youth fútbol.
                   </div>
                   <a href="/checkout" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
@@ -260,7 +264,7 @@ export default function DashboardPage() {
                 </div>
               )}
               {tier === 'plus' && (
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: '1.6' }}>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', lineHeight: '1.6' }}>
                   You're competing for weekly prizes. Upgrade to Premium for the $500 grand prize.
                   <a href="https://www.paypal.com/ncp/payment/JAJYWPYW4UTWJ" style={{ display: 'block', marginTop: '10px', padding: '10px', background: 'rgba(0,200,83,0.12)', border: '1px solid rgba(0,200,83,0.3)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
                     UPGRADE TO PREMIUM →
@@ -268,7 +272,7 @@ export default function DashboardPage() {
                 </div>
               )}
               {['premium', 'founder', 'champion'].includes(tier) && (
-                <ul style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.8', paddingLeft: '0', listStyle: 'none', margin: 0 }}>
+                <ul style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', lineHeight: '1.8', paddingLeft: '0', listStyle: 'none', margin: 0 }}>
                   <li><span style={{ color: '#00C853' }}>✓</span> $500 Grand Prize eligible</li>
                   <li><span style={{ color: '#00C853' }}>✓</span> Weekly cash prizes</li>
                   {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> Founding Wall — permanent</li>}
@@ -283,7 +287,7 @@ export default function DashboardPage() {
 
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '12px', padding: '20px' }}>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>REFER FRIENDS — EARN POINTS</div>
-              <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '14px', lineHeight: '1.5' }}>
+              <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#8ab898', marginBottom: '14px', lineHeight: '1.5' }}>
                 Share your link. When a friend joins the paid challenge you earn <strong style={{ color: '#00C853' }}>+2 bonus points</strong>.
               </div>
 
@@ -291,34 +295,35 @@ export default function DashboardPage() {
                 <input
                   readOnly
                   value={referralLink}
-                  style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '9px 12px', fontFamily: "'Barlow'", fontSize: '0.75rem', color: '#5a8a68', outline: 'none' }}
+                  style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '9px 12px', fontFamily: "'Barlow'", fontSize: '0.75rem', color: '#8ab898', outline: 'none' }}
                 />
                 <button onClick={copyReferral} style={{ padding: '9px 16px', background: copyDone ? '#00C853' : 'rgba(0,200,83,0.15)', border: '1px solid rgba(0,200,83,0.3)', borderRadius: '6px', color: copyDone ? '#050C0A' : '#00C853', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap' }}>
                   {copyDone ? '✓ COPIED' : 'COPY'}
                 </button>
               </div>
 
-              <div style={{ display: 'flex', gap: '6px', marginBottom: '14px' }}>
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
                 <button onClick={() => shareReferral('twitter')} style={shareBtn('#1da1f2')}>X</button>
                 <button onClick={() => shareReferral('whatsapp')} style={shareBtn('#25d366')}>WhatsApp</button>
-                <button onClick={() => shareReferral('native')} style={shareBtn('#FFD600')}>Share</button>
+                <button onClick={() => shareReferral('facebook')} style={shareBtn('#1877F2')}>Facebook</button>
+                <button onClick={() => shareReferral('native')} style={shareBtn('#FFD600')}>TikTok · IG · More</button>
               </div>
 
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#4FC3F7', lineHeight: 1 }}>{referralCount}</div>
-                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>FRIENDS JOINED</div>
+                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#8ab898', letterSpacing: '1px' }}>FRIENDS JOINED</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', lineHeight: 1 }}>+{profile?.referral_points_earned ?? 0}</div>
-                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '1px' }}>BONUS POINTS</div>
+                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#8ab898', letterSpacing: '1px' }}>BONUS POINTS</div>
                 </div>
               </div>
             </div>
 
             <div style={{ background: 'rgba(0,200,83,0.04)', border: '1px solid rgba(0,200,83,0.12)', borderRadius: '12px', padding: '20px' }}>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>GRASSROOTS FUTBOL FUND</div>
-              <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '14px' }}>
+              <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#8ab898', lineHeight: '1.6', marginBottom: '14px' }}>
                 Every fan who joins helps fund youth futbol programs around the world. Your participation matters beyond the leaderboard.
               </div>
               <a href="https://www.paypal.com/ncp/payment/BTKA5UPNZ64FQ" style={{ display: 'block', padding: '11px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
@@ -330,12 +335,12 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ marginTop: '24px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>COMING UP — GROUP STAGE</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', letterSpacing: '3px', marginBottom: '14px' }}>COMING UP — GROUP STAGE</div>
           <UpcomingMatchesStrip supabase={supabase} />
         </div>
 
-        <div style={{ marginTop: '32px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
-          <a href="/" style={{ color: '#3a5a42', textDecoration: 'none' }}>worldcupfanchallenge.com</a>
+        <div style={{ marginTop: '32px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#7a9988', letterSpacing: '1px' }}>
+          <a href="/" style={{ color: '#7a9988', textDecoration: 'none' }}>worldcupfanchallenge.com</a>
           {' · '}
           <span>No purchase necessary to win</span>
           {' · '}
@@ -369,9 +374,9 @@ function UpcomingMatchesStrip({ supabase }: { supabase: ReturnType<typeof create
             GROUP {m.group_name} · {m.city}
           </div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1rem', color: 'white', letterSpacing: '1px' }}>
-            {m.home_flag ?? ''} {m.home_team} <span style={{ color: '#5a8a68' }}>vs</span> {m.away_team} {m.away_flag ?? ''}
+            {m.home_flag ?? ''} {m.home_team} <span style={{ color: '#8ab898' }}>vs</span> {m.away_team} {m.away_flag ?? ''}
           </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', marginTop: '3px' }}>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', marginTop: '3px' }}>
             {new Date(m.kickoff_time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
           </div>
         </div>

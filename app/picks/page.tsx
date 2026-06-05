@@ -44,7 +44,7 @@ const FLAGS: Record<string, string> = {
 
 function FlagImg({ code, size = 24 }: { code: string, size?: number }) {
   const cp = FLAGS[code]
-  if (!cp) return <span style={{ fontSize: size * 0.7, fontFamily: "'Barlow Condensed'", color: '#5a8a68' }}>—</span>
+  if (!cp) return <span style={{ fontSize: size * 0.7, fontFamily: "'Barlow Condensed'", color: '#8ab898' }}>—</span>
   return <img src={`${TWEMOJI}/${cp}.png`} width={size} height={size} style={{ borderRadius: 4, objectFit: 'cover', display: 'block' }} alt={code} />
 }
 
@@ -118,7 +118,7 @@ export default function PicksPage() {
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(5,12,10,0.95)', position: 'sticky', top: 0, zIndex: 50 }}>
         <a href="/" style={{ fontFamily: "'Bebas Neue'", fontSize: '1.5rem', color: 'white', letterSpacing: '3px', textDecoration: 'none' }}>WCFC<span style={{ color: '#00C853' }}>.</span></a>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <Link href="/dashboard" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', textDecoration: 'none', letterSpacing: '1px' }}>← Dashboard</Link>
+          <Link href="/dashboard" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', textDecoration: 'none', letterSpacing: '1px' }}>← Dashboard</Link>
         </div>
       </nav>
 
@@ -128,8 +128,8 @@ export default function PicksPage() {
         <div style={{ marginBottom: '32px' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>WORLD CUP 2026</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem, 6vw, 3.5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>YOUR PICKS</div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginTop: '8px' }}>
-            Submit your bracket before June 11. Make daily score picks before each match.
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#8ab898', marginTop: '8px' }}>
+            Submit your bracket before June 11.
           </div>
         </div>
 
@@ -143,10 +143,10 @@ export default function PicksPage() {
 
         {/* NOT PAID WARNING */}
         {!isPaid && (
-          <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '12px', padding: '20px 24px', marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
+          <div style={{ background: 'rgba(0,200,83,0.08)', border: '1px solid rgba(0,200,83,0.25)', borderRadius: '12px', padding: '20px 24px', marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
             <div>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#ff6b6b', letterSpacing: '1px', marginBottom: '4px' }}>Playing for Bragging Rights</div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68' }}>Free fans compete on the leaderboard for a winner's shirt. Upgrade to win cash and help fund youth fútbol.</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#00C853', letterSpacing: '1px', marginBottom: '4px' }}>Playing for Bragging Rights</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898' }}>Free fans compete on the leaderboard for a winner's shirt. Upgrade to win cash and help fund youth fútbol.</div>
             </div>
             <a href="/checkout" style={{ padding: '12px 24px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               Champion Founder — $10
@@ -155,7 +155,7 @@ export default function PicksPage() {
         )}
 
         {/* TWO MAIN CARDS */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginBottom: '32px' }}>
 
           {/* BRACKET CARD */}
           <Link href="/picks/bracket" style={{ textDecoration: 'none' }}>
@@ -164,13 +164,13 @@ export default function PicksPage() {
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,214,0,0.2)')}>
               <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#FFD600', marginBottom: '12px' }}>BRACKET</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>BRACKET PICKS</div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', lineHeight: '1.6', marginBottom: '20px' }}>
                 Predict winners for all 72 group matches + full knockout bracket. Lock in before June 11 kickoff.
               </div>
               {/* Progress bar */}
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68', letterSpacing: '1px' }}>PROGRESS</span>
+                  <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898', letterSpacing: '1px' }}>PROGRESS</span>
                   <span style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#FFD600' }}>{bracketProgress} / 105 PICKS</span>
                 </div>
                 <div style={{ height: '4px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden' }}>
@@ -183,38 +183,39 @@ export default function PicksPage() {
             </div>
           </Link>
 
-          {/* DAILY PICKS CARD */}
+          {/* DAILY PICKS CARD — hidden until a daily scoring engine exists */}
+          {false && (
           <Link href="/picks/daily" style={{ textDecoration: 'none' }}>
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '28px', cursor: 'pointer', transition: 'border-color 0.2s', height: '100%' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(0,200,83,0.5)')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(0,200,83,0.2)')}>
               <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#00C853', marginBottom: '12px' }}>DAILY</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#00C853', letterSpacing: '2px', marginBottom: '8px' }}>DAILY PICKS</div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', lineHeight: '1.6', marginBottom: '20px' }}>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', lineHeight: '1.6', marginBottom: '20px' }}>
                 Predict exact scores for today's matches. Lock in before kickoff. Up to 25 pts per exact score.
               </div>
               {/* Today's matches */}
               {todayMatches.length > 0 ? (
                 <div style={{ marginBottom: '16px' }}>
-                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '2px', marginBottom: '8px' }}>TODAY'S MATCHES</div>
+                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', letterSpacing: '2px', marginBottom: '8px' }}>TODAY'S MATCHES</div>
                   {todayMatches.slice(0, 3).map(m => (
                     <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                       <FlagImg code={m.home_flag} size={18} />
                       <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: 'white' }}>{m.home_team}</span>
-                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68' }}>vs</span>
+                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898' }}>vs</span>
                       <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: 'white' }}>{m.away_team}</span>
                       <FlagImg code={m.away_flag} size={18} />
                     </div>
                   ))}
                   {dailyProgress.total > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
-                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '1px' }}>PICKED TODAY</span>
+                      <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', letterSpacing: '1px' }}>PICKED TODAY</span>
                       <span style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#00C853' }}>{dailyProgress.picked}/{dailyProgress.total}</span>
                     </div>
                   )}
                 </div>
               ) : (
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', marginBottom: '16px', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', marginBottom: '16px', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
                   No matches in the next 24 hours. Check back before each matchday.
                 </div>
               )}
@@ -223,12 +224,13 @@ export default function PicksPage() {
               </div>
             </div>
           </Link>
+          )}
 
         </div>
 
         {/* POINTS LEGEND */}
         <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px 24px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', letterSpacing: '3px', marginBottom: '14px' }}>HOW POINTS WORK</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', letterSpacing: '3px', marginBottom: '14px' }}>HOW POINTS WORK</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px' }}>
             {[
               { pts: '25', label: 'Exact Score', color: '#FFD600' },
@@ -242,7 +244,7 @@ export default function PicksPage() {
             ].map(p => (
               <div key={p.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                 <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.3rem', color: p.color, minWidth: '36px', textAlign: 'center' }}>{p.pts}</div>
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68', letterSpacing: '0.5px' }}>{p.label}</div>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#8ab898', letterSpacing: '0.5px' }}>{p.label}</div>
               </div>
             ))}
           </div>

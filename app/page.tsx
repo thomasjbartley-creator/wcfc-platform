@@ -47,7 +47,7 @@ export default function Home() {
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#8ab898', letterSpacing: '0.5px', marginTop: '4px', maxWidth: '440px', lineHeight: 1.5 }}>
             Free fans play for bragging rights and a winner&apos;s shirt. Champions win cash and help fund youth fútbol.
           </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '2px' }}>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#7a9988', letterSpacing: '1px', marginTop: '2px' }}>
             ✓ No purchase necessary to enter or win &nbsp;·&nbsp; ✓ 18+ for cash prizes
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function Home() {
         {[['104', 'Total Matches'], ['$500', 'Grand Prize'], ['25 Pts', 'Per Exact Score'], ['Jun 11', 'Bracket Deadline']].map(([n, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(1.6rem,4vw,2.4rem)', color: '#FFD600', letterSpacing: '2px' }}>{n}</div>
-            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#5a8a68', letterSpacing: '2px', textTransform: 'uppercase' }}>{l}</div>
+            <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898', letterSpacing: '2px', textTransform: 'uppercase' }}>{l}</div>
           </div>
         ))}
       </div>
@@ -106,7 +106,7 @@ export default function Home() {
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '12px' }}>TOURNAMENT PICK-EM BRACKET PREVIEW</div>
             {[['A','Mexico','S. Africa'],['B','Canada','Switzerland'],['C','Brazil','Morocco'],['D','USA','Paraguay'],['I','France','Senegal'],['J','Argentina','Algeria']].map(([g,h,a]) => (
               <div key={g} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', marginBottom: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '7px' }}>
-                <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', minWidth: '44px' }}>GRP {g}</span>
+                <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#8ab898', minWidth: '44px' }}>GRP {g}</span>
                 <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', fontWeight: 700, color: 'white', flex: 1 }}>{h}</span>
                 <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: 'rgba(255,255,255,0.2)' }}>vs</span>
                 <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', fontWeight: 700, color: 'white', flex: 1, textAlign: 'right' }}>{a}</span>
@@ -116,7 +116,7 @@ export default function Home() {
                 </div>
               </div>
             ))}
-            <div style={{ textAlign: 'center', marginTop: '10px', fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#3a5a42', letterSpacing: '1px' }}>72 group matches + full knockout bracket</div>
+            <div style={{ textAlign: 'center', marginTop: '10px', fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#7a9988', letterSpacing: '1px' }}>72 group matches + full knockout bracket</div>
           </div>
         </div>
       </section>
@@ -138,7 +138,7 @@ export default function Home() {
                 <span style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#00C853', opacity: 0.5 }}>{s.n}</span>
               </div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.3rem', color: 'white', letterSpacing: '1px', marginBottom: '8px' }}>{s.title}</div>
-              <p style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#5a8a68', lineHeight: 1.6 }}>{s.desc}</p>
+              <p style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6 }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -161,7 +161,7 @@ export default function Home() {
               <div key={p.label} style={{ background: '#0a1410', border: `1px solid ${p.color}30`, borderRadius: '12px', padding: '24px' }}>
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: p.color, letterSpacing: '1px', marginBottom: '8px' }}>{p.label}</div>
                 <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2.5rem', color: p.color, lineHeight: 1 }}>{p.amt}</div>
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', marginTop: '6px', letterSpacing: '1px' }}>{p.tier}</div>
+                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', marginTop: '6px', letterSpacing: '1px' }}>{p.tier}</div>
               </div>
             ))}
           </div>
@@ -174,7 +174,7 @@ export default function Home() {
               JOIN AS CHAMPION FOUNDER →
             </a>
           </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px' }}>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#7a9988', letterSpacing: '1px' }}>
             All cash prizes are fixed amounts funded by the platform operator — not pooled from entry fees. No purchase necessary to enter or win non-cash prizes.
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function Home() {
           <Link href="/about" style={{ padding: '12px 24px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
             OUR STORY →
           </Link>
-          <Link href="/shop" style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#5a8a68', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
+          <Link href="/shop" style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#8ab898', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
             DONATE TO YOUTH FÚTBOL
           </Link>
         </div>
@@ -204,10 +204,10 @@ export default function Home() {
         </div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
           {[['Join Free', '/auth/signup'], ['Sign In', '/auth/login'], ['Leaderboard', '/leaderboard'], ['For Clubs', '/clubs'], ['Sponsors', '/sponsors'], ['Our Story', '/about'], ['Earn $$$', '/affiliate'], ['Shop', '/shop'], ['How It Works', '/how-it-works'], ['Rules', '/rules']].map(([label, href]) => (
-            <Link key={label} href={href} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', textDecoration: 'none', letterSpacing: '1px' }}>{label}</Link>
+            <Link key={label} href={href} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', textDecoration: 'none', letterSpacing: '1px' }}>{label}</Link>
           ))}
         </div>
-        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', lineHeight: 1.8 }}>
+        <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#7a9988', letterSpacing: '1px', lineHeight: 1.8 }}>
           worldcupfanchallenge.com · No purchase necessary to enter or win non-cash prizes · Skill-based competition · 18+ for cash prizes<br />
           © 2026 Bartex Enterprise Holdings LLC · Houston, TX
         </div>
