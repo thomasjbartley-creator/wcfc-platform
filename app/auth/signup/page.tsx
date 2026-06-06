@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import InAppBrowserNotice from '@/app/components/InAppBrowserNotice'
 
 function generateReferralCode(seed: string): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -87,6 +88,8 @@ function SignupPageContent() {
   }
 
   return (
+    <>
+    <InAppBrowserNotice />
     <div style={{
       minHeight: '100vh',
       background: '#050C0A',
@@ -231,6 +234,7 @@ function SignupPageContent() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 const labelStyle: React.CSSProperties = {

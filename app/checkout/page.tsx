@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Nav from '@/app/components/Nav'
+import InAppBrowserNotice from '@/app/components/InAppBrowserNotice'
 import { createClient } from '@/lib/supabase'
 import { Suspense } from 'react'
 
@@ -194,6 +195,7 @@ function CheckoutContent() {
     <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>
       <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
       <Nav />
+      <InAppBrowserNotice />
       <div style={{ maxWidth: '520px', margin: '0 auto', padding: '60px 24px 80px' }}>
 
         {/* HERO */}
