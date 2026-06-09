@@ -171,6 +171,65 @@ export default function SponsorsPage() {
  </div>
  </div>
 
+ {/* BACK THE MISSION · ADD A PRIZE */}
+ <div style={{ marginBottom: '48px' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>SUPPORT THE CHALLENGE</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(1.8rem,4vw,2.8rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>Back the Mission · Add a Prize</div>
+ <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '720px', marginBottom: '24px' }}>
+ Donations support the Grassroots Fútbol Fund — funding youth soccer programs and the cost of running the platform. Want to add a prize fans compete for, fund the mission directly, or keep the lights on so every dollar raised goes to kids? Here&apos;s how.
+ </p>
+
+ <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+ {/* PRIZE SPONSOR */}
+ <div style={{ background: '#0a1410', border: '1.5px solid rgba(255,214,0,0.25)', borderRadius: '14px', padding: '28px', display: 'flex', flexDirection: 'column' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>ADD A PRIZE</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '16px' }}>Prize Sponsor</div>
+ <div style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '12px' }}>
+ <span style={{ color: '#FFD600', fontWeight: 600 }}>You provide:</span> A prize fans compete for — a jersey, gear, experience, gift card, or anything fans would want to win.
+ </div>
+ <div style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, flex: 1 }}>
+ <span style={{ color: '#FFD600', fontWeight: 600 }}>You get:</span> Your brand featured on the prize announcement, recognition on the Sponsor Leaderboard, and a direct connection to the most engaged fans during the tournament.
+ </div>
+ </div>
+
+ {/* MISSION SPONSOR */}
+ <div style={{ background: '#0a1410', border: '1.5px solid rgba(0,200,83,0.25)', borderRadius: '14px', padding: '28px', display: 'flex', flexDirection: 'column' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#00C853', letterSpacing: '2px', marginBottom: '8px' }}>SPONSOR THE MISSION</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '16px' }}>Mission Sponsor</div>
+ <div style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '12px' }}>
+ <span style={{ color: '#00C853', fontWeight: 600 }}>You provide:</span> A donation to the Grassroots Fútbol Fund — any amount, no minimum. Every dollar funds youth soccer programs worldwide.
+ </div>
+ <div style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, flex: 1 }}>
+ <span style={{ color: '#00C853', fontWeight: 600 }}>You get:</span> Sponsor Leaderboard placement, recognition in fan communications, and the story of directly funding the next generation of players.
+ </div>
+ </div>
+
+ {/* FOUNDING / OPERATIONS PARTNER */}
+ <div style={{ background: '#0a1410', border: '1.5px solid rgba(79,195,247,0.25)', borderRadius: '14px', padding: '28px', display: 'flex', flexDirection: 'column' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#4FC3F7', letterSpacing: '2px', marginBottom: '8px' }}>COVER PLATFORM COSTS</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: 'white', letterSpacing: '2px', marginBottom: '16px' }}>Operations Partner</div>
+ <div style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '12px' }}>
+ <span style={{ color: '#4FC3F7', fontWeight: 600 }}>You provide:</span> Funding that covers hosting, infrastructure, and platform costs — so that fan donations can go entirely to youth soccer instead of overhead.
+ </div>
+ <div style={{ fontFamily: "'Barlow'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, flex: 1 }}>
+ <span style={{ color: '#4FC3F7', fontWeight: 600 }}>You get:</span> &ldquo;Operations powered by&rdquo; credit across the platform, top-tier Sponsor Leaderboard placement, and the distinction of making the entire fund go further.
+ </div>
+ </div>
+ </div>
+
+ {/* CONTACT BLOCK */}
+ <div style={{ background: 'rgba(0,200,83,0.04)', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '12px', padding: '20px 24px', marginBottom: '16px', textAlign: 'center' }}>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#8ab898', lineHeight: 1.8 }}>
+ Reach out to discuss any tier — amounts are flexible and every contribution matters.<br />
+ <a href="mailto:thomasjbartley@worldcupfanchallenge.com" style={{ color: '#FFD600', textDecoration: 'none' }}>thomasjbartley@worldcupfanchallenge.com</a> · <span style={{ color: '#FFD600' }}>773-680-3623</span>
+ </div>
+ </div>
+
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '0.5px', lineHeight: 1.6, textAlign: 'center' }}>
+ All prizes are awarded in a free, skill-based contest. No purchase or donation is necessary to enter or win, and donating does not improve anyone&apos;s chances.
+ </div>
+ </div>
+
  {/* CONTACT CTA */}
  <div style={{ background: 'rgba(255,214,0,0.05)', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '32px', textAlign: 'center' }}>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Ready to Talk?</div>
