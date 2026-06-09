@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
-const navLinks = [
+const navLinks: { label: string; href: string; gold?: boolean }[] = [
   { label: 'HOME', href: '/' },
   { label: 'HOW IT WORKS', href: '/how-it-works' },
   { label: 'LEADERBOARD', href: '/leaderboard' },
