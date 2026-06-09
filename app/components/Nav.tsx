@@ -11,7 +11,7 @@ const navLinks = [
   { label: 'FOR CLUBS', href: '/clubs' },
   { label: 'SPONSORS', href: '/sponsors' },
   { label: 'OUR STORY', href: '/about' },
-  { label: 'EARN $$$', href: '/affiliate', gold: true },
+  // { label: 'EARN $$$', href: '/affiliate', gold: true },  // Affiliate program paused
 ]
 
 export default function Nav() {

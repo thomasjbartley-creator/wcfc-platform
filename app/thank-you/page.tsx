@@ -80,7 +80,7 @@ function ThankYouContent() {
             {[
               { n: '1', title: 'Check your email', desc: "We've sent you a link to set your password and complete your fan profile." },
               { n: '2', title: 'Make your picks', desc: 'Once logged in, head to your dashboard to predict every match before June 11 kickoff.' },
-              { n: '3', title: 'Spread the word', desc: 'Each friend who joins through your referral link earns you bonus points and helps fund youth fútbol.' },
+              { n: '3', title: 'Spread the word', desc: 'Share with friends and help fund youth fútbol. The more fans, the bigger the impact.' },
             ].map(s => (
               <div key={s.n} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>
                 <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,214,0,0.15)', border: '1px solid rgba(255,214,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#FFD600', flexShrink: 0 }}>{s.n}</div>

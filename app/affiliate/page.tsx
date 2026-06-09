@@ -1,11 +1,22 @@
 'use client'
 
+// AFFILIATE PROGRAM PAUSED — see brief. Page redirects to homepage.
+// All original code preserved below the redirect for re-enablement.
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import Nav from '@/app/components/Nav'
 
 export default function AffiliatePage() {
+  const router = useRouter()
+  useEffect(() => { router.replace('/') }, [router])
+  return <div style={{ minHeight: '100vh', background: '#050C0A' }} />
+}
+
+function _OriginalAffiliatePage_PAUSED() {
  const [form, setForm] = useState({ name: '', email: '', platform: '', audience: '', paypal: '' })
  const [submitted, setSubmitted] = useState(false)
  const [affiliateCode, setAffiliateCode] = useState('')

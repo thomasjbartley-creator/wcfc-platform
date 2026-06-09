@@ -20,7 +20,7 @@ export default function SponsorsPage() {
  'Logo in hero position on all pages',
  'Included in every fan email',
  'Donation match opportunity — become the hero',
- 'Affiliate links placed prominently on site',
+ 'Product/brand links placed prominently on site',
  'Social media features throughout tournament',
  'Included in press releases when issued',
  'Champion Founder memberships for your team (10)',
@@ -38,7 +38,7 @@ export default function SponsorsPage() {
  perks: [
  'Logo in sponsors section on site',
  'Donation match opportunity',
- 'Affiliate links placed on site',
+ 'Product/brand links placed on site',
  'Public Sponsor Leaderboard placement',
  '2 dedicated social media features',
  'Spotlight post during a marquee match',
@@ -55,7 +55,7 @@ export default function SponsorsPage() {
  limit: 'Sponsors wall placement by commit date',
  perks: [
  'Logo on sponsors wall',
- 'Affiliate link placement',
+ 'Brand link placement on site',
  'Public Sponsor Leaderboard placement',
  'Thank you post on social media',
  'Named in award announcement',
@@ -106,13 +106,7 @@ export default function SponsorsPage() {
  </p>
  </div>
 
- {/* AFFILIATE PARTNERSHIP CALLOUT */}
- <div style={{ background: 'linear-gradient(135deg,rgba(255,214,0,0.08),rgba(79,195,247,0.04))', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px', padding: '28px 32px', marginBottom: '20px' }}>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>BUILT-IN BONUS FOR EVERY SPONSOR</div>
- <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>The Affiliate Loop</div>
- <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '0' }}>We place your affiliate purchase links throughout the site — product mentions, fan emails, relevant content. When fans buy through your link, you make sales beyond your sponsorship. A portion of every affiliate commission we earn is donated directly to the Grassroots Fútbol Fund. You get traffic. You get sales. You fuel the mission. Everyone wins.
- </p>
- </div>
+ {/* AFFILIATE PARTNERSHIP CALLOUT — PAUSED (affiliate program hidden, see brief) */}
 
  {/* SPONSOR LEADERBOARD CALLOUT */}
  <div style={{ background: 'linear-gradient(135deg,rgba(229,57,53,0.06),rgba(255,214,0,0.04))', border: '1px solid rgba(229,57,53,0.2)', borderRadius: '14px', padding: '28px 32px', marginBottom: '48px' }}>

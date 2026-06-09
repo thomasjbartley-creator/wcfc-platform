@@ -118,14 +118,15 @@ export async function POST(req: NextRequest) {
       .eq('email', normalizedEmail)
       .maybeSingle()
 
-    // --- Resolve referral code: affiliate first, then fan ---
-    // These two paths are mutually exclusive. Affiliate codes earn money only (zero points).
-    // Fan referral codes earn leaderboard points only (zero money).
+    // --- Resolve referral code: fan referrals only ---
+    // AFFILIATE PROGRAM PAUSED — see brief. Affiliate lookup disabled; only fan
+    // referral codes are resolved. No affiliate rows are created, no payouts touched.
+    // To re-enable: restore the affiliate lookup block below and the Step 3 block.
     let validatedRefCode: string | null = null   // fan referral code (sets profiles.referred_by)
-    let matchedAffiliate: { id: string; email: string; user_id: string | null } | null = null
+    const matchedAffiliate: { id: string; email: string; user_id: string | null } | null = null  // always null while paused
 
     if (referralCode) {
-      // Check affiliates table first
+      /* ── AFFILIATE LOOKUP — PAUSED ──────────────────────────────────
       const { data: affiliate } = await adminClient
         .from('affiliates')
         .select('id, email, user_id')
@@ -135,7 +136,6 @@ export async function POST(req: NextRequest) {
         .maybeSingle()
 
       if (affiliate) {
-        // Block self-referral: affiliate cannot credit their own purchase
         if (affiliate.email !== normalizedEmail && affiliate.user_id !== existingProfile?.id) {
           matchedAffiliate = affiliate
           console.log(`Affiliate matched: code=${referralCode} affiliate=${affiliate.id}`)
@@ -143,21 +143,22 @@ export async function POST(req: NextRequest) {
           console.log(`Affiliate self-referral blocked: ${normalizedEmail} code=${referralCode}`)
         }
       } else {
-        // Not an affiliate code -- check fan referral codes
-        const { data: referrer } = await adminClient
-          .from('profiles')
-          .select('id, email, referral_code')
-          .eq('referral_code', referralCode)
-          .maybeSingle()
+      ── END PAUSED BLOCK ────────────────────────────────────────── */
 
-        if (referrer && referrer.email !== normalizedEmail) {
-          validatedRefCode = referralCode
-          console.log(`Fan referral validated: ${referralCode} -> referrer ${referrer.email}`)
-        } else if (referrer && referrer.email === normalizedEmail) {
-          console.log(`Fan self-referral blocked: ${normalizedEmail} tried code ${referralCode}`)
-        } else {
-          console.log(`Referral code ${referralCode} not found in affiliates or profiles -- ignoring`)
-        }
+      // Fan referral codes only (affiliate codes are ignored while paused)
+      const { data: referrer } = await adminClient
+        .from('profiles')
+        .select('id, email, referral_code')
+        .eq('referral_code', referralCode)
+        .maybeSingle()
+
+      if (referrer && referrer.email !== normalizedEmail) {
+        validatedRefCode = referralCode
+        console.log(`Fan referral validated: ${referralCode} -> referrer ${referrer.email}`)
+      } else if (referrer && referrer.email === normalizedEmail) {
+        console.log(`Fan self-referral blocked: ${normalizedEmail} tried code ${referralCode}`)
+      } else {
+        console.log(`Referral code ${referralCode} not found -- ignoring (affiliate lookup paused)`)
       }
     }
 
@@ -262,12 +263,12 @@ export async function POST(req: NextRequest) {
       console.log(`New user created: ${normalizedEmail} -> champion (txn: ${transactionId})`)
     }
 
-    // --- Step 3: Affiliate attribution (money path, zero points) ---
-    // Only one affiliate conversion per buyer (referred_id has a UNIQUE constraint).
-    // A retry that hits ORDER_ALREADY_CAPTURED returns early above, but even if it
-    // reaches here, the insert on referred_id ensures no double-count.
+    /* ── STEP 3: AFFILIATE ATTRIBUTION — PAUSED ──────────────────────
+     * Affiliate program paused — see brief. No referral rows created,
+     * no payout counters touched. matchedAffiliate is always null while
+     * paused, so this block never fires. Keeping code for re-enablement.
+     *
     if (matchedAffiliate) {
-      // Check if this buyer already has a referral row (idempotency guard)
       const { data: existingReferral } = await adminClient
         .from('referrals')
         .select('id')
@@ -286,10 +287,8 @@ export async function POST(req: NextRequest) {
           })
 
         if (refInsertErr) {
-          // Non-fatal: payment and account are already done
           console.error('Affiliate referral insert failed (non-fatal):', refInsertErr)
         } else {
-          // Increment affiliate total_signups
           const { data: aff } = await adminClient
             .from('affiliates')
             .select('total_signups')
@@ -307,6 +306,7 @@ export async function POST(req: NextRequest) {
         console.log(`Affiliate referral already exists for buyer ${userId} -- skipping`)
       }
     }
+    ── END PAUSED BLOCK ──────────────────────────────────────────── */
 
     // Non-critical: Brevo (fire-and-forget)
     const brevoKey = process.env.BREVO_API_KEY

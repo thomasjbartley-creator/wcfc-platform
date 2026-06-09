@@ -200,7 +200,7 @@ export default function Home() {
           WCFC<span style={{ color: '#00C853' }}>.</span>
         </div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
-          {[['Play Free', '/auth/signup'], ['Sign In', '/auth/login'], ['Leaderboard', '/leaderboard'], ['For Clubs', '/clubs'], ['Sponsors', '/sponsors'], ['Our Story', '/about'], ['Earn $$$', '/affiliate'], ['Donate', '/checkout'], ['How It Works', '/how-it-works'], ['Rules', '/rules']].map(([label, href]) => (
+          {[['Play Free', '/auth/signup'], ['Sign In', '/auth/login'], ['Leaderboard', '/leaderboard'], ['For Clubs', '/clubs'], ['Sponsors', '/sponsors'], ['Our Story', '/about'], ['Donate', '/checkout'], ['How It Works', '/how-it-works'], ['Rules', '/rules']].map(([label, href]) => (
             <Link key={label} href={href} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', textDecoration: 'none', letterSpacing: '1px' }}>{label}</Link>
           ))}
         </div>

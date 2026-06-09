@@ -3,10 +3,14 @@ import { createAdminClient } from '@/lib/supabase-admin'
 
 /**
  * POST /api/affiliate-apply
- * Creates a pending affiliate application row.
- * approved=false, is_active=false — owner reviews and approves manually.
+ * AFFILIATE PROGRAM PAUSED — see brief. Returns 404 while paused.
+ * Original code preserved below for re-enablement.
  */
 export async function POST(req: NextRequest) {
+  return NextResponse.json({ error: 'Affiliate program is currently paused' }, { status: 404 })
+}
+
+async function _originalPOST_PAUSED(req: NextRequest) {
   try {
     const { name, email, platform, audience, paypal } = await req.json()
 
