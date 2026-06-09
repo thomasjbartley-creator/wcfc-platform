@@ -59,18 +59,18 @@ export default function Nav() {
           ))}
           <div id="translate-widget-slot" style={{ display: 'inline-block' }} />
           <Link href="/auth/login" style={{ ...linkStyle(), padding: '7px 12px' }}>SIGN IN</Link>
-          <a href="/checkout" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
-            JOIN — $10
-          </a>
+          <Link href="/auth/signup" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#00C853', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
+            PLAY FREE
+          </Link>
         </div>
 
         {/* Mobile: SIGN IN + JOIN + hamburger — shown at ≤768px */}
         <div className="wcfc-nav-mobile-ctas" style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
           <div id="translate-widget-slot-mobile" style={{ display: 'inline-block' }} />
           <Link href="/auth/login" style={{ ...linkStyle(), padding: '7px 12px' }}>SIGN IN</Link>
-          <a href="/checkout" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#FFD600', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
-            JOIN — $10
-          </a>
+          <Link href="/auth/signup" style={{ fontFamily: "'Bebas Neue'", fontSize: '0.9rem', color: '#050C0A', background: '#00C853', letterSpacing: '2px', textDecoration: 'none', padding: '9px 20px', borderRadius: '5px' }}>
+            PLAY FREE
+          </Link>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"

@@ -4,7 +4,7 @@ import Nav from '@/app/components/Nav'
 
 export const metadata: Metadata = {
   title: 'How It Works \u2014 WCFC',
-  description: 'Learn how to play the World Cup Fan Challenge. Submit your bracket, make daily score picks, climb the leaderboard, and win real prizes.',
+  description: 'Learn how to play the World Cup Fan Challenge. Free to play. Submit your bracket, make daily score picks, and climb the leaderboard.',
 }
 
 export default function HowItWorksPage() {
@@ -18,21 +18,10 @@ export default function HowItWorksPage() {
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2.4rem,6vw,4rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '40px' }}>How It Works</div>
 
  {/* STEP 1 — SIGN UP */}
- <Section color="#FFD600" icon="1" title="Sign Up & Choose Your Tier">
- <p>Create a free account at worldcupfanchallenge.com. Choose the tier that works for you:</p>
- <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', margin: '16px 0' }}>
- {[
- { tier: ' Champion Founder', price: '$10', color: '#FFD600', perks: '+25 pts, Founding Wall, Champion leaderboard tier, $2 to youth fútbol' },
- { tier: ' Premium', price: '$5', color: '#00C853', perks: '$500 grand prize, $100 weekly, full leaderboard' },
- { tier: 'Free', price: '$0', color: '#5a8a68', perks: 'Merch prizes only, no cash prizes' },
- ].map(t => (
- <div key={t.tier} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${t.color}30`, borderRadius: '10px', padding: '14px' }}>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', fontWeight: 700, color: t.color, marginBottom: '4px' }}>{t.tier} — {t.price}</div>
- <div style={{ fontFamily: "'Barlow'", fontSize: '0.78rem', color: '#5a8a68', lineHeight: 1.4 }}>{t.perks}</div>
- </div>
- ))}
- </div>
- <p style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68' }}>No purchase necessary to enter or win non-cash prizes.</p>
+ <Section color="#FFD600" icon="1" title="Sign Up — Free">
+ <p>Create a free account at worldcupfanchallenge.com. Every player gets full access to the bracket, daily picks, and the global leaderboard. No purchase necessary — the entire competition is free.</p>
+ <p>The Champion wins an official Thunder FC jersey and a custom WCFC Champion shirt, earns the Champion badge, and is named on the Winners Wall. Additional prizes from sponsors and donors are announced throughout the tournament.</p>
+ <p style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68' }}>No purchase or donation necessary to enter or win. Donating does not improve your chances.</p>
  </Section>
 
  {/* STEP 2 — BRACKET */}
@@ -71,8 +60,8 @@ export default function HowItWorksPage() {
  <p>After every match, scores update and rankings shift. Two leaderboards run simultaneously:</p>
  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', margin: '16px 0' }}>
  {[
- { title: ' Individual', desc: 'Every fan ranked globally. Premium fans compete for $500 grand prize. Premium fans compete for weekly prizes.' },
- { title: ' Country', desc: 'Average score per fan by country. Levels the playing field — a country with 10 fans can beat a country with 10,000.' },
+ { title: ' Individual', desc: 'Every fan ranked globally. The Champion takes home a Thunder FC jersey, WCFC Champion shirt, and permanent recognition.' },
+ { title: ' Country', desc: 'Average score per fan by country. Levels the playing field — a country with 10 fans can beat a country with 10,000. The winning country earns the "Best World Cup Fans" title.' },
  ].map(l => (
  <div key={l.title} style={{ background: 'rgba(79,195,247,0.05)', border: '1px solid rgba(79,195,247,0.15)', borderRadius: '10px', padding: '16px' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.95rem', fontWeight: 700, color: '#4FC3F7', marginBottom: '6px' }}>{l.title}</div>
@@ -84,16 +73,16 @@ export default function HowItWorksPage() {
 
  {/* STEP 5 — REFERRALS */}
  <Section color="#FF9800" icon="5" title="Refer Friends — Earn Points">
- <p>Share your unique referral link. When a friend creates a paid account through your link, you earn +2 bonus points. Capped at 10 referral points per day.</p>
+ <p>Share your unique referral link. When a friend signs up through your link, you earn +2 bonus points. Capped at 10 referral points per day.</p>
  <div style={{ background: 'rgba(255,152,0,0.06)', border: '1px solid rgba(255,152,0,0.15)', borderRadius: '10px', padding: '16px', margin: '16px 0', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#FF9800' }}>
- 1 paid referral = +2 pts &nbsp;·&nbsp; 5 paid referrals/day = +10 pts &nbsp;·&nbsp; Max 10 referral pts/day
+ 1 referral = +2 pts &nbsp;·&nbsp; 5 referrals/day = +10 pts &nbsp;·&nbsp; Max 10 referral pts/day
  </div>
  <p>Find your referral link on your dashboard after signing up.</p>
  </Section>
 
  {/* STEP 6 — FUND */}
  <Section color="#00C853" icon="6" title="The Grassroots Fútbol Fund">
- <p>Every Champion Founder membership includes a $2 donation to the Grassroots Fútbol Fund. Fans can also donate separately. Donors designate which country&apos;s youth programs receive their contribution.</p>
+ <p>Every donation goes to the Grassroots Fútbol Fund. Donors designate which country&apos;s youth programs receive their contribution. Donations are entirely optional and do not affect scoring or standings.</p>
  <p>After the tournament ends (July 19), the fund distributes donations to approved youth fútbol projects. Fan voting determines which projects receive funding. Projects are published and impact is reported publicly.</p>
  <div style={{ background: 'rgba(0,200,83,0.06)', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '10px', padding: '16px', margin: '16px 0' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', lineHeight: 1.6 }}>Phase 1: Now → July 19 — Youth clubs submit project proposals<br />Phase 2: July 19 → Aug 15 — Review and shortlist published<br />Phase 3: Aug 15 → Sep 1 — Fan backing + board selection<br />Phase 4: September 2026 — Funds awarded, impact published
@@ -105,13 +94,13 @@ export default function HowItWorksPage() {
  {/* CTA */}
  <div style={{ textAlign: 'center', marginTop: '48px', padding: '40px', background: 'linear-gradient(135deg,rgba(255,214,0,0.07),rgba(0,200,83,0.03))', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px' }}>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Ready to Play?</div>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginBottom: '24px' }}>June 11 bracket deadline · Free to enter · 18+ for cash prizes</div>
- <a href="/checkout" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>Join as Champion Founder — $10
- </a>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginBottom: '24px' }}>June 11 bracket deadline · Free to play · No purchase necessary</div>
+ <Link href="/auth/signup" style={{ display: 'inline-block', padding: '16px 40px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>PLAY FREE
+ </Link>
  <div style={{ marginTop: '12px' }}>
  <Link href="/rules" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#3a5a42', letterSpacing: '1px' }}>Read Official Rules →</Link>
  &nbsp;&middot;&nbsp;
- <Link href="/auth/signup" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#3a5a42', letterSpacing: '1px' }}>Free entry available →</Link>
+ <a href="/checkout" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#FFD600', letterSpacing: '1px', textDecoration: 'none' }}>Donate →</a>
  </div>
  </div>
 

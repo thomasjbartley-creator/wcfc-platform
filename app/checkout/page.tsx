@@ -200,32 +200,35 @@ function CheckoutContent() {
 
         {/* HERO */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>CHAMPION FOUNDER</div>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>FOUNDING SUPPORTER</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '12px' }}>
-            Join as Champion Founder
+            Become a Founding Supporter
           </div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2.5rem', color: '#FFD600', marginBottom: '16px' }}>$10</div>
           <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '420px', margin: '0 auto' }}>
-            One-time founding membership. +25 bonus points at signup. Name on the Founding Wall. Champion tier on the leaderboard. Includes $2 donation to the Grassroots F&#250;tbol Fund.
+            A voluntary donation to support youth soccer. Your name on the Founding Wall, Founding Supporter badge, and the knowledge that every dollar goes to kids&apos; f&#250;tbol programs.
           </p>
         </div>
 
         {/* BENEFITS */}
         <div style={{ background: '#0a1410', border: '1px solid rgba(255,214,0,0.15)', borderRadius: '12px', padding: '20px', marginBottom: '32px' }}>
-          {['+25 bonus points at signup', 'Name on the Founding Wall', 'Champion tier on the leaderboard', '$2 donation to the Grassroots Fútbol Fund'].map(b => (
+          {['Name on the Founding Wall — permanent', 'Founding Supporter badge on your profile', 'Every dollar goes to the Grassroots Fútbol Fund', 'Free books for your kids (while supplies last)'].map(b => (
             <div key={b} style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '6px 0' }}>
               <span style={{ color: '#FFD600', flexShrink: 0 }}>{'✓'}</span>
               <span style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898' }}>{b}</span>
             </div>
           ))}
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#5a8a68', marginTop: '10px', lineHeight: 1.5 }}>
+            This donation does not grant points, bonuses, or any competitive advantage. The challenge is free and skill-only.
+          </div>
         </div>
 
         {/* PAYMENT SUCCESS BUT ACCOUNT FAILED */}
         {paymentSuccess && (
           <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.3)', borderRadius: '10px', padding: '20px', marginBottom: '24px', textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>Payment Received</div>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.4rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>Donation Received</div>
             <p style={{ fontFamily: "'Barlow'", fontSize: '0.9rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '12px' }}>
-              Your $10 payment was captured successfully. We&apos;re setting up your Champion account &mdash; if it doesn&apos;t appear within a few minutes, contact us.
+              Your donation was captured successfully. We&apos;re setting up your Founding Supporter status &mdash; if it doesn&apos;t appear within a few minutes, contact us.
             </p>
             <a href="mailto:thomasjbartley@worldcupfanchallenge.com" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#00C853', textDecoration: 'none' }}>
               Contact support &rarr;
@@ -319,11 +322,11 @@ function CheckoutContent() {
         {/* FINE PRINT */}
         <div style={{ textAlign: 'center', marginTop: '24px' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#3a5a42', letterSpacing: '1px', lineHeight: 1.8 }}>
-            Secure payment via PayPal &middot; No purchase necessary to enter or win non-cash prizes &middot; 18+ for cash prizes
+            Secure payment via PayPal &middot; This is a voluntary donation &middot; Donating does not improve your chances of winning
           </div>
           <div style={{ marginTop: '8px' }}>
-            <Link href="/auth/signup" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#5a8a68', textDecoration: 'underline' }}>
-              Just want a free account? Sign up here &rarr;
+            <Link href="/auth/signup" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.78rem', color: '#00C853', textDecoration: 'underline' }}>
+              Just want to play? Sign up free &rarr;
             </Link>
           </div>
         </div>

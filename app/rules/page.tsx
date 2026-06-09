@@ -4,7 +4,7 @@ import Nav from '@/app/components/Nav'
 
 export const metadata: Metadata = {
   title: 'Official Rules \u2014 WCFC',
-  description: 'Official rules for the World Cup Fan Challenge 2026. No purchase necessary. Open to fans worldwide. Skill-based competition with real prizes.',
+  description: 'Official rules for the World Cup Fan Challenge 2026. Free to play. No purchase necessary. Skill-based competition open to fans worldwide.',
 }
 
 export default function RulesPage() {
@@ -21,13 +21,13 @@ export default function RulesPage() {
  {[
  {
  title: '1. No Purchase Necessary',
- body: `NO PURCHASE OR PAYMENT OF ANY KIND IS NECESSARY TO ENTER OR WIN. A purchase does not improve your chances of winning. The World Cup Fan Challenge is a skill-based competition. Winners are determined by prediction accuracy, not by chance and not by the amount spent on entry fees.
+ body: `Entry is free. NO PURCHASE OR DONATION IS NECESSARY TO ENTER OR WIN, AND DONATING DOES NOT IMPROVE YOUR CHANCES. The World Cup Fan Challenge is a free, skill-based competition. Winners are determined solely by prediction accuracy under the published scoring rules.
 
-To enter without purchase, visit worldcupfanchallenge.com/auth/signup and create a free account. Free accounts are eligible for non-cash prizes including merchandise and activity books.`,
+To enter, visit worldcupfanchallenge.com/auth/signup and create a free account.`,
  },
  {
  title: '2. Eligibility',
- body: `Open to legal residents of the United States and worldwide where not prohibited by law. Participants must be 18 years of age or older to be eligible for cash prizes. Participants under 18 may enter the Junior Fan Challenge and are eligible for non-cash prizes only (merchandise, trophies, activity books).
+ body: `Open to legal residents of the United States and worldwide where not prohibited by law. Participants under 18 may enter the Junior Fan Challenge.
 
 Participants under 13 require verifiable parental consent (COPPA compliance). A parent or guardian must create the account and add the child's name and date of birth.
 
@@ -48,7 +48,7 @@ Daily match picks must be submitted before the official kickoff time of each ind
 3. Submit daily score predictions before each match kickoff.
 4. Points are earned based on prediction accuracy as described in Section 5.
 
-Paid entry tiers ($5 Premium, $10 Champion Founder) unlock eligibility for cash prizes. Payment is processed through PayPal. Entry fees are non-refundable.`,
+All features and prize eligibility are available to every registered user at no cost. Optional donations support youth soccer programs but do not affect scoring, standings, or prize eligibility.`,
  },
  {
  title: '5. Scoring System',
@@ -78,29 +78,20 @@ Correct upset/underdog pick (lower FIFA ranking wins): +5 points
 
 Soft bonuses:
 Daily login streak (consecutive matchdays with picks): +2 points per day
-Referral bonus: +2 points per paid referral signup (capped at 10 points per day)
+Referral bonus: +2 points per referred signup (capped at 10 points per day)
 No overall daily point cap.
 
-One-time bonuses:
-Champion Founder signup: +25 points
+No points, bonuses, or competitive advantages are granted in exchange for payment or donation. Winners are determined solely by skill (prediction accuracy under the published scoring rules).
 
 The Sponsor Operator reserves the right to correct scoring errors. Decisions of the Sponsor Operator regarding scores and standings are final.`,
  },
  {
  title: '6. Prizes',
- body: `All cash prizes are fixed amounts funded directly by Bartex Enterprise Holdings LLC (the Sponsor Operator). Prize amounts are NOT determined by, pooled from, or dependent on entry fees collected.
+ body: `The World Cup Fan Challenge is free to play. The Champion will receive an official Thunder FC jersey and a custom WCFC Champion shirt, plus the Champion badge and placement on the Winners Wall. The winning country earns the "Best World Cup Fans" title.
 
-Premium Entry cash prizes:
-Grand Prize: $500 USD (highest total points at tournament end)
-Weekly Prize: $100 USD per week (highest points in each tournament week)
+Additional prizes may be provided by sponsors and donors and will be announced as confirmed. The total value of all prizes awarded will not exceed $5,000.
 
-Free Entry prizes:
-Merchandise prizes, activity books (no cash prizes)
-
-Junior Fan Challenge (under 18) prizes:
-Merchandise, trophies, activity books only (no cash prizes)
-
-In the event of a tie, the earliest submission timestamp determines the winner. Cash prizes are paid via PayPal within 7 business days of determination. Winners must provide a valid PayPal account and may be required to provide proof of identity and eligibility.`,
+In the event of a tie, the earliest submission timestamp determines the winner. Winners may be required to provide proof of identity and eligibility. No purchase or donation is necessary to enter or win, and donating does not improve your chances.`,
  },
  {
  title: '7. Skill-Based Competition',
@@ -128,7 +119,7 @@ For participants under 13, we collect only the minimum necessary information wit
  },
  {
  title: '10. Grassroots Futbol Fund Donations',
- body: `Donations to the Grassroots Futbol Fund are voluntary and separate from competition entry. Donations are not required to enter or win.
+ body: `Donations to the Grassroots Futbol Fund are voluntary and separate from competition entry. Donations are not required to enter or win, and donating does not improve your chances. Donors may receive recognition (badge, Founding Wall placement) but never points, bonuses, or any competitive advantage.
 
 Donors may designate which country's youth programs receive their contribution. If no qualifying project exists for the designated country, funds are directed to partner organizations (streetfootballworld, Common Goal) earmarked for that region.
 
@@ -168,7 +159,7 @@ For questions about these rules, prize claims, or eligibility, contact us at the
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#3a5a42', letterSpacing: '1px', lineHeight: 1.8 }}>Questions? Contact thomasjbartley@worldcupfanchallenge.com<br />
  <Link href="/how-it-works" style={{ color: '#5a8a68' }}>How It Works →</Link>
  &nbsp;·&nbsp;
- <span style={{ color: '#5a8a68' }}>Free entry available →</span>
+ <Link href="/auth/signup" style={{ color: '#5a8a68' }}>Play Free →</Link>
  </div>
  </div>
  </div>

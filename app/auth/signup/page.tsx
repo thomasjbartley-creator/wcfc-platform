@@ -124,7 +124,7 @@ function SignupPageContent() {
             Create Your Account
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#5a8a68', marginBottom: '28px', letterSpacing: '0.5px' }}>
-            Join the global fan challenge — free to play, win cash &amp; prizes
+            Join the global fan challenge — free to play
           </div>
           {referredBy && (
             <div style={{
@@ -201,7 +201,7 @@ function SignupPageContent() {
               />
             </div>
             <div style={{ fontSize: '0.78rem', color: '#5a8a68', fontFamily: "'Barlow Condensed'", lineHeight: '1.5', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
-              By creating an account you agree that no purchase is necessary to enter or win. This is a skill-based competition. You must be 18+ to win cash prizes.
+              By creating an account you agree that no purchase is necessary to enter or win. This is a free, skill-based competition.
             </div>
             <button
               type="submit"

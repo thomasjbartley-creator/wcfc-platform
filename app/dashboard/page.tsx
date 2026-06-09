@@ -134,7 +134,7 @@ export default function DashboardPage() {
 
   const shareReferral = (platform: string) => {
     const country = profile?.country_supported || 'my country'
-    const msg = `I just joined the World Cup Fan Challenge representing ${country}! Predict scores, win cash prizes, and help fund youth futbol. Join me\n${referralLink}`
+    const msg = `I just joined the World Cup Fan Challenge representing ${country}! Predict every match for free and help fund youth futbol. Join me\n${referralLink}`
     if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`, '_blank')
     if (platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank')
     if (platform === 'facebook') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank')
@@ -243,8 +243,8 @@ export default function DashboardPage() {
                   <Link href="/picks/bracket" style={{ display: 'block', padding: '13px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
                     PLAY YOUR BRACKET — FREE
                   </Link>
-                  <a href="/checkout" style={{ display: 'block', padding: '13px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                    UPGRADE — WIN CASH &amp; FUND FÚTBOL · $10
+                  <a href="/checkout" style={{ display: 'block', padding: '13px', background: 'rgba(255,214,0,0.12)', border: '1px solid rgba(255,214,0,0.3)', color: '#FFD600', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
+                    BECOME A FOUNDING SUPPORTER
                   </a>
                 </div>
               )}
@@ -256,27 +256,20 @@ export default function DashboardPage() {
               {tier === 'free' && (
                 <div>
                   <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', lineHeight: '1.6', marginBottom: '14px' }}>
-                    You're playing for bragging rights and a winner's shirt. Upgrade to Champion to win cash and help fund youth fútbol.
+                    You&apos;re competing for the Champion prize — a Thunder FC jersey, WCFC Champion shirt, and permanent recognition. Want to support youth fútbol?
                   </div>
-                  <a href="/checkout" style={{ display: 'block', padding: '12px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                    CHAMPION FOUNDER — $10
+                  <a href="/checkout" style={{ display: 'block', padding: '12px', background: 'rgba(255,214,0,0.12)', border: '1px solid rgba(255,214,0,0.3)', color: '#FFD600', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
+                    BECOME A FOUNDING SUPPORTER
                   </a>
+                  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#5a8a68', marginTop: '6px', textAlign: 'center' }}>Recognition only — donating does not improve your chances</div>
                 </div>
               )}
-              {tier === 'plus' && (
-                <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', lineHeight: '1.6' }}>
-                  You're competing for weekly prizes. Upgrade to Premium for the $500 grand prize.
-                  <a href="https://www.paypal.com/ncp/payment/JAJYWPYW4UTWJ" style={{ display: 'block', marginTop: '10px', padding: '10px', background: 'rgba(0,200,83,0.12)', border: '1px solid rgba(0,200,83,0.3)', color: '#00C853', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', textDecoration: 'none', textAlign: 'center' }}>
-                    UPGRADE TO PREMIUM →
-                  </a>
-                </div>
-              )}
-              {['premium', 'founder', 'champion'].includes(tier) && (
+              {['champion', 'founder', 'premium', 'plus'].includes(tier) && (
                 <ul style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', lineHeight: '1.8', paddingLeft: '0', listStyle: 'none', margin: 0 }}>
-                  <li><span style={{ color: '#00C853' }}>✓</span> $500 Grand Prize eligible</li>
-                  <li><span style={{ color: '#00C853' }}>✓</span> Weekly cash prizes</li>
+                  <li><span style={{ color: '#00C853' }}>✓</span> Champion prize eligible (jersey + shirt)</li>
+                  <li><span style={{ color: '#00C853' }}>✓</span> Winners Wall + Champion badge</li>
                   {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> Founding Wall — permanent</li>}
-                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> +25 bonus points · $2 donated to youth fútbol</li>}
+                  {tier === 'champion' && <li><span style={{ color: '#FFD600' }}>✓</span> Founding Supporter — thank you!</li>}
                 </ul>
               )}
             </div>
@@ -288,7 +281,7 @@ export default function DashboardPage() {
             <div style={{ background: '#0a1410', border: '1px solid rgba(0,200,83,0.15)', borderRadius: '12px', padding: '20px' }}>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>REFER FRIENDS — EARN POINTS</div>
               <div style={{ fontFamily: "'Barlow'", fontSize: '0.85rem', color: '#8ab898', marginBottom: '14px', lineHeight: '1.5' }}>
-                Share your link. When a friend joins the paid challenge you earn <strong style={{ color: '#00C853' }}>+2 bonus points</strong>.
+                Share your link. When a friend signs up through your link you earn <strong style={{ color: '#00C853' }}>+2 bonus points</strong>.
               </div>
 
               <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>

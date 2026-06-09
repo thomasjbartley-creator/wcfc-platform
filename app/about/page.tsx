@@ -54,9 +54,9 @@ export default function AboutPage() {
  </div>
 
  <div style={{ textAlign: 'center' }}>
- <a href="/checkout" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', marginBottom: '12px' }}>Join as Champion Founder — $10
- </a>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '8px' }}><Link href="/auth/signup" style={{ color: '#3a5a42' }}>Free entry available →</Link>
+ <Link href="/auth/signup" style={{ display: 'inline-block', padding: '16px 40px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', marginBottom: '12px' }}>PLAY FREE
+ </Link>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '8px' }}><a href="/checkout" style={{ color: '#FFD600', textDecoration: 'none' }}>Donate to youth fútbol →</a>
  </div>
  </div>
  </div>

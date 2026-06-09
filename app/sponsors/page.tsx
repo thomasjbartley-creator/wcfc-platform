@@ -88,7 +88,7 @@ export default function SponsorsPage() {
  <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '640px', marginBottom: '24px' }}>The 2026 FIFA World Cup is the biggest sporting event in history — 48 teams, 104 matches, 5 billion global fans. The World Cup Fan Challenge puts your brand in front of the most engaged fans during the tournament&apos;s most exciting moments, while funding youth soccer programs worldwide.
  </p>
  <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
- {[['', '48', 'Nations Competing'], ['', '104', 'Matches'], ['', 'June 11', '2026 Kickoff'], ['', '$500', 'Grand Prize']].map(([i, n, l]) => (
+ {[['', '48', 'Nations Competing'], ['', '104', 'Matches'], ['', 'June 11', '2026 Kickoff'], ['', 'Free', 'To Play']].map(([i, n, l]) => (
  <div key={l} style={{ textAlign: 'center' }}>
  <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>{i}</div>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: '#FFD600', lineHeight: 1 }}>{n}</div>

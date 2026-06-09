@@ -22,7 +22,7 @@ export default function LeaderboardPage() {
  {[
  { icon: '', title: 'Individual Leaderboard', desc: 'Every fan ranked globally by total points. Updated after each match.' },
  { icon: '', title: 'Country Leaderboard', desc: 'Average score per fan by country. Levels the playing field for smaller nations.' },
- { icon: '', title: 'Weekly Prize Tracker', desc: 'Top Premium fans each week. Cash prizes paid within 48 hours of week end.' },
+ { icon: '', title: 'Weekly Highlights', desc: 'Top fans each week. Best predictions highlighted and celebrated.' },
  { icon: '', title: 'Champion Founders Wall', desc: 'Every founding member listed permanently. Your name in the history of this platform.' },
  { icon: '', title: 'Sponsor Leaderboard', desc: 'Live now. Brands ranked by total commitment, refreshed as new sponsors join.' },
  ].map(c => (
@@ -85,9 +85,9 @@ export default function LeaderboardPage() {
  <Link href="/sponsors" style={{ display: 'inline-block', padding: '10px 24px', background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.3)', color: '#E53935', fontFamily: "'Bebas Neue'", fontSize: '0.85rem', letterSpacing: '2px', borderRadius: '5px', textDecoration: 'none' }}>CLAIM A SPOT →</Link>
  </div>
  </div>
- <a href="/checkout" style={{ display: 'inline-block', padding: '16px 40px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', marginBottom: '12px' }}>Get on the Leaderboard — $10
- </a>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '8px' }}>No purchase necessary to enter · Free fans eligible for non-cash prizes
+ <Link href="/auth/signup" style={{ display: 'inline-block', padding: '16px 40px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', marginBottom: '12px' }}>PLAY FREE
+ </Link>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#3a5a42', letterSpacing: '1px', marginTop: '8px' }}>Free to play · No purchase necessary to enter or win
  </div>
  </div>
  </div>

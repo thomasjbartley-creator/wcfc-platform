@@ -145,11 +145,11 @@ export default function PicksPage() {
         {!isPaid && (
           <div style={{ background: 'rgba(0,200,83,0.08)', border: '1px solid rgba(0,200,83,0.25)', borderRadius: '12px', padding: '20px 24px', marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
             <div>
-              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#00C853', letterSpacing: '1px', marginBottom: '4px' }}>Playing for Bragging Rights</div>
-              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898' }}>Free fans compete on the leaderboard for a winner's shirt. Upgrade to win cash and help fund youth fútbol.</div>
+              <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: '#00C853', letterSpacing: '1px', marginBottom: '4px' }}>Free to Play</div>
+              <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898' }}>Compete on the global leaderboard. The Champion wins a Thunder FC jersey and WCFC Champion shirt.</div>
             </div>
-            <a href="/checkout" style={{ padding: '12px 24px', background: '#FFD600', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              Champion Founder — $10
+            <a href="/checkout" style={{ padding: '12px 24px', background: 'rgba(255,214,0,0.12)', border: '1px solid rgba(255,214,0,0.3)', color: '#FFD600', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              Donate →
             </a>
           </div>
         )}

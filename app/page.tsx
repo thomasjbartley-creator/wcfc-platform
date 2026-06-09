@@ -4,7 +4,7 @@ import Nav from '@/app/components/Nav'
 
 export const metadata: Metadata = {
   title: 'WCFC — World Cup Fan Challenge 2026',
-  description: 'Pick every match. Win real prizes. The global fan challenge for the 2026 FIFA World Cup.',
+  description: 'Play the World Cup. Fund the next generation. A free, skill-based bracket challenge for the 2026 FIFA World Cup.',
   alternates: {
     languages: {
       'pt-BR': 'https://worldcupfanchallenge.com/?lang=pt',
@@ -27,35 +27,32 @@ export default function Home() {
           2026 FIFA WORLD CUP — JUNE 11 KICKOFF
         </div>
         <h1 style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(3rem,10vw,7rem)', color: 'white', letterSpacing: '3px', lineHeight: 1, marginBottom: '8px' }}>
-          PICK EVERY MATCH.
+          PLAY THE WORLD CUP.
         </h1>
         <h1 style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(3rem,10vw,7rem)', color: '#00C853', letterSpacing: '3px', lineHeight: 1, marginBottom: '28px' }}>
-          WIN REAL PRIZES.
+          FUND THE NEXT GENERATION.
         </h1>
         <p style={{ fontFamily: "'Barlow'", fontSize: 'clamp(1rem,2vw,1.2rem)', color: '#8ab898', maxWidth: '600px', margin: '0 auto 40px', lineHeight: 1.7 }}>
-          The global fan challenge for the 2026 World Cup. Predict every match and climb the global leaderboard. Free to play for bragging rights — go Champion to win cash and help fund youth fútbol worldwide.
+          A free, skill-based World Cup bracket built by a Houston youth coach. Every dollar donated goes to youth soccer.
         </p>
 
         {/* CTAs */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-          <a href="/checkout" style={{ display: 'inline-block', padding: '18px 48px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.3rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', boxShadow: '0 0 32px rgba(255,214,0,0.25)' }}>
-            JOIN AS CHAMPION FOUNDER — $10
-          </a>
-          <Link href="/auth/signup" style={{ display: 'inline-block', padding: '15px 44px', background: 'rgba(0,200,83,0.12)', color: '#00C853', border: '1px solid rgba(0,200,83,0.4)', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
-            PLAY FREE →
+          <Link href="/auth/signup" style={{ display: 'inline-block', padding: '18px 48px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.3rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none', boxShadow: '0 0 32px rgba(0,200,83,0.25)' }}>
+            PLAY FREE
           </Link>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#8ab898', letterSpacing: '0.5px', marginTop: '4px', maxWidth: '440px', lineHeight: 1.5 }}>
-            Free fans play for bragging rights and a winner&apos;s shirt. Champions win cash and help fund youth fútbol.
-          </div>
-          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#7a9988', letterSpacing: '1px', marginTop: '2px' }}>
-            ✓ No purchase necessary to enter or win &nbsp;·&nbsp; ✓ 18+ for cash prizes
+          <a href="/checkout" style={{ display: 'inline-block', padding: '15px 44px', background: 'rgba(255,214,0,0.12)', color: '#FFD600', border: '1px solid rgba(255,214,0,0.4)', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
+            DONATE
+          </a>
+          <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.7rem', color: '#7a9988', letterSpacing: '1px', marginTop: '4px' }}>
+            ✓ No purchase necessary to enter or win &nbsp;·&nbsp; ✓ Donating does not improve your chances
           </div>
         </div>
       </section>
 
       {/* STATS STRIP */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '20px 24px', display: 'flex', justifyContent: 'center', gap: 'clamp(24px,6vw,80px)', flexWrap: 'wrap' }}>
-        {[['104', 'Total Matches'], ['$500', 'Grand Prize'], ['25 Pts', 'Per Exact Score'], ['Jun 11', 'Bracket Deadline']].map(([n, l]) => (
+        {[['104', 'Total Matches'], ['Free', 'Entry'], ['25 Pts', 'Per Exact Score'], ['Jun 11', 'Bracket Deadline']].map(([n, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(1.6rem,4vw,2.4rem)', color: '#FFD600', letterSpacing: '2px' }}>{n}</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898', letterSpacing: '2px', textTransform: 'uppercase' }}>{l}</div>
@@ -93,9 +90,9 @@ export default function Home() {
               ))}
             </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <a href="/checkout" style={{ padding: '13px 24px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-                Join &amp; Fill Bracket — $10
-              </a>
+              <Link href="/auth/signup" style={{ padding: '13px 24px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
+                Play Free &amp; Fill Bracket
+              </Link>
               <Link href="/picks/bracket" style={{ padding: '13px 20px', background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
                 Preview Bracket →
               </Link>
@@ -131,7 +128,7 @@ export default function Home() {
           {[
             { n: '01', title: 'Predict Every Score', desc: 'Pick the result and score of every match. Closer guess = more points.' },
             { n: '02', title: 'Fill Your Tournament Bracket', desc: 'Bonus picks: pick winners through the knockout rounds. Lock in before June 11.' },
-            { n: '03', title: 'Climb the Leaderboard', desc: 'Compete on the global individual leaderboard and the country leaderboard. Premium fans compete for $500 grand prize.' },
+            { n: '03', title: 'Climb the Leaderboard', desc: 'Compete on the global individual leaderboard and the country leaderboard. The Champion wins a Thunder FC jersey, a custom WCFC Champion shirt, and permanent recognition.' },
           ].map(s => (
             <div key={s.n} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '28px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
@@ -151,31 +148,31 @@ export default function Home() {
       <section style={{ padding: '80px 24px', background: 'rgba(255,214,0,0.03)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>PRIZES</div>
-          <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3rem)', color: 'white', letterSpacing: '2px', marginBottom: '40px' }}>Real Cash. Fixed Amounts.</div>
+          <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3rem)', color: 'white', letterSpacing: '2px', marginBottom: '40px' }}>Free to Play. Real Recognition.</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '40px' }}>
             {[
-              { label: 'Grand Prize', amt: '$500', tier: 'Premium', color: '#FFD600' },
-              { label: 'Weekly Prize', amt: '$100', tier: 'Premium', color: '#00C853' },
-              { label: 'Country Prize', amt: 'Trophy', tier: 'All tiers', color: '#FF9800' },
+              { label: 'Champion Prize', amt: 'Jersey + Shirt', tier: 'Thunder FC jersey + WCFC Champion shirt', color: '#FFD600' },
+              { label: 'Recognition', amt: 'Badge + Wall', tier: 'Champion badge + Winners Wall', color: '#00C853' },
+              { label: 'Country Title', amt: 'Best Fans', tier: '"Best World Cup Fans" country title', color: '#FF9800' },
             ].map(p => (
               <div key={p.label} style={{ background: '#0a1410', border: `1px solid ${p.color}30`, borderRadius: '12px', padding: '24px' }}>
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: p.color, letterSpacing: '1px', marginBottom: '8px' }}>{p.label}</div>
-                <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2.5rem', color: p.color, lineHeight: 1 }}>{p.amt}</div>
+                <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.8rem', color: p.color, lineHeight: 1 }}>{p.amt}</div>
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#8ab898', marginTop: '6px', letterSpacing: '1px' }}>{p.tier}</div>
               </div>
             ))}
           </div>
-          <div style={{ background: 'rgba(255,214,0,0.06)', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '12px', padding: '28px 32px', marginBottom: '32px' }}>
-            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Champion Founder — $10</div>
+          <div style={{ background: 'rgba(0,200,83,0.06)', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '12px', padding: '28px 32px', marginBottom: '32px' }}>
+            <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Sponsor &amp; Donor Prizes</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#8ab898', lineHeight: 1.6, marginBottom: '16px' }}>
-              One-time founding membership. +25 bonus points at signup. Name on the Founding Wall. Champion tier on the leaderboard. Includes $2 donation to the Grassroots Fútbol Fund.
+              Additional prizes provided by sponsors and donors, announced throughout the tournament as they&apos;re confirmed. Help us grow the prize pool — every donation counts.
             </div>
             <a href="/checkout" style={{ display: 'inline-block', padding: '14px 36px', background: '#FFD600', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>
-              JOIN AS CHAMPION FOUNDER →
+              DONATE →
             </a>
           </div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#7a9988', letterSpacing: '1px' }}>
-            All cash prizes are fixed amounts funded by the platform operator — not pooled from entry fees. No purchase necessary to enter or win non-cash prizes.
+            The World Cup Fan Challenge is free to play. No purchase or donation is necessary to enter or win. Donating does not improve your chances.
           </div>
         </div>
       </section>
@@ -185,15 +182,15 @@ export default function Home() {
         <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>THE MISSION</div>
         <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3rem)', color: 'white', letterSpacing: '2px', marginBottom: '16px' }}>Built by a Coach. Powered by Fans.</div>
         <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.8, marginBottom: '28px' }}>
-          Founded by a Houston Navy veteran and youth soccer coach who spent 20+ years coaching YMCA kids for free. The Grassroots Fútbol Fund channels fan donations directly to youth soccer programs worldwide. This is the Thunder FC mission going global.
+          This started with a youth team called Thunder FC. The World Cup Fan Challenge turns the world&apos;s biggest tournament into a way to fund kids&apos; soccer. Play the bracket free, and if you can, donate — every dollar goes to youth programs, and donations grow the champion&apos;s prize pool. No donation is required to play or to win.
         </p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/about" style={{ padding: '12px 24px', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', color: '#00C853', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
             OUR STORY →
           </Link>
-          <Link href="/shop" style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#8ab898', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
+          <a href="/checkout" style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(255,214,0,0.3)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.9rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
             DONATE TO YOUTH FÚTBOL
-          </Link>
+          </a>
         </div>
       </section>
 
@@ -203,12 +200,12 @@ export default function Home() {
           WCFC<span style={{ color: '#00C853' }}>.</span>
         </div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '20px' }}>
-          {[['Join Free', '/auth/signup'], ['Sign In', '/auth/login'], ['Leaderboard', '/leaderboard'], ['For Clubs', '/clubs'], ['Sponsors', '/sponsors'], ['Our Story', '/about'], ['Earn $$$', '/affiliate'], ['Shop', '/shop'], ['How It Works', '/how-it-works'], ['Rules', '/rules']].map(([label, href]) => (
+          {[['Play Free', '/auth/signup'], ['Sign In', '/auth/login'], ['Leaderboard', '/leaderboard'], ['For Clubs', '/clubs'], ['Sponsors', '/sponsors'], ['Our Story', '/about'], ['Earn $$$', '/affiliate'], ['Donate', '/checkout'], ['How It Works', '/how-it-works'], ['Rules', '/rules']].map(([label, href]) => (
             <Link key={label} href={href} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#8ab898', textDecoration: 'none', letterSpacing: '1px' }}>{label}</Link>
           ))}
         </div>
         <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#7a9988', letterSpacing: '1px', lineHeight: 1.8 }}>
-          worldcupfanchallenge.com · No purchase necessary to enter or win non-cash prizes · Skill-based competition · 18+ for cash prizes<br />
+          worldcupfanchallenge.com · Free to play · No purchase necessary to enter or win · Skill-based competition<br />
           © 2026 Bartex Enterprise Holdings LLC · Houston, TX
         </div>
       </footer>

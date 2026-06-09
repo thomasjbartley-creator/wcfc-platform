@@ -183,11 +183,8 @@ export async function POST(req: NextRequest) {
       if (validatedRefCode && !existingProfile.referred_by) {
         updateFields.referred_by = validatedRefCode
       }
-      // Apply founder bonus exactly once
-      if (!existingProfile.founder_bonus_applied) {
-        updateFields.points_total = (existingProfile.points_total || 0) + 25
-        updateFields.founder_bonus_applied = true
-      }
+      // Founding Supporter: recognition only (badge + wall). No points bonus.
+      // Donating must never improve competitive standing.
 
       const { error: updateError } = await adminClient
         .from('profiles')
@@ -240,8 +237,7 @@ export async function POST(req: NextRequest) {
           first_name: cleanFirst || undefined,
           last_name: cleanLast || undefined,
           founding_wall_name: newWallName,
-          points_total: 25,
-          founder_bonus_applied: true,
+          // No points bonus — Founding Supporter is recognition only.
       }
       // Only set referred_by for fan referrals (not affiliate)
       if (validatedRefCode) {
