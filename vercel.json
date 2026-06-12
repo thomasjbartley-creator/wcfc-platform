@@ -4,6 +4,10 @@
     {
       "path": "/api/bracket-lock",
       "schedule": "0 17 11 6 *"
+    },
+    {
+      "path": "/api/recompute-scores",
+      "schedule": "0 * * * *"
     }
   ]
 }
