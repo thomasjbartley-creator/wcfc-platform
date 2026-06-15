@@ -168,7 +168,7 @@ export default function DailyPicksPage() {
         <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ fontSize: '1.2rem' }}>&#9888;</span>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#FFD600', letterSpacing: '0.5px' }}>
-            Preview mode — fill out your bracket to try it, but saving opens before the June 11 kickoff. Your picks aren&apos;t stored yet.
+            Preview mode — fill out your bracket to try it. The Knockout Bracket opens June 27; entries lock when the Round of 32 begins. Your picks aren&apos;t stored yet.
           </div>
         </div>
 
@@ -276,7 +276,7 @@ export default function DailyPicksPage() {
                           cursor: pick.saving ? 'wait' : 'pointer',
                           transition: 'all 0.2s',
                         }}>
-                          {pick.saved ? '✓ SAVED' : 'SAVING OPENS BEFORE JUNE 11'}
+                          {pick.saved ? '✓ SAVED' : 'SAVING OPENS JUNE 27'}
                         </button>
                       </div>
                     )}

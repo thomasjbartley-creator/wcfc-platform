@@ -77,7 +77,7 @@ function SignupPageContent() {
             referred_by: referredBy ?? null,
           })
         if (profileError) throw profileError
-        router.push('/picks/bracket')
+        router.push('/leaderboard')
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Something went wrong'

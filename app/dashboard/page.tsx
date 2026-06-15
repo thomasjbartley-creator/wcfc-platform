@@ -188,7 +188,7 @@ export default function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '28px' }}>
           {[
             { label: 'Points', value: profile?.points_total?.toLocaleString() || '0', color: '#FFD600' },
-            { label: 'Global Rank', value: '—', color: '#00C853', note: 'Opens June 11' },
+            { label: 'Global Rank', value: '—', color: '#00C853', note: 'Group stage live' },
             { label: 'Day Streak', value: String(profile?.streak_current || 0), color: '#FF9800' },
             { label: 'Referrals', value: String(referralCount), color: '#4FC3F7' },
           ].map(s => (
@@ -231,23 +231,22 @@ export default function DashboardPage() {
               </div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', marginBottom: '16px', lineHeight: '1.5' }}>
                 {isPaid
-                  ? 'Predict every match. Submit your bracket before June 11.'
-                  : 'Make your picks and climb the global leaderboard — free. Play for bragging rights and a winner\'s shirt.'}
+                  ? 'The group stage is live. The Knockout Bracket opens June 27 — pick winners through every round to the final.'
+                  : 'The group stage is live — climb the global leaderboard free. The Knockout Bracket opens June 27.'}
               </div>
-              {isPaid ? (
-                <Link href="/picks" style={{ display: 'block', padding: '12px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                  GO TO PICKS →
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <Link href="/leaderboard" style={{ display: 'block', padding: '13px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
+                  SEE THE LIVE LEADERBOARD →
                 </Link>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <Link href="/picks/bracket" style={{ display: 'block', padding: '13px', background: '#00C853', color: '#050C0A', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
-                    PLAY YOUR BRACKET — FREE
-                  </Link>
+                <div aria-disabled="true" style={{ display: 'block', padding: '13px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#5a8a68', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textAlign: 'center', cursor: 'not-allowed' }}>
+                  KNOCKOUT BRACKET — OPENS JUNE 27
+                </div>
+                {!isPaid && (
                   <a href="/checkout" style={{ display: 'block', padding: '13px', background: 'rgba(255,214,0,0.12)', border: '1px solid rgba(255,214,0,0.3)', color: '#FFD600', borderRadius: '6px', fontFamily: "'Bebas Neue'", fontSize: '1rem', letterSpacing: '2px', textDecoration: 'none' }}>
                     BECOME A FOUNDING SUPPORTER
                   </a>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '20px' }}>

@@ -522,7 +522,7 @@ export default function BracketPage() {
                 <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.78rem", color: statusMsg.includes("fail") || statusMsg.includes("error") || statusMsg.includes("No picks") ? "#E53935" : "#00C853", marginBottom: "4px" }}>{statusMsg}</div>
               )}
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: "0.68rem", color: "#3a5a42", letterSpacing: "1px" }}>
-                Auto-submits June 11 at 12:00 PM CT &mdash; you can edit until then
+                The Knockout Bracket opens June 27 &mdash; entries lock when the Round of 32 begins
               </div>
             </>
           )}

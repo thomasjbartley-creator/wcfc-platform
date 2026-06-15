@@ -79,7 +79,7 @@ function ThankYouContent() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {[
               { n: '1', title: 'Check your email', desc: "We've sent you a link to set your password and complete your fan profile." },
-              { n: '2', title: 'Make your picks', desc: 'Once logged in, head to your dashboard to predict every match before June 11 kickoff.' },
+              { n: '2', title: 'Watch the live leaderboard', desc: 'The group stage is live now. Head to your dashboard and the leaderboard — the Knockout Bracket opens June 27.' },
               { n: '3', title: 'Spread the word', desc: 'Share with friends and help fund youth fútbol. The more fans, the bigger the impact.' },
             ].map(s => (
               <div key={s.n} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px', background: '#0a1410', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px' }}>

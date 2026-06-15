@@ -34,7 +34,7 @@ export default async function LeaderboardPage() {
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>GLOBAL RANKINGS</div>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2.4rem,7vw,5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>Leaderboard<br /><span style={{ color: '#FFD600' }}>Live Now</span>
  </div>
- <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '540px', margin: '0 auto 48px' }}>The global leaderboard opens at kickoff. Rankings update after every match. Individual standings, country leaderboard, and weekly prize tracking — all live.
+ <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '540px', margin: '0 auto 48px' }}>The group stage is live. Rankings update after every match — individual standings, country leaderboard, and weekly highlights.
  </p>
  {/* PREVIEW CARDS */}
  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '14px', marginBottom: '48px', textAlign: 'left' }}>

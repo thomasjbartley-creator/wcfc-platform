@@ -25,8 +25,8 @@ export default function HowItWorksPage() {
  </Section>
 
  {/* STEP 2 — BRACKET */}
- <Section color="#FFD600" icon="2" title="Fill Your Bracket Before June 11">
- <p>Predict scores for all 72 group stage matches and pick winners through every knockout round to the final. Your bracket locks automatically at 12pm CT on June 11 — 1 hour before the opening kickoff.</p>
+ <Section color="#FFD600" icon="2" title="The Knockout Bracket Opens June 27">
+ <p>The group stage is live now. Predict scores for all 72 group stage matches and pick winners through every knockout round to the final. The Knockout Bracket opens June 27 — bracket entries lock when the Round of 32 begins.</p>
  <div style={{ background: 'rgba(255,214,0,0.06)', border: '1px solid rgba(255,214,0,0.15)', borderRadius: '10px', padding: '16px', margin: '16px 0' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.72rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '10px' }}>BRACKET POINTS</div>
  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -94,7 +94,7 @@ export default function HowItWorksPage() {
  {/* CTA */}
  <div style={{ textAlign: 'center', marginTop: '48px', padding: '40px', background: 'linear-gradient(135deg,rgba(255,214,0,0.07),rgba(0,200,83,0.03))', border: '1px solid rgba(255,214,0,0.2)', borderRadius: '14px' }}>
  <div style={{ fontFamily: "'Bebas Neue'", fontSize: '2rem', color: 'white', letterSpacing: '2px', marginBottom: '8px' }}>Ready to Play?</div>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginBottom: '24px' }}>June 11 bracket deadline · Free to play · No purchase necessary</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#5a8a68', marginBottom: '24px' }}>Knockout Bracket opens June 27 · Free to play · No purchase necessary</div>
  <Link href="/auth/signup" style={{ display: 'inline-block', padding: '16px 40px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '1.1rem', letterSpacing: '3px', borderRadius: '6px', textDecoration: 'none' }}>PLAY FREE
  </Link>
  <div style={{ marginTop: '12px' }}>

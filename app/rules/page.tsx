@@ -37,14 +37,14 @@ Employees of Bartex Enterprise Holdings LLC and their immediate family members a
  title: '3. Tournament Period',
  body: `The competition runs from the platform launch date through July 19, 2026 (the 2026 FIFA World Cup Final).
 
-Bracket picks must be submitted before 12:00 PM Central Time on June 11, 2026. All submitted bracket picks are automatically locked at this time.
+The Knockout Bracket opens June 27, 2026. Bracket entries are automatically locked when the Round of 32 begins.
 
 Daily match picks must be submitted before the official kickoff time of each individual match. Picks submitted after kickoff will not be accepted.`,
  },
  {
  title: '4. How to Enter',
  body: `1. Visit worldcupfanchallenge.com and create a free account.
-2. Submit bracket predictions for World Cup matches before June 11, 2026 at 12:00 PM CT.
+2. Submit Knockout Bracket predictions after it opens June 27, 2026; entries lock when the Round of 32 begins.
 3. Submit daily score predictions before each match kickoff.
 4. Points are earned based on prediction accuracy as described in Section 5.
 

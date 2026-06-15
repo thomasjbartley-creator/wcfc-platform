@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'WCFC \u2014 World Cup Fan Challenge 2026',
-  description: 'The global fan prediction challenge for the 2026 FIFA World Cup. Pick every match, win real prizes.',
+  description: 'Play the World Cup free. Watch the live leaderboard. Knockout Bracket opens June 27. Every dollar donated funds youth soccer.',
 };
 
 export default function RootLayout({

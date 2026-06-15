@@ -24,7 +24,7 @@ export default function Home() {
       {/* HERO */}
       <section style={{ textAlign: 'center', padding: 'clamp(60px,10vw,120px) 24px 60px', background: 'radial-gradient(ellipse at top, rgba(0,200,83,0.08) 0%, transparent 70%)' }}>
         <div style={{ display: 'inline-block', background: 'rgba(0,200,83,0.1)', border: '1px solid rgba(0,200,83,0.25)', borderRadius: '20px', padding: '6px 16px', fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', fontWeight: 700, color: '#00C853', letterSpacing: '2px', marginBottom: '24px' }}>
-          2026 FIFA WORLD CUP — JUNE 11 KICKOFF
+          2026 FIFA WORLD CUP — GROUP STAGE LIVE
         </div>
         <h1 style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(3rem,10vw,7rem)', color: 'white', letterSpacing: '3px', lineHeight: 1, marginBottom: '8px' }}>
           PLAY THE WORLD CUP.
@@ -52,7 +52,7 @@ export default function Home() {
 
       {/* STATS STRIP */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '20px 24px', display: 'flex', justifyContent: 'center', gap: 'clamp(24px,6vw,80px)', flexWrap: 'wrap' }}>
-        {[['104', 'Total Matches'], ['Free', 'Entry'], ['25 Pts', 'Per Exact Score'], ['Jun 11', 'Bracket Deadline']].map(([n, l]) => (
+        {[['104', 'Total Matches'], ['Free', 'Entry'], ['25 Pts', 'Per Exact Score'], ['Jun 27', 'Knockout Bracket Opens']].map(([n, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(1.6rem,4vw,2.4rem)', color: '#FFD600', letterSpacing: '2px' }}>{n}</div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#8ab898', letterSpacing: '2px', textTransform: 'uppercase' }}>{l}</div>
@@ -65,7 +65,7 @@ export default function Home() {
         <div style={{ maxWidth: '640px', margin: '0 auto', background: 'rgba(0,200,83,0.05)', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '14px', padding: '28px 32px' }}>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: 'white', letterSpacing: '2px', marginBottom: '12px' }}>New to Pick&apos;em?</div>
           <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '16px' }}>
-            Before June 11 kickoff, you pick your tournament bracket and predict the result and score of every match. The closer your guesses, the more points you earn. Most points wins.
+            The group stage is live right now. The Knockout Bracket opens June 27 — pick winners through every round to the final and predict scores, and the closer your guesses, the more points you earn. Create your free account now so you&apos;re ready the moment it opens, and watch the live leaderboard in the meantime.
           </p>
           <Link href="/how-it-works" style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#00C853', letterSpacing: '1px', textDecoration: 'none' }}>Full How It Works →</Link>
         </div>
@@ -77,10 +77,10 @@ export default function Home() {
           <div>
             <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#FFD600', letterSpacing: '3px', marginBottom: '8px' }}>PREDICT EVERY MATCH</div>
             <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem,5vw,3.2rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>
-              Pick the result and score of every match.<br /><span style={{ color: '#FFD600' }}>Lock in your full tournament before June 11.</span>
+              Pick the result and score of every match.<br /><span style={{ color: '#FFD600' }}>The Knockout Bracket opens June 27.</span>
             </div>
             <p style={{ fontFamily: "'Barlow'", fontSize: '0.95rem', color: '#8ab898', lineHeight: 1.7, marginBottom: '20px' }}>
-              Predict scores for all 72 group matches. Pick winners through every knockout round to the final. Auto-saves as you go and locks in 1 hour before kickoff.
+              Predict scores for all 72 group matches. Pick winners through every knockout round to the final. Auto-saves as you go and locks when the Round of 32 kicks off.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
               {[['Exact score prediction', '25 pts'], ['Correct winner', '10 pts'], ['Pick the champion', '50 pts'], ['Perfect matchday bonus', '+20 pts']].map(([label, pts]) => (
@@ -93,8 +93,8 @@ export default function Home() {
               <Link href="/auth/signup" style={{ padding: '13px 24px', background: '#00C853', color: '#050C0A', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
                 Play Free &amp; Fill Bracket
               </Link>
-              <Link href="/picks/bracket" style={{ padding: '13px 20px', background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
-                Preview Bracket →
+              <Link href="/leaderboard" style={{ padding: '13px 20px', background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', color: '#FFD600', fontFamily: "'Bebas Neue'", fontSize: '0.95rem', letterSpacing: '2px', borderRadius: '6px', textDecoration: 'none' }}>
+                See the Live Leaderboard →
               </Link>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
           {[
             { n: '01', title: 'Predict Every Score', desc: 'Pick the result and score of every match. Closer guess = more points.' },
-            { n: '02', title: 'Fill Your Tournament Bracket', desc: 'Bonus picks: pick winners through the knockout rounds. Lock in before June 11.' },
+            { n: '02', title: 'Fill Your Tournament Bracket', desc: 'Bonus picks: pick winners through the knockout rounds. The Knockout Bracket opens June 27.' },
             { n: '03', title: 'Climb the Leaderboard', desc: 'Compete on the global individual leaderboard and the country leaderboard. The Champion wins a Thunder FC jersey, a custom WCFC Champion shirt, and permanent recognition.' },
           ].map(s => (
             <div key={s.n} style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '28px' }}>

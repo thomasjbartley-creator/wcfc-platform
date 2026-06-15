@@ -129,7 +129,7 @@ export default function PicksPage() {
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', color: '#00C853', letterSpacing: '3px', marginBottom: '6px' }}>WORLD CUP 2026</div>
           <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2rem, 6vw, 3.5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1 }}>YOUR PICKS</div>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#8ab898', marginTop: '8px' }}>
-            Submit your bracket before June 11.
+            The Knockout Bracket opens June 27.
           </div>
         </div>
 
@@ -137,7 +137,7 @@ export default function PicksPage() {
         <div style={{ background: 'rgba(255,214,0,0.08)', border: '1px solid rgba(255,214,0,0.25)', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ fontSize: '1.2rem' }}>&#9888;</span>
           <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.88rem', color: '#FFD600', letterSpacing: '0.5px' }}>
-            Preview mode — fill out your bracket to try it, but saving opens before the June 11 kickoff. Your picks aren&apos;t stored yet.
+            Preview mode — fill out your bracket to try it. The Knockout Bracket opens June 27; entries lock when the Round of 32 begins. Your picks aren&apos;t stored yet.
           </div>
         </div>
 
@@ -165,7 +165,7 @@ export default function PicksPage() {
               <div style={{ fontSize: '1rem', fontFamily: "'Barlow Condensed'", fontWeight: 700, letterSpacing: '3px', color: '#FFD600', marginBottom: '12px' }}>BRACKET</div>
               <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.6rem', color: '#FFD600', letterSpacing: '2px', marginBottom: '8px' }}>BRACKET PICKS</div>
               <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.85rem', color: '#8ab898', lineHeight: '1.6', marginBottom: '20px' }}>
-                Predict winners for all 72 group matches + full knockout bracket. Lock in before June 11 kickoff.
+                Predict winners for all 72 group matches + full knockout bracket. The Knockout Bracket opens June 27.
               </div>
               {/* Progress bar */}
               <div style={{ marginBottom: '16px' }}>
