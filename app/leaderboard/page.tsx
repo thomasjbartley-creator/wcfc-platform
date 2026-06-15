@@ -1,19 +1,38 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Nav from '@/app/components/Nav'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 export const metadata: Metadata = {
-  title: 'Leaderboard \u2014 WCFC',
+  title: 'Leaderboard — WCFC',
   description: 'See who leads the World Cup Fan Challenge. Global individual and country leaderboards updated after every match.',
 }
-export default function LeaderboardPage() {
+
+// Always render fresh standings from the live leaderboard table.
+export const dynamic = 'force-dynamic'
+
+type LeaderboardRow = {
+  rank: number
+  username: string | null
+  country_supported: string | null
+  points_total: number
+}
+
+export default async function LeaderboardPage() {
+ const supabase = createAdminClient()
+ const { data } = await supabase
+   .from('leaderboard_individual')
+   .select('rank, username, country_supported, points_total')
+   .order('rank', { ascending: true })
+   .limit(50)
+ const rows = (data ?? []) as LeaderboardRow[]
  return (
  <div style={{ minHeight: '100vh', background: '#050C0A', fontFamily: "'Barlow', sans-serif", color: '#d0ead8' }}>
  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
  <Nav />
  <div style={{ maxWidth: '900px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
  <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.75rem', fontWeight: 700, color: '#00C853', letterSpacing: '3px', marginBottom: '8px' }}>GLOBAL RANKINGS</div>
- <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2.4rem,7vw,5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>Leaderboard<br /><span style={{ color: '#FFD600' }}>Goes Live June 11</span>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: 'clamp(2.4rem,7vw,5rem)', color: 'white', letterSpacing: '2px', lineHeight: 1, marginBottom: '16px' }}>Leaderboard<br /><span style={{ color: '#FFD600' }}>Live Now</span>
  </div>
  <p style={{ fontFamily: "'Barlow'", fontSize: '1rem', color: '#8ab898', lineHeight: 1.7, maxWidth: '540px', margin: '0 auto 48px' }}>The global leaderboard opens at kickoff. Rankings update after every match. Individual standings, country leaderboard, and weekly prize tracking — all live.
  </p>
@@ -33,25 +52,28 @@ export default function LeaderboardPage() {
  </div>
  ))}
  </div>
- {/* PLACEHOLDER TABLE */}
+ {/* INDIVIDUAL LEADERBOARD */}
  <div style={{ background: '#0a1410', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', overflow: 'hidden', marginBottom: '40px' }}>
  <div style={{ padding: '14px 20px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'grid', gridTemplateColumns: '48px 1fr 80px 80px', gap: '12px' }}>
  {['RANK', 'FAN', 'COUNTRY', 'POINTS'].map(h => (
  <div key={h} style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.68rem', color: '#5a8a68', letterSpacing: '2px', fontWeight: 700 }}>{h}</div>
  ))}
  </div>
- {[1,2,3,4,5].map(n => (
- <div key={n} style={{ padding: '12px 20px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'grid', gridTemplateColumns: '48px 1fr 80px 80px', gap: '12px', alignItems: 'center', opacity: 0.25 }}>
- <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: n <= 3 ? '#FFD600' : '#5a8a68' }}>#{n}</div>
+ {rows.length === 0 ? (
+ <div style={{ padding: '16px 20px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: '#8ab898', letterSpacing: '1px' }}>Standings update after each match.
+ </div>
+ ) : rows.map(row => (
+ <div key={row.rank} style={{ padding: '12px 20px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'grid', gridTemplateColumns: '48px 1fr 80px 80px', gap: '12px', alignItems: 'center' }}>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1.1rem', color: row.rank <= 3 ? '#FFD600' : '#5a8a68' }}>#{row.rank}</div>
  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
  <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: 'white' }}>———</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.9rem', color: 'white' }}>{row.username ?? 'Anonymous'}</div>
  </div>
- <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68' }}>——</div>
- <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1rem', color: '#00C853' }}>—</div>
+ <div style={{ fontFamily: "'Barlow Condensed'", fontSize: '0.8rem', color: '#5a8a68' }}>{row.country_supported ?? '—'}</div>
+ <div style={{ fontFamily: "'Bebas Neue'", fontSize: '1rem', color: '#00C853' }}>{row.points_total}</div>
  </div>
  ))}
- <div style={{ padding: '16px 20px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', letterSpacing: '1px' }}>Rankings unlock at kickoff — June 11, 2026
+ <div style={{ padding: '16px 20px', textAlign: 'center', fontFamily: "'Barlow Condensed'", fontSize: '0.82rem', color: '#5a8a68', letterSpacing: '1px' }}>Updated after every match.
  </div>
  </div>
  {/* SPONSOR LEADERBOARD — LIVE NOW */}
